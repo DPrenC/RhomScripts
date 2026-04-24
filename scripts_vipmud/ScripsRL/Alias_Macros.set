@@ -1,0 +1,163 @@
+;Módulo: alias_macros.set
+;Versión: 1.9FV, 08/11/2018
+;Descripción: Incluye todos los alias y macros generales.
+;Autor: Rhomdur
+
+
+;Declaración de variables:
+
+#Var Ojear 0
+#Var Mirar 0
+
+
+; Alias generales:
+
+#GAlias oj {
+#Var Ojear 1;
+ojear
+}
+
+#GAlias m {
+#Var Mirar 1;
+mirar %0
+}
+
+
+;Ver la versión de los Scrips:
+#GAlias versionscrips {
+#Say {Scrips RL versión @Version, Escritos para VipMud por Rhomdur.}}
+
+
+
+;Alias de configuración:
+
+#GAlias configurarficha {
+#Say {Configurando tu ficha} NoDisplay|output;
+inform alineamiento on;
+inform bloqueos on;
+inform ataques_a_otros on;
+inform ataques_invocaciones on;
+inform xp-ganada on;
+consentir accesibilidad on;
+consentir detallado off;
+consentir menus off;
+consentir gmcp off;
+consentir mudlet_gui off;
+consentir MSP off;
+columnas 180;
+filas 80;
+terminal ansi;
+charset resetear;
+ojear configurar jugadores linea npcs linea short espacio s_cortas espacio linea objetos
+}
+	
+#GAlias configurarpromptB {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$k$lLD:$K$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$k$lLD:$K$l
+}
+
+#GAlias configurarpromptBM {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$k$lLD:$K$lImágenes:$e$lPieles:$p$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$k$lLD:$K$lImágenes:$e$lPieles:$p$l
+}
+
+#GAlias configurarprompta {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$b$lLD:$K$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$b$lLD:$K$l
+}
+
+#GAlias configurarpromptAM {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$b$lLD:$K$lImágenes:$e$lPieles:$p$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lNM:$b$lLD:$K$lImágenes:$e$lPieles:$p$l
+}
+
+#GAlias configurarpromptx {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lJgd:$j$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lJgd:$j$l
+}
+
+#GAlias configurarpromptxm {
+prompt $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lJgd:$j$lImágenes:$e$lPieles:$p$l;
+promptcombate $lPv:$v\$V Pe:$g\$G Xp:$x$lSL:$s$lPL:$a$lJgd:$j$lImágenes:$e$lPieles:$p$l
+}
+
+
+#GAlias canalescolores {
+alias t telepatia $1$ %^BOLD%^RED%^ $2*$;
+alias ' decir %^BOLD%^RED%^$*$;
+alias ciu ciudadania %^BOLD%^RED%^$*$;
+alias ba bando %^BOLD%^RED%^$*$;
+alias gre gremio %^BOLD%^RED%^$*$;
+alias cla clan %^BOLD%^RED%^$*$;
+alias cha chat %^BOLD%^RED%^$*$;
+alias ro rol %^BOLD%^RED%^$*$;
+alias gru grupo %^BOLD%^RED%^$*$;
+alias int interbando %^BOLD%^RED%^$*$;
+alias co consulta %^BOLD%^RED%^$*$;
+alias av avatar %^BOLD%^RED%^$*$
+}
+
+
+;Alias para reportar datos seleccionados:
+
+#GAlias repd {
+'%clipboard}
+
+#GAlias repb {
+ba %clipboard}
+
+#GAlias repr {
+t @Remitente %clipboard}
+
+#GAlias rept {
+t %1 %clipboard}
+
+#GAlias repc {
+ciu %clipboard}
+
+#GAlias repch {
+cha %clipboard}
+
+
+;Alias para reportar el nick X:
+
+#GAlias repdx {
+' %Replace(@NickX,"|",",")}
+
+#GAlias repcx {
+ciu %Replace(@NickX,"|",",")}
+
+#GAlias repbx {
+ba %Replace(@NickX,"|",",")}
+
+#GAlias repgx {
+gre %Replace(@NickX,"|",",")}
+
+#GAlias reprx {
+t @Remitente %Replace(@NickX,"|",",")}
+
+#GAlias reptx {
+t %1 %Replace(@NickX,"|",",")}
+
+
+;Keys de macros generales:
+
+#GKey ctrl-o {seguir @Objetivo}
+#GKey ctrl-m {mano}
+#GKey ctrl-p {perder todo}
+#GKey alt-b {buscar}
+#GKey ctrl-a {agacharse}
+#GKey ctrl-l {levantarse}
+#GKey ctrl-i {enterrar cuerpos}
+#Key ctrl-u {estado -b x}
+#Key ctrl-j {estado -b todo}
+
+#GKey alt-h {m1}
+#GKey alt-n {m2}
+#GKey alt-y {m3}
+#GKey alt-ctrl-h {m4}
+#GKey alt-ctrl-n {m5}
+#GKey alt-ctrl-y {m6}
+#GKey shift-control-alt-h {m7}
+#GKey shift-control-alt-n {m8}
+#GKey shift-control-alt-y {m9}

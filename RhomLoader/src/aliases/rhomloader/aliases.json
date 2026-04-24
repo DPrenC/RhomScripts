@@ -1,0 +1,7 @@
+[
+  {
+    "name": "rl",
+    "isActive": "yes",
+    "regex": "^rl$"
+  }
+]

@@ -1,0 +1,2182 @@
++5.2 Commands 
+
+++5.2.1 Abort
+Syntax: #abort [value] 
+
+This command terminates a script.  If no parameter is given, only the current level of the script is terminated.  Otherwise, the entire script is aborted
+
+Example:
+#10 {
+    #Say {Try %i};
+    #if {@hitPoints > 30} {
+        #abort} {
+        get potion from bag;quaff potion;#wait 0.5};
+    #say {Success %i}
+};#say {done}
+
+
+The above example directs the character to alternate continuously between quaffing potions and obtaining another potion from his bag until he reaches over 30 hit points.  This script assumes that there is a trigger running monitoring the Mud prompt and extracting the hit points into the @HitPoints variable.  The Wait command is included to wait half a  second for the Mud prompt to return and the prompt trigger to pick up the hit points value.  The Abort command as it stands would stop the entire script once HitPoints is greater than thirty. The word "success" would be spoken every time a potion is quaffed. If the #Abort command is executed, the "done" word will not be spoken.
+
+If there wasn't  a parameter specified on the abort, the #IF command would be evaluated ten times, as would the incremental speaking of tries. The word "done" will be spoken regardless of what happens in the #If command, but the word "success" will only be spoken if a potion is quaffed. In this example, both types of aborts will result in the same number of potions quaffed.
+This script could be written in a more effective way, but it was written to illustrate the use of the abort command.
+
+Related Commands "If"
+
+++5.2.2 AddItem
+Syntax: #AddItem list-variable item [NoDuplicates}
+
+The command will add a value to a list variable. A list-variable is usually separated with a vertical bar (|).  list variables are used in various commands such as the pick list command or function.
+
+Example:
+
+#Var SampleList {Ann|Bob|Charles}
+
+The following two commands are equivalent, but only if the list variable is not empty:
+
+AddItem SampleList David
+
+#Var SampleList {@{sampleList}|David}
+
+
+Related functions: "Add an item to the beginning of a List"
+"Delete A List Item by contents"
+"Delete A List Item by number"
+"Return the first item from a list"
+"Pick from a List"
+"Reverse the Contents of a List"
+"Sort a List"
+"Extract a Specific Word"
+Related commands: "Pick"
+"Tab"
+
+++5.2.3 Alarm
+Syntax: #alarm [variable-name] [-]seconds [list-of-commands]
+
+The alarm command allows you to set a list of commands to be executed after a certain time period has elapsed.  Unlike the Wait command, it does not pause the Mud client, nor take up nearly as much of the computer's resources.  
+
+The list of commands are executed after the number of seconds have elapsed. The variable-name will be assigned the alarm number and can be used as a handle by the UnAlarm command to terminate a timer. It can also be used in the #alarm command to adjust the number of seconds for execution.  Although the variable is optional, it is a good idea to use it when you are repeatedly executing commands because you will probably want to stop the alarm at some point.  If you include the variable and number of seconds, but do not specify the list-of-commands, the specified alarm's time will be adjusted.  Once a one-time alarm has executed, that alarm is deleted and you will not be able to adjust the time. You will need to re-enter the entire alarm command. 
+
+You would not normally use the @-sign on the variable name unless you are making an indirect reference to the variable. See "Indirect Variables" for more details.
+
+If the number of seconds are negative, the list-of-commands are executed repeatedly every number of seconds specified.  If positive, the list-of-commands are only executed once after the number of seconds has passed.
+
+Example:
+
+#Trigger {&{charname} shouts 'Fred'} {#alarm 3.5 {shout @charname}}
+
+This script creates a trigger which waits for someone on the mud to shout your character's name (Fred), and then shouts the person's name after three and a half seconds. Without the Alarm command, the shout would come back immediately and everyone would know it was a trigger.  
+
+#alarm check -120 {save}
+#alarm check -300
+#unalarm check
+
+The first command starts up an alarm which performs a save on the mud every two minutes.  The second command modifies the timer so that it now executes only every five minutes. The third command deletes the timer.
+
+The following script lines sets up some useful "away from Keyboard" controls.
+
+alias afk {#class afk enable; #alarm AFKHandle 60 {stand;sit}} 
+#alias UnAfk {#unalarm AFKHandle ;#Class afk disable} 
+#GTrigger {* fred * }  
+  {#var FirstWord {%wword,#1," ",1)}; 
+#var SecondWord {%wword,#1," ",2)}; 
+   #if {%left(@FirstWord,1)="<"}   {@firstword{ Sorry, I'm AFK}; #abort 1} ; 
+   #if {@seccond word = "tells" or @secondword ="asks or @secondword = "says"}{tel @firstword {Sorry, I'm AFK}; #abort 1} 
+  } {afk}
+
+These three script commands show how you can set-up an away from keyboard script.  You would type in "afk" and the alias would execute a command that enables the afk class, the only member of which is the trigger above.  The trigger is now active.  The alias then sets an alarm to start-up the alias again in 60 seconds.  It also has your character stand and sit just so the Mud does not think you are inactive and log you off.
+You would type in the "UnAFk" alias when you are ready to return to the mud. The trigger stands by and monitors all Mud output and when it encounters your name, it tries to send a reply in the same channel or mode as the message was received.  In Valhalla, when you receive a message from the comm channel, the channel name is the first word on the line and its name is enclosed in angle brackets.  The trigger tests the first letter of the first  word of the line and if it is a left angle bracket it assumes it is a comm channel communication and replies on that channel that you are AFK.  It also tests for someone "telling" you or speaking to you in the same room by checking the second word for either the words "tells", "asks", or "says", and if so, sends the same message to this person.  The abort command is used to exit the trigger because its work is done, but the trigger stays active until the "UnAFK" alias command is entered.  The last parameter of the trigger is the class-name AFK and since it is present, the trigger is put into the AFK class. The trigger only executes when the afk class is enabled.
+
+Refer to the UnAlarm command for explanations and examples on how to use the variable-name to stop the alarm.
+
+Related commands: "unalarm", "wait" 
+
+++5.2.4 Alias
+Syntax: #Alias entered-command commands-to-execute [class]
+
+The Alias command allows you to assign a group of script or Mud commands to one single word. It can also be used to pass parameters on to the list of commands using the reserved variables %1 to %99.   
+
+Example:
+
+#alias dagger {remove sword; get dagger from bag; wield dagger}
+#alias pb {put %1 in bag}
+
+#alias am {#prompt monster {Enter monster name};#Tab @monster;kill @monster}
+
+In the first example, you would simply enter the word dagger into the Entry window and the character would switch weapons to the dagger.  The next line in the example is a simple demonstration of a command that will allow you to easily put objects in the character's bag.  For example, if you entered:
+
+pb sword
+
+the word sword would be assigned to the variable %1 and then the variable can be used in the list of commands.  The "pb sword" will be seen by the Mud as "put sword in bag". The next line in the above example executes a combination of script and Mud commands which first prompt you to enter a monster's name to be assigned to the variable @monster, put the monster name in the Space-completion table, and then kill the monster. 
+
+When the class is specified, the alias is only active if that class-name is enabled.
+
+The alias command is described in more detail in a special section. Also see the GAlias and UnAlias commands.
+
+See the "Aliases"section for more discussion on this topic. See the "Classes" section for more discussion on classes.
+
+Related Commands: "UnAlias"
+
+++5.2.5 Automenu
+Syntax: #automenu list-of-menu-selections
+
+This command allows you to automate the process of selecting some of the more often used menu selections.  The menu selections can be abbreviated to the fewest number of characters which still keeps them unique.  The menu selections are separated by the list separator, which by default is set the the vertical bar (|).
+
+Example:
+
+#key control-q {#quit}
+#key control-q {#automenu Main|file|Exit}
+
+These two examples will give identical results.  When you press the keystroke Control-Q the Mud client is terminated.
+
+If you would like to redefine the F1 key, you could do the following:
+
+#key f1 {help}
+#key F10 {#automenu main}
+
+When you press the F1 key, this might bring up help on your currently running MUDD. It then assigns the VIP Mud main menu to the F10 key. 
+
+++5.2.6 Bell
+Syntax: #Bell
+
+This command plays the default bell sound on your computer. It is useful for alerting you to some condition.
+
+Example:
+
+#Trigger {A Smuggler is standing here.} {#bell; k smuggler}
+
+When wandering around the ports in Valhalla Mud, you will want to be notified of smugglers loitering around, and then dispatch them quickly.
+Related command: "Play"
+
+++5.2.7 Break
+Syntax: #Break
+
+If Debug mode is on, this command will stop execution in a script and present you the Debug dialog.  This command is useful in designating a point in a complex script where you are having unpredictable results.  Once the Debug dialog is presented, you can examine parameters and variables, and check other conditions for problems.
+
+The command is ignored if Debug mode is not on.
+
+See the "Debugging Scripts" section for more information.
+
+++5.2.8 Character
+Syntax: #char [Character-Reference/GLOBAL]
+
+When playing more than one character, either on one Mud or on several, you can switch between the characters by using this command.  Any scripts loaded or entered after this command will belong to the character-reference specified.  If no character-reference is specified, the next mud connection is reference sequentially in order of login.  
+
+It can also be used to set or ensure the ownership of triggers, aliases, keys, and variables.  When VIP-Mud creates an empty script file for a new character, this command is included, and is intended to remain the first command in the file.  If later, you decide to make changes to the script file and execute the entire file, The Character command ensures that the rest of the commands in the file are assigned to the right character, because normally when you execute a command, it is assigned to the current character. You can also specify Global which causes the subsequent commands to be assigned to all characters.
+
+Example:
+
+#Key Control-shift-F {#char Fred}
+
+This command  switches focus to the Mud character Fred's session when the keystroke Control-Shift-F is pressed.  This may be one way to switch to a session quickly. Another way to do this is to enter:
+
+Fred:
+in the entry window.  If the first letter of the name is unique within the currently opened characters, the "Fred:" could be shortened to "F:".
+
+See the section "Playing Multiple Characters" for more information.
+
+++5.2.9 Class
+Syntax: #class class-name [Enable/Disable]
+
+This command allows you to manipulate classes.  See the section on Classes for more details.  
+
+If no parameters are specified, a list of enabled classes are displayed in the Output window. if only the class-name is specified, the class is added if it doesn't exist, and the current class is set to class-name. By specifying Disable, the specified class is removed from the enabled class list.  If Enabled is present, the class is added if it doesn't exist and is added to the enabled class list, but the current class-name is not effected.
+
+See the UnClass command for more details.
+
+++5.2.10 Clipboard
+
+Syntax: #Clipboard s
+
+
+This command saves the value s into the Windows clipboard. 
+
+Example:
+
+#var  Equipment {gloves|breastplate|leggings|boots|helmet}
+#var ClipVar 
+#ForAll @equipment {#var ClipVar @clipVar%crlf%i} 
+#Clip @ClipVar
+
+The above example takes a list, and formats and copies it to a Windows clipboard. Each item is put on its own line by separateing each item with a carriage-return line-feed.
+
+
+Related commands:
+
+To retrieve the contents of the clipboard, use the system variable %Clipboard.  
+
+++5.2.11 Close
+Syntax: #close file-handle
+
+Any files updated with a #read or #write command are candidates for the close command.  The Close command will free up resources and flush any remaining unwritten data to the hard drive.  The close command is usually not needed though.  VipMud closes all files on exit, and if you do need the file-handle or actual file again, the #file command will close the file using the file-handle as reference,  and then it assigns the file-handle to the new file.
+
+Example:
+
+#close 1
+
+This closes the file with the file-handle 1 as assigned by the #file command.
+
+
+Related commands: "File" "Read" "Write" and "DelFile"
+See also:  "Check for End of File"
+
+++5.2.12 Configure
+Syntax: #conf configure-name  
+
+This command allows you to configure many aspects of the VIP-Mud client. Most of these settings can be also performed through the Options dialog.  Look at the VipMud.set file in the VipMud data folder for an example of most of the configure commands.  
+
+Note that "True", "On", and "Yes" are synonomus, as are "False", "Off", and "no".
+
+UserPath folder
+Use this parameter to change the folder where your mud script files, start.set and character.mud files are kept.  Your mud script files will be kept in a sub-folder named after the Mud. Use this with care. This command is not valid in the VIPMud.set file. 
+
+LogsPath folder
+Used to set the folder where the session logs are kept. By default, they are logged in the Logs folder under the user data folder.  That is {%HomeFolder}Logs.  The logs path  can be found through the system variable %LogsFolder. This command is not valid in the VIPMud.set file. 
+
+SoundsPath folder
+Use this to set the name of the folder where your sounds are kept. By default, they are logged in the Sounds folder under the user data folder.  That is {%HomeFolder}sounds. The sounds path  can be found through the system variable %SoundsFolder. This command is not valid in the VIPMud.set file. 
+
+
+AutoLogin True/False
+Controls whether the client performs the auto-login process. It will normally use the character name and password entered in the Character Setup form to perform the login.
+
+Explicit True/False
+
+Controls how undefined variables are treated. If Explicit is set to True, undefined variables will contain their name.  For example, an undefined variable named @monster would contain "@monster" and may cause errors when used in expressions. If Explicit is set to False, undefined variables are set to a zero-length string.  If used in a numeric expression, they default to zero.
+
+
+ExpandCommandLineVars True/False
+
+If false, user and system variables are treated as if they are regular text. This means that the at-sign and percent sign are passed to the Mud without expanding them as if they  are variables. When this option is set to false, it is similar to putting a right angle bracket ">" at the beginning of the line.  The big difference though, if this option is set, aliases and script commands will still execute from the command line.  See the "PassThru" command as well.
+
+MarginBell Column
+
+
+When entering text in the entry or edit windows, a margin bell can be set to notify you when you have typed past a specific column. This allows you to control the length of your input lines.  A value of zero will disable the margin bell.
+
+BatchSpeech On/Off
+
+Controls whether lines are batched before being sent to the screen reader.  This prevents the pause at the end of every line, but for some screen readers and some Muds, it causes the text to run together making it less understandable.
+
+SlowWalk On/Off
+
+Controls whether the Auto-walk/Recorded commands feature simply dumps all of its commands to the Mud (when Off), or it executes one command at a time for each execution of the "OK" command (when on). 
+
+OutputWindowPercent value
+
+Value is the percentage the output window will occupy of the VipMud form. If you want a larger entry window, this value should be smaller.  Valid values are 5 to 95.
+
+OutputWindowSize value
+
+This sets the size of the output window buffer in kilobytes.  The output window from each  Mud connection can grow to this size before VipMud starts dropping the oldest incoming text.
+
+ColorDisplay True/False
+
+Controls whether colored texts sent by the Mud is displayed in color in the output window. If you do not use or need  colors, this should be turned off to improve performance. When this is turned on, the ColorTextTags option is turned off.
+
+ColorTextTags True/False
+
+Controls whether color is shown in words rather than the actual color.  For example: "<red>The store sign waves in the wind.<white>".   When this is turned on, the ColorDisplay is turned off.
+
+OutputLog True/False
+Controls whether output from the mud is logged to a file.  If more than one character is being used, an output file is created for each character. If this value is changed, it will only take effect on the next new character connection.
+
+LogRetentionDays #-days
+
+The number of days the log files are retained.  A value of 0 will keep the log only until you next connect to a Mud.  Make the number large, say 1000000 to keep the logs virtually forever.
+ 
+LogBySession True/false
+
+This controls whether a log is created for each character session, or just one per character per day.  The date is included in both methods, the time is also included if you select LogBySession.
+ 
+
+Editor program-file-path 
+If this command is used, you can specify an external editor to edit the script files.  Ensure that the editor can create plain text files with carriage-return/line-feeds at the end of each line. By default, Notepad is used.
+
+ForgroundColor color
+
+Used to set the foreground color in the entry window, and the default foreground color in the output window.  The options are black, white, blue, green, red, yellow, cyan, magenta, and standard.  Standard assumes VipMud will use the standard colors you have set-up for your PC.
+
+BackgroundColor color
+
+Used to set the background color in the entry and output windows.  The options are black, white, blue, green, red, yellow, cyan, magenta, and standard.  Standard assumes VipMud will use the standard colors you have set-up for your PC.
+
+CompressOutput True/False
+
+This command specifies whether the Mud client removes blank lines from the Output window.  This makes it easier for people who use screen readers to quickly browse through the copious amounts of output text.
+
+DisplayCommandsInOutput True/False
+
+When true, all commands entered in the entry window, sent to the Mud from a Key macro, or sent by a script command are also displayed in the output window.
+
+RemoveAsciiArt  0/1/2
+
+Allows you to specify the type of Ascii Character Art removal to perform. This is useful to stop the voicing of pictures made of Ascii characters. These are usually non-alpha-numeric characters such as the following: !@#$%^&*()-_=+[{]},<.>/?\| and so on.  If you specify the value 1, it uses an algorithm based on the length of the line and the number of non-alpha-numeric characters to determine if the line should not be spoken. If you specify the value 2, none of the above Ascii characters are sent to your speech program.  The exception is sentence punctuation, which must be immediately preceded by alphabetic characters.  If neither of these methods work for your situation, refer to the "Quiet" command.  This allows you to specify which characters you wish to silence. Use 0 to specify no Ascii art removal. 
+
+EnterByLine Yes/No
+
+This controls how the entry of text is handled when commands are entered in the entry window. When EntryByLine is disabled, commands are entered into the window as if you are entering and moving in a textf ile.  This allows you to delete or move past the beginning and end of the lines.  If EntryByLine is enabled, you can move between lines with the up and down arrows, page up and down, and control-home keys, but you will receive an error sound if you try to move past the end or beginning of the line using backspace, delete, or the right and left arrows.
+
+PlaySoundsOutsideVipMud true/false
+
+Controls whether sounds are played when focus is moved away from VipMud.
+
+SppeakIndent True/False
+
+Speaks the number of leading spaces in a line when moveing through script lines in an edit window.  Normally four spaces is one level of indent.  You may want to use indetation to make your scripts more readable.
+
+CommandChar ANSI-character
+
+An ANSI character identifying the beginning of a script command. A pound character (#) is the default.
+
+LineTerminator ansi-character
+
+The character used to terminate each line sent to a mud.  It is usually %cr  or %crlf (default).
+
+CommandSeparator ansi-character
+
+The character used to seperate script and Mud commands in a script line. By default it is a semi-colon. 
+
+
+SwitchSession ANSI-character
+
+The character used to separate  the character name from the command when switching characters.  By default it is the colon (:).
+
+CommentChar ANSI-character
+
+A character that determines if the line is to be considered a comment.  By default, the semi colan (;) is used. It must be the first character on the line.
+
+EndOfLineChar ANSI-Character(s)
+
+One or more characters that when encountered, designate all remaining characters on the line as comments.  By default, two slashes (//) are used.  
+
+VariableChar ANSI-character
+
+By default, user-defined variables start with the At-sign (@).  TinTin uses the dollar sign, but any non-alphabetic character can be used.
+
+EscapeChar ANSI-character
+
+An escape character allows you to use a reserved character in a place where it would normally be illegal or cause unwanted results.  The escape character is placed immediately before the special character. By default it is the tilda (~).
+
+PassThruChar Ansi-character
+
+By default, a right angle bracket is used at the beginning of a line to indicate that the entire line should pass through to the Mud ignoring any special characters. If your Mud uses this leading character, you will want to change the right angle bracket to another character. 
+
+ScriptReadOnly True/False
+
+When this option is set to true, you may not modify script file edit windows.  You can override this setting through the menu. By default, you may modify script file edit windows.
+
+
+AutoSave True/False
+
+When True, any modified script file edit windows will be automatically saved to file every five minutes. 
+
+See the "Setting Options" section for more details.
+
+++5.2.13 Connect
+Syntax: #Connect [Character-reference]
+
+This command is used to connect to a specific Mud. The Character list is searched using the character reference.  Once connected, the Mud's script file and the character script file is loaded and executed.
+
+If the character reference is omitted, VipMud attempts to reconnect the character running in the current session to the Mud.  On a reconnect, none of the script files are reloaded.  This command is equivalent to pressing Enter in the entry window for a character who has previously been disconnected, or is being worked on off-line. 
+
+Examples:
+
+#Connect Fred
+
+This will look up the character reference Fred and try to login to the Mud with the character name and password.
+
+#Conn
+
+This will attempt to reconnect an off-line character. You must be within the character's session to use this command.
+
+See also: "Character" "Reload" 
+
+++5.2.14 DelClass
+Syntax: #DelClass class-name
+
+Removes all triggers, aliases, and keys associated with this class.  Be careful how you use this command because the command is not reversable.
+
+See the "Classes" section for more information on this topic.
+
+Related commands: "Class" "Unclass"
+
+++5.2.15 DelFile
+Syntax: #DelFile filename
+
+This command deletes the specified file from the User Path directory.  It can be found in the system variable %HomeFolder.  By default it is \VipMud found under your "documents" folder.
+
+For security reasons, like the #File command, this command can not delete or reference any of the system files in the VipMud directory.  You may not use .hlp, .exe, .ini, .cfg, .dll, or folder references and wildcards.
+
+Example:
+
+#DelFile {%MudFolder}test.txt
+
+Related commands: "Close" "File" "Read" "Write"  
+See also:  "Check for End of File"
+
+++5.2.16 Direction
+Syntax: #Direction direction-character reverse-character
+
+This command defines the valid movement directions and their corresponding reverse directions.  This is primarily used by the Autowalk commands.
+
+Example:
+
+#DIR N S
+#DIR S N
+#Dir E W
+#Dir W E
+#DIR U D
+#Dir  D U
+
+The above commands define the six possible directions on the Valhalla Mud and their reverse. These are north, south, east, west, up, and down.
+
+See also the %SwitchDirection function.
+
+++5.2.17 Edit
+Syntax: #Edit file-path
+
+The command uses the default editor to edit scripts and text files. The editor must be specified in the "#configure Editor" command.  VIP-Mud will look for the specified file in the VIP-Mud main directory and the VIP-Mud sub-directory for the mud. You may also use a full pathname to edit a file.  
+
+++5.2.18 EndRecord
+Syntax: #EndRecord name [flags]
+
+This command finishes off the recording of a series of script and Mud commands.  The name is entered as an alias with the addition of a period preceding its name.  You need not enter it in the command line though.  The flags are listed below and if entered, must be separated by the list seperator.  By default this is the vertical bar (|).
+
+Compress - remove redundant movement commands.
+Save - Add the recorded alias command to the last  opened script.  The script must be saved to disk before you quit the program.
+Directions - Remove all non-direction commands from what has just been recorded. Directions are declared by using the #Direction command.
+
+                        
+Alternatively, You may use the "Finish Recording" from the "Record Commands" menu selection instead of using this command directly. 
+
+Related commands: "Erase" "configure" "Record" "Pause" "UnPause" "stop" and "OK" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+
+
+++5.2.19 Erase
+Syntax: #Erase
+
+This command erases or removes the last action performed while recording your commands.
+
+While in recording mode, if you have entered a series of commands to the Mud and realize that the last command was a mistake, just select "Ignore last command" from the "Record" menu, or use the "#Erase" command. The erased command will be spoken.
+
+Example:
+
+#Trigger {Alas, you can not go that way.} {#erase}
+
+This command may be useful if you are recording speed walk commands and you make a wrong turn.  The last direction entered will be removed from the list.  Because the erase command is ignored if not in record mode, this command would not cause any problems if left running all the time. 
+
+
+Related commands: "EndRecord" "configure" "Record" "EndRecord" "Pause" "UnPause" "stop" and "OK" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+++5.2.20 Execute
+Syntax: #Execute {command-list} [char-reference]
+
+This command executes a list of script or Mud commands, and optionally runs them on another  of your character's Mud connections.  Char-reference can be any valid connected character.  It can also be the keyword "All" which sends the commands to all of your connected characters. When the character is omitted,  the commands are executed on the current session.
+
+Example:
+
+#Execute {quit} All
+
+This will log all of your connected characters off the Muds.  An alternate way to do this is to enter the following in the Entry window:
+
+*:quit
+
+The following script command will send a command to the Amy session from the current session when the F9 key is pressed.
+
+#key F9 {#exec {quaf potion} Amy}
+
+If you are in the Fred session for example, you can press F9 and Amy will quaff a potion if it is in her inventory.
+
+Another use is to simply send a command to the Mud. 
+
+#Trigger {Amy tells you '*'} {#Exec #1}
+
+This trigger first captures the command that Amy tells you, and then executes it as if it was yours. If Amy tells you to "Kill Rabbit", your character will immediately try to kill the rabbit.  Be careful who you entrust with this priviledge--this could leave your character wide open to mischief. 
+
+
+Related commands: "Character"
+See the section "Playing Multiple Characters" for more information.
+
+++5.2.21 File
+Syntax: #File File-Handle filename [Record-Length]
+
+This command sets up a file to be opened, but The actual opening of a file is performed when the first #read or #write command is executed.
+
+The FileHandle is a number from 1 to 10.  The numbers 1 through 5 are used for sequential files, while 6 through 10 are used for random or relative files.  Commands and functions such as the #read, #write, #close and %EndOfFile use this number as a refernce to the original File command.
+
+The File name will be created or must exist in the User Path, which by default, is the VipMud directory (%HomeFolder).
+
+Sequential files are standard text files that you might edit in Notepad.  They are read and written sequentially from top to bottom.  You must either be reading a sequential file or writing it--you can't do both from under one #file command.  You could though, first create a file, close it, open it and then read it.  You may not specify a record length when using this format. 
+
+Random or relative files consist of fixed length lines which may be read and written in any order, that is, randomly.  You may read line 75 from a random file and then immediately read line 3.  You could then write line 100. Record Length should be set to the length of the longest line written.  This value must be the same every time you use the same file or you will probably not get what you want.  If not specified, it defaults to 120 characters.
+
+Examples:
+
+#File 3 list.txt
+
+This will attach a handle to a sequential file called list.txt.
+
+#file 6 Rooms.db 50
+
+
+This will attach a handle to the random file named rooms.db.  The lines read and written will all be 50 characters in length.
+
+The folder is assumed to be the User path,
+
+Related commands: "Close" "Read" "Write" "DelFile"  
+See also:  "Check for End of File"
+
+
+++5.2.22 Find
+Syntax: #Find search-string [flags] 
+
+The Find command searches either the Output, Entry, or Edit windows for a string of text.  If the text is found, the entire line it was found on is placed in the system variable %FoundLine. The following are a list of optional flag words that may be used. Note that flags are separated by the vertical bar. 
+
+Input - Search the Edit or Entry windows.
+Output - Search the Output window.
+First - Search for the first occurrence from the top or bottom depending on the search direction.
+Next - Search for the next occurrence depending on the search direction.
+Forward - Search forward (downwards) through the window.
+Reverse - Search backwards through the window.
+
+By default, Find searches forward finding the first occurrence in the current window.
+
+Example:
+
+
+#GKey control-f { 
+#prompt temp {Reverse Search for? } ; 
+ #find {@temp} FIRST|Reverse ; 
+#say  {%foundline} NoDisplay  }
+
+#GKey f3 { 
+#find {@temp}  reverse|next ;
+#say {%foundline} NoDisplay }
+
+The examples used are the actual scripts for the Find (Control-F) and Find Next (F3) commands.  The find command first prompts the user for the search string and puts it in the variable "temp".  It then searches the current window in reverse looking for the first occurrence. Once found, it uses the Incoming voice speaking the line it was found on.  The Find Next (F3) key searches the current window in reverse starting just after the last string found.   If found, it puts the line in the %FoundLine system variable.  The Say command then speaks the line using the Incoming voice.  
+
+++5.2.23 ForAll
+Syntax: #ForAll list command-list 
+
+This command performs the command-list once for every occurance of an item in a list.  The system variable %i will contain the value of the list item for each iteration.  
+
+A list variable contains one or more items separated by the virtical bar.
+
+
+Example:
+
+#var  Equipment {gloves|breastplate|leggings|boots|helmet}
+
+#For @equipment {remove %i;cast repair %i;wear %i} 
+
+
+Each piece of equipment listed in the equipment variable is removed, then a repair spell is cast on it, and then put back on and worn again.
+
+++5.2.24 GagLine
+Syntax: #GagLine [lines] [Display/Voice/All]
+
+This command is usually tied to a trigger. When used with a trigger, it prevents the triggered line, and optionally one or more of the lines after the triggered line from being spoken or displayed or both.  It is a very good way to remove unwanted spam from the Mud, especially during battles. If the Display keyword is used, only the screen output is stopped.  If Voice is used, the line is not spoken but it is displayed to the screen.  If the keyword All is used or no keyword is used, the line is neither displayed or spoken.
+
+You can optionally specify a number of lines to gag. By default, if you omit the number of lines, only 1 line is gagged.
+
+Example:
+
+#trigger {&{mana}m/&{endurance}e/&{hp}h}		 {#gagline All;#OK }
+
+
+This example prevents the Valhalla prompt line from being displayed and spoken, but it grabs the hitpoints, mana, and endurance values and saves them in variables.  The variable values can then be spoken by user-defined keys, or it could be tested within the same trigger to ensure no value gets too low. Remember that the ampersan  used before a variable name with in a trigger search string is equivalent to an asterisk  wildcard, but the value replaced by the wildcard is saved in the variable.
+
+
+The following line is placed at the beginning of the characters script file and will prevent the speaking of a picture made from ascii characters.  This assumes the picture is 17 lines long.
+
+#gagline 17 voice
+
+
+Related commands: "GagOn"  "unGagOn"
+
+++5.2.25 GagOn
+Syntax: #GagOn [Display/Voice/All]
+
+Once this command is executed, Mud output is not displayed or spoken until the #UnGagOn command is executed. As a safety feature, when this command is in effect, the VIP-Mud client warns you of the fact every ten seconds or so.  This command is good for silencing blocks of text, especially to remove character-based pictures, or when picking up information from many lines of text using a trigger.
+
+If the Display keyword is used, only the screen output is stopped.  If Voice is used, the text is not spoken but it is displayed to the screen.  If the keyword All is used or no keyword is used, the line is neither displayed or spoken.
+
+Example:
+
+#Alias {xp} {#gagon voice;score ;#class xp enable}
+#Trigger {You have * experience points and you need * to the next level.} {#say {XP %1 to level %2}} {xp}
+#Trigger {You are a protected citizen.} {#ungagon;#gagline voice;#class xp disable} {xp}
+
+The first line of this example creates an alias that is executed by entering "Xp". This starts gagging the speaking of output from the Mud.  It then runs the Valhalla Mud's "score" command, and enables the two triggers shown here by enabling the "xp" class.  The next line is a trigger that, when enabled, looks for the line showing the experience points earned and the number needed to reach the next level.   It extracts this information from the line and then speaks the information in a brief format. The next trigger waits until it finds a line that says "you are a protected citizen.", which happens to be the last line displayed of the score text.  It then turns off gagging and turns off these two triggers by disabling the XP class.  It also gags the current line which included the triggering text. This is needed because the #UnGagOn command removes the gagging effect at the beginning of the triggering line.
+
+Related commands: "GagLine"  "unGagOn"
+
+++5.2.26 IF
+Syntax #if {expression} {commands-if-true} [{commands if false}]
+
+The If command allows you to conditionally execute a series of script and/or Mud commands depending on the expression.  If expression evaluates to 0, the second set of commands are executed, and if the expression evaluates to any other value, the first set of commands are executed.
+
+Example:
+
+#trigger {* hugs you.} {#if {%1 = "Brutus"} {bonk #1; say go away} {hug #1}
+
+
+If the above trigger detects the words "hugs you" at the end of a line, it checks the first word or words, and if it is the character Brutus, you bonk Brutus and then tell him to go away.  If the person who hugs you is anyone else, you hug them back.
+
+
+There is a built-in function called %If which is similar to #If, but it can be used to return information as a result. See the "If Function" for details.
+
+See the "Use of Expressions in Scripts" section for details on the use of expressions.
+
+++5.2.27 Ignore
+Syntax: #ignore trigger/alias/key On/Off
+
+This command can disable or enable the execution of triggers, aliases, and assigned keystrokes.  This is useful when you have problems in one of these categories or you want to temporarily have a clean unaltered link with the Mud.
+
+Example:
+
+#ignore trigger on
+
+This will stop the execution of any triggers.
+
+++5.2.28 Key
+Syntax: #Key key-definition {list-of-commands} [{class}]
+
+This allows you to assign script or Mud commands to a keystroke.
+
+The key definition can be combined with one or more of these words. Each word must be separated by a hyphen.
+
+Shift
+Control
+Alt
+
+In addition, the following keystrokes may be used.
+A through Z
+0 through 9
+F1 through F12
+NumPad0 through Numpad9
+Numpad*, Numpad/, Numpad+, NumpadDash, Numpad.
+ENTER, TAB, SPACE, BACKSPACE, ESCAPE, CAPS, PAGEUP, PAGEDOWN
+END, HOME, LEFT, RIGHT, UP, DOWN, DELETE, INSERT, Dash, NUMLOCK 
+Or any of the following symbols:
+`=,./;'[]\
+
+You can assign a class to keys.  This is very useful for assigning the same set of keys for different situations, say navigation, questing, socializing, melees and so on.
+
+Note that you can redefine system keys such as Control-C, but this is not advisable unless you know for sure you won't need them.
+
+Examples:
+#GKey numpad8 {n}
+#GKey numpad4 {w}
+#GKey numpad6 {e}
+#GKey numpad5 {d}
+#GKey numpad9 {u}
+#GKey numpad2 {s}
+#GKey  NumPad/ {#char Next}
+#GKey numpad1 {#say %char}
+
+
+#key numpad+ {disarm @monster} battle
+#key shift-numpad+ {kick @monster} battle
+#key control-numpad+ {bash @monster} battle
+#key shift-numpadDash {rescue @partner} battle
+#key numpadDash {assist @partner} battle
+#key numpad. {quaff potion} battle
+#alias k {#var monster %1; kill @monster; #class battle enable}
+#trigger {You bury the corpse.} {#class battle disable} battle
+
+The first set of key commands sets up your keyboard's numeric pad for easy navigation. An additional key is assigned for quick reference to speak the name of the current character you are playing. 
+
+The second section assign several keys that may be useful in a melee, and assigns them to the class "battle".  The K key is assigned as a shortcut for kill. You would also need to include the monster's name when using the key.  It will then be assigned to the variable Monster for use by the battle numeric keypad keys.  When used, it will also enable the battle keys by enabling the battle class. Finally, once the monster is killed and buried, the battle class is disabled freeing up the keys for other uses, say socializing.
+
+
+See the "Classes" section for more details on classes.
+
+Related command: "UnKey"
+
+++5.2.29 KillAll
+Syntax: #KillAll [char-reference]
+
+If a character reference is not given, it removes all keys, aliases, triggers, variables, Direction commands, tab entries, classes, and running speed walks from memory.
+
+If a character reference is given, all aliases, triggers, keys, variables, tab entries, and in-progress speedwalk commands are removed from memory for the character.
+
+In either case, the triggers, aliases and so on will be removed from memory, but the loaded script files that may have created these settings will not be effected. 
+
+Example:
+
+#KillAll
+
+
+
+Note that this command can not be abbreviated.
+
+
+Related command: "Unload"
+
+++5.2.30 Load
+Syntax: #load file-path [NoEXECUTE|NoRemove]
+
+The Load command loads script files into the Mud client, and optionally executes the script commands.  The file-path can be fully specified, but if no folder is given, the VIP-Mud directory and the Mud sub-directory  are each searched.
+
+If the NoExecute option is included, the file is checked for errors, but the commands are not executed.
+
+If the file has already been loaded and the NoRemove option is specified, the previous settings such as aliases, triggers, and keys will not be removed.  This is useful when you load a Set file more than once and assign settings to different characters. For example, you might create a file called Common.set which contains non-global commands that you would like to assign to more than one character.
+
+
+xxx checking through %homefolder
+Example:
+
+#LO Valhalla\Amy.set
+#Lo c:\program files\VIP-Mud\TestingDir\Fred.set NoExecute|NoRemove
+
+The first line looks for amy.set in the Valhalla folder under the VIPMud folder.  If the Valhalla\ portion was omitted, amy.set would still be found if there is a connection to the Valhalla Mud by any character.
+The second example uses a full file-path to find Fred.set.  You may want to use this method if you are testing new or alternate versions of your active script file.  In this example, errors are reported, but the script is not executed. As well, any aliases, triggers, and keys loaded previously will not be removed.
+
+Related commands: "Reload" "Character" "Unload" "Offline" "Connect"
+
+++5.2.31 Math
+Syntax: #math variable expression
+
+This command evaluates the expression and puts the result in the specified variable.  See the Expressions section for more details on how to write an expression. 
+
+Note that you normally would not include the At-sign at the beginning of the variable name unless the variable name is to be used indirectly.  See "Indirect Variables" for more details. 
+
+If for some strange reason you need the area of a circle spoken, this example will give you the approximate value.
+
+#alias area { 
+    #if {%1<>""} {
+        #var radius %1} {
+        #Prompt Radius {Enter radius}};
+    #math AreaOfCircle {22 * @radius ^ 2 /7};
+    #say @AreaOfCircle}
+
+In this example, we have created an alias called "Area". If you do not include the radius after the alias name, it will prompt you for it. Because VIPMud does not currently handle decimal values, we used the approximate equation of the formula.
+
+See the "Use of Expressions in Scripts" section for details on the use of expressions.
+
+++5.2.32 Offline
+Syntax: #Offline char-reference [NoLoad]
+
+Similar to the Connect command, the Offline command opens a character using its character reference.  It will open all of its associated script files as well, but it does not make the connection to the Mud.  This command is useful if you would like to work on the scripts of a character and you do not need a connection.  
+
+The Mud Character dialog also provides access to this function.
+
+If you include the NoLoad literal no script files will be loaded for the character.  This may be useful when loading several characters and their settings in one file, or if you want a session with no settings.
+ 
+Related commands: "Reload" "Character" "Unload" "Load" "Connect"
+
+
+++5.2.33 OK
+Syntax: #ok
+
+This command has two uses. 
+First, it can be used with the #wait command with the OK type.  This form of the wait command waits until the #OK command executes before moving on to the next command.  In this case, the #OK command is usually included in the prompt trigger.
+
+Second, it can tell the record mode playback routine to execute the next Mud command.  It is especially useful when speed walking to ensure that the Mud has recognized the previous walk directive.  You might put the #Ok command in the prompt trigger, or place it in some room recognition trigger.
+  
+The SlowWalk configuration variable must be set to True before the OK command can be used.  Otherwise, the entire set of Mud commands are sent to the Mud at once.  This could possibly flood the Mud's input buffer and cause the loss of some of the speed walk commands.
+
+See the "Recording Commands/Autowalk" section for more details.
+
+Examples:
+
+#trigger {*m/*E/*h>} #ok
+#trigger {*Exits:*} #ok
+
+in the first example, a trigger is created to wait for the Mud prompt.  When encountered, the OK command is executed which informs the client to make the next move in the Autowalk sequence. The second example is similar, but it expects the list of exits from each room to be given before making the next move.  The second example is more fool-proof, but it does assume that exits are shown for each room.
+
+
+Related commands: "Erase" "configure" "Record" "EndRecord" "Pause" "UnPause" "stop" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+++5.2.34 PassThru
+Syntax: #PassThru {special-char-list}
+
+The PassThru command lets you identify special VipMud characters that should be allowed to just pass through to the Mud without being used as they would be normally.  This command acts only on text entered in the entry window for the current session.  
+
+To turn off PassThru, use the PassThru command again but do not include any characters between the braces.
+
+For example:
+
+#PassThru {}
+
+Will turn off the previously defined PassThru processing. 
+
+Example 2:
+
+#alias EndPassThru {#PassThru {}}
+#passThru {#@}
+
+Ignoring the alias for a moment, This example will ignore all at and pound signs as special characters and send them to the Mud without further processing.  Because some Muds and Mushes use many of VipMud's special characters in their own syntax, and using the escape character or right angle brackets for every line can be tiresome, the PassThru command may be especially useful in these cases.
+
+Note that in this example, the pound sign was used.  You may need a way to be able to enter VipMud script commands again, and so an alias is created first.  If it was created second or not created at all, you would not be able to use the #PassThru command because  any lines starting with the pound sign would be ignored by VipMud and sent directly to the Mud.  In this example, type "EndPassThru" at any point to remove the effects of the PassThru command.
+
+++5.2.35 Pause
+Syntax: #pause 
+
+The pause command is used to pause the recording or playback of recorded script and mud commands. It is especially useful when performing Autowalk recording or playbacks.  When recording you may want to stop recording temporarily to fight a monster or communicate with a clanny.  Likewise, you may want to pause during playback to do something similar.
+
+Examples:
+
+#trigger {A deer is feeding on the grass.} {#pause } {ForestHunt}
+#alias continue {#unpause } {ForestHunt}
+
+In this example there is a forest filled with deer.  You have created an Autowalk sequence (not shown here) which travels through every trail in the forest. This trigger will pause the playback of the sequence temporarily when you encounter a deer.  You can then fight it and when finished you may enter the command "continue" defined by the above alias.  Your character will then continue its explorations. Notice that both the trigger and the alias are assigned to the ForestHunt class, and so both lines are inactive until this class is enabled, say with the following alias command "StartHunt".
+
+#alias StartHunt {#class ForestHunt enable; .ForestWalk}
+
+This command   sets up an alias called "StartHunt", which will enable the ForestHunt class and then start the autowalk sequence.
+
+Related commands: "Erase" "configure" "Record" "EndRecord"  "UnPause" "stop" and "OK" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+++5.2.36 Pick
+Syntax: #Pick pick-list-string
+
+Sends the item selected from a list by the user to the Mud. A list is a string containing words or phrases separated by the vertical bar character (|). Optionally, the list items can have a caption and a return value portion.  This is specified by using a colon (:).  If the caption portion is the letter P, the return value will be the title of the list.  If the caption is preceeded by an asterisk (*), the cursor will initially be placed on that caption. If a colon is not included, the value will double as both the caption and the return value.
+
+
+You can have up to 99 items in a list.
+Example:
+
+#key f2 {#pick {p:select monster|rabbit:kill rabbit|*fox:kill fox|badger:kill badger}}
+
+In the above example, if you press F2, a list is shown with the title "Select Monster.  The list will include the words rabbit, fox, and badger.  The cursor is initially placed on fox.  When one is selected, an instruction to kill that animal is sent to the Mud.
+
+Related to the "Pick from a List" function.
+
+++5.2.37 PC
+Syntax: #PC playHandle  function [value]
+
+This command is actually a collection of sound functions. The command provides access to already playing MP3 and  Wave sound files. The PlayHandle can be one of the system variables %PlayHandle or %MP3Loop, or a user-defined variable.  The handle is created and saved in %Playhandle when the play command is executed, and it provides a reference value so that you can effect an already playing sound or song. Note that it is much safer to assign the %PlayHandle to a variable immediately after the sound is played because another unexpected Play command could change this value. The exception is when looping the playing of MP3 files. You should use the %MP3Loop directly due to the fact that the handle value changes every time the MP3 sound is looped. If you are only playing the MP3 file once, you would continue to use %PlayHandle to control its play.
+
+The list of functions are as follows:
+Stop - Stop the sound immediately. If the handle is zero or less, all sounds are stopped.
+Volume - Change the volume of the sound.  The valid values are 0 for almost silent, to 100 for full volume. If the handle is 0, the system variable %volume will be modified.  This will effect the volume of all sounds subsequently played.
+Frequency - Adjust the pitch of the sound.  This will also effect the duration.  That is the higher the frequency, the faster it is played. The valid values for most sound cards are 5000 to 44100, But the values may be set lower and higher for the higher end cards.
+Pan - Sets the left/right stereo balance.  A pan of -5000 plays the sound totally in the left ear, while a value of 5000 plays the sound in the right ear.  Zero is the default for a balanced stereo or mono sound.
+IsPlaying - This function returns a non-zero value if the sound is playing, otherwise the value is set to zero. A variable name is required to receive the value and would be used as the value parameter.
+
+Examples:
+
+#PC ThemeHandle Stop
+#Playloop theme.wav 50; #var ThemeHandle %PlayHandle; #var ThemeVolume 50
+#key PageUp {#math ThemeVolume {@ThemeVolume+5};
+   #if {@ThemeVolume>100} {#var ThemeVolume 100};
+   #PC @ThemeHandle Volume @ThemeVolume} 
+
+The first example shows the simplest form of the command where it stops the sound attached to the specified handle.
+
+The second example, first plays the theme song at 50% volume, and then assigns the handle to a variable. Then the ThemeVolume variable is set to 50 to match the start-up volume.  The next line creates a PageUp keystroke which will increase the volume5% each time it is pressed.  It adds 5 to the volume variable, and if it exceeds 100, it sets it to 100.  The PC command then sets the volume of the theme song to the new volume.  There would probably be a similar keystroke command for PageDown. Because the song file is looped, if the theme song is an MP3 file, it must be done slightly differently due to the fact that the handle changes every time the song repeats.  Consider the following:
+
+#PlayLoop theme.mp3 50;#var ThemeVolume 50
+#key PageUp {#math ThemeVolume {@ThemeVolume+5};
+   #if {@ThemeVolume>100} {#var ThemeVolume 100;
+  		 #PC %MP3Loop Volume @ThemeVolume }
+
+Note that the handle is not saved to a user-defined variable.  Instead the system variable %MP3Loop is used.
+
+The following command will set the %volume variable to 50% which will cause all sounds played from thereafter to be played at half volume.
+
+#PC 0 Volume 50
+
+Related commands: "Play"
+
+++5.2.38 Play
+Syntax: #Play filename [volume]
+Syntax: #PlayLoop filename [volume]
+
+These commands play a sound or song when executed.  The file must be located in the VIPMud's sound folder.  The sound file can either be a .WAV or a .MP3 file. You may specify a sub-folder within the sound folder.  You may also change the sound folder with the "Configure" command.
+
+If included, the volume must be numeric and have the values 0 through 100 indicating the percent of volume.  That is, 100 indicates 100% or full volume.  The system variable %volume will effect the volume as well. For example, if the %volume value is 60 and the volume is set to 50, the sound will be played at 30% (60% of 50% ). 
+
+If not included, full volume is assumed. If you use the PlayLoop form of the command, the sound is played repeatedly until the #PC Stop command is executed or until VIP-Mud is exited. After the Play command has executed successfully, the %PlayHandle system variable is set, giving you access to the playing sound through the PC command. It is best to save the play handle in another variable immediately after playing because any other play command that follows will reset the value of the handle to the new sound.
+
+Note, you can have a large number of sounds playing simultaneously, even many of each type.  Your sound card is the only limiting factor. You can also have more than one Wave file looping at any one time, but you can not loop two or more MP3 files simultaneously. When playing a looped MP3 sound, use the %MP3Loop system variable as the sound handle because each time the sound or song repeats, the looped MP3 handles value changes. 
+
+If you would like to vary the sound randomly, simply name your files with a sequential number at the end of the name portion, and use the wildcard indicator in the play command.  For example, you have ten scream sounds named scream1.wav through scream10.wav. the play command would look like this:
+#play scream*10.wav
+Notice the asterisk between the maximum file number and the name portion.
+
+The Play command is very useful for providing auditory warnings and notifications of what is happening on the Mud.  It also can bring the game alive, making your Mud melees sound more like a video than a text-based game.
+
+Here are a few good uses for the command:
+- warn you when your character's name is mentioned,
+- play a sound when someone tells or asks you something,
+- notify you when you encounter a monster of interest,
+- sound an alarm when hit points drop below a certain level,
+- play authentic sword hit sounds when hits are made,
+- have the monster scream when hit,
+- Have your character scream's volume vary depending on the amount of damage,
+- have the sound of a body falling when the monster dies,
+- have your favourite MP3 song playing in the background.
+
+This commands functionality will grow over time, and so stay tuned.
+
+Examples:
+
+#play Valhalla\welcom.wav
+
+This example plays the welcome sound from a sub-folder name Valhalla under the SoundPath folder set in the Options dialog or with the "Configure" command. By default, the SoundPath is "c:\program files\VipMud\Sounds.
+
+
+#trigger {&{mana}m/&{endurance}e/&{hp}h}   { 
+    #gagline All; 
+    #ok; 
+    #if {@endurance < 50 and @endurFlag = 0} { 
+        #var EndurFlag  1 ; 
+        #alarm 10 {#var endurFlag 0} ; 
+        #say Endurance voiceOnly|current} ;
+    #if {@hp< @oldHP } { 
+        #if {@hp <50} { 
+            q jug; 
+            #play warning.wav; 
+            #alarm 10 {get jug from bag}} ; 
+        #play {Hit*4.wav} {%eval((@OldHp-@hp)^2)} ; 
+         #say {fred @hp} VoiceOnly|current ; 
+        #if {@hp < 30} { 
+            flee; 
+            #play warning.wav}  
+        }; 
+    #var oldHP @HP}
+
+This is a slightly more complex example than usual, but it is useful enough so that you may want to implement a modified version of it in your script files.  The trigger first tests for the Mud prompt, and when encountered, extracts the hitpoints, mana, and endurance for current use and later reference.  The line is gagged so that you don't need to put up with the lengthy prompt constantly being spoken. In case we are doing an auto-walk, and OK command is executed. The endurance is checked and if it has fallen below 50, it will speak the word "Endurance" across all sessions no more than once per ten seconds.  This is enforced by using a flag and an alarm. 
+ The script then checks to see if the current hitpoints are less than the hitpoints given in the last prompt.  If so, several commands are executed. First, it checks to see if it is below a danger level set at 50, and if so, the command is sent telling the character to quaff a potion.  A warning sound is also played, and an alarm is sent to get another potion from the character's bag.
+ 
+Second, a scream sound is played with the volume increasing with the amount of hitpoints lost.  It randomly selects one of six sounds. It also speaks the character's name across all sessions giving the remaining hit points.
+ 
+Next, if the hit points fall below the flee threshold set here at 30, the character is requested to flee, and another warning sound is played.
+The last function is performed regardless of hitpoint loss and it is the updating of the OldHP variable to the current HP value for use by the script when it next triggers.
+
+Note that the speaking of the word "endurance" and the character's name and hit points would be best played in a speech type which interrupts, or speaks over all other speech.
+
+Related Command: "pc"
+
+++5.2.39 Prompt
+Syntax: #prompt variable prompt-string
+
+This command creates and pops-up a dialogue box that will prompt the user for information.  The information entered will be save to the variable name supplied in this command.  The voice used is the voice set for system functions.
+
+Example:
+
+#alias pm {#prompt monster {Monster name?}}
+#alias bm {bash @monster}
+#alias dm {disarm @monster}
+#alias km {kill @monster}
+#alias sm {cast slow @monster}
+
+These commands set-up some alias shortcuts that allow you to deal with a monster.  First, enter "pm" to prompt for the new monster, and then you can enter any of the other alias commands to dispatch the monster.
+++5.2.40 Quiet
+Syntax: Quiet character-list
+
+The characters specified in the character list will not be spoken, but they will be displayed in the output window.  There should be no need to use this command when specifying sentence puntuation such as period, comma, exclamation mark, question mark, and hyphen because VipMud will pass these along to the screen reader or MS Sapi as sentence punctuation, which is not spoken.
+
+
+VipMud does not expand on the character list, and if enclosed in braces, there is no need to use the escape character. The exception is if you specify the left or right braces.
+example,
+
+#quiet {`!;@#$%^&*()_=+~}}
+
+
+See also the Remove Ascii Art configuration command for other methods of avoiding the speaking of Ascii characters.
+ 
+++5.2.41 Quit
+Syntax: #quit
+
+This command will shutdown the VIP-Mud client.  It will first check to see if there are any modified scripts that may need to be saved.  You will be prompted for each of these.  It will also check for active Mud connects, and the program will prompt you to ensure you really do want to end them in this fashion.  It is probably best to exit the Mud normally so you will not lose your equipment or your last few minutes of game play.
+
+++5.2.42 Read
+Syntax: #Read FileHandle VariableName RecordNumber
+
+This command will read a line of text from a file specified by the #file command. The FileHandle is used to determine the corresponding #file command and file name.
+ 
+If the FileHandle is 1 through 5, the file should be sequential.  If 6 through 10, the file should be Random (sometimes called Relative).
+
+When reading a sequential file, every time the #read command is executed, the next line is read into the variable name specified.  Do not specify a record number for sequential files.  Once you have red the last line in the file, the %EndOfFile function will return a true status or the value 1 when tested.  If you continue to read past the end of the file, the variable will take on the value "[EOF]" for end-of-file.  You can use either method to determine whether you have read all the text in a file.
+
+When reading a random file, that is files with the file handle 6 through 10, you must specify the record number to read.  The line found at that position will be saved the the variable name specified.
+
+Note that you do not specify the at-sign at the beginning of the variable name unless you are indirectly referring to another variable. See "Indirect Variables" for more details.
+
+Examples:
+
+#alias shout 3 {#File 3 Shout.txt;
+     #while {%EndOfFile(3)=0} { 
+        #read 3 TempVariable ;
+        shout {shout @TempVariable}}}
+
+This alias will shout each line of the shout.txt file.  Using a handle of 3, the file is first attached to this handle, and then using the While command, it goes through each line of the file and shouts it in the Mud.  The while command continues until the %EndOfFile function tells us we are finished. Alternatively, you could have checked TempVariable for the value "[EOF]".  The file could then be closed with the #close statement, or more easily just left open.  When VipMud is exited or when the #File command with a file handle of 3 is executed, the file will be closed automatically.
+
+The following will shout out a random line whenever the F12 key is pressed.  It is assumed that the file has already been created with 100 lines of shout text.
+
+#key f12 { 
+    #file 7 RandomShouts.txt 100 ;
+    #read 7 TempVariable {%random(1,100)};
+    shout @TempVariable;
+    #close 7} 
+
+
+When the F12 key is pressed, the file RandomShouts.txt is assigned to file handle 7.  It is then read with a randomly created record number with the value 1 through 100.  The line is shouted out in the Mud, and the file is then closed.
+
+Related commands: "Close" "File" "Write" "DelFile"
+See also:  "Check for End of File"
+
+
+++5.2.43 Record
+Syntax: #record
+
+This command starts the recording of script and Mud commands.  As with all the Recording mode commands, they are also available from the Record Commands/Autowalk menu.
+
+Note that the record command will abort any other ongoing recording without warning.
+
+Example:
+
+#Record
+
+Start recording mud and script commands.
+
+Related commands: "Erase" "configure" "EndRecord" "Pause" "UnPause" "stop" and "OK" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+++5.2.44 Reload
+Syntax: Reload char-reference
+
+
+This command first removes all variables, aliases, keys, and triggers belonging to the character including anything added manually.  It then reloads the set files that are normally loaded when the character is first started up. This command is related to the Offline command in that it loads all the character's script files, but the Reload command may be used either while connected or while working offline.
+
+The difference between the Unload command and the command removal portion of the reload command is that the Unload command is based on the commands belonging to a script file, while the reload command bases its command removal on ownership by the character.
+
+Related commands: "Connect" "Unload" "load" "OffLine"
+
+++5.2.45 Reset
+Syntax: #Reset
+
+This command resets all variables for a character to their initial or default values.
+
+
+Related commands: "Variable"
+
+++5.2.46 Save
+Syntax: #save [Variables/Character/Full][<filename]
+
+This command saves settings to a .set file.  It has four basic forms:  
+
+If no parameters are specified, all modified script files are saved.  This is equivalent to selecting  "File" from the main menu pop-up, then selecting "Save All", and finally selecting the "Save All Scripts" menu item. 
+
+If the keyword "Variables"  is used, all of the variables for the current session's character are saved to a set file with the name of the character reference plus "-var".  For example, Fred would have his variables saved to "Fred-var.set" in the folder belonging to  Fred's Mud. No filename is allowed.  The file is loaded automatically the next time the character is loaded and the file is deleted immediately afterwards. Alternatively, you can set the "Keep variable values" check box for the character in the Character Setup dialog to automatically save and restore the character's variables.
+
+You can save a total copy of the current session's settings by using the "Character" parameter.  This will save the direction commands, Tab values, variables, anything defined in start.set, globals, aliases, triggers, and keys.  It will not save the position of a currently running speed walk. You may optionally use a filename. If the filename is not included, it will be saved in the folder belonging to the character's Mud with the name of the character reference followed by -Char.set. This file will be loaded automatically the next time the character is loaded.  Alternatively, you can also set the "Simple Script Control" check box for the character in the Character Setup dialog to automatically save and restore the character's settings.
+
+Similar to the Character parameter, the "Full" parameter saves the same settings, but it does it for all characters loaded. This is a handy way of easily returning to the middle of a game where you are  using more than one character. This will save VipMud virtually as you left it. You may include a filename, but if not included the settings will be saved to Full.set in the User Path directory. The next time you start VipMud, you will be asked if you would like to load, delete, or ignore this file.  Warning, the "KillAll" command is saved in the first line of this script file to ensure a clean load. 
+
+You can use the "Load" command to reload these saved settings.
+
+Alternatively, you can use the "Save All" menu selection under the "File" selection to obtain any of the above results.
+
+Examples:
+
+#Save
+#Save Variables
+#Save Fred
+#Save Fred Fred23.set
+#Save Full
+#Save Full FredAndAmy.set
+
+These examples assume the current session is using the Character Fred, and Amy is being played in another session. The first example will save any modified edit windows to their appropriate .set file. Both Fred and Amy's set files are saved along with any secondary set files that may have been loaded.  
+The second example will save the variables in the current session to Fred-var.set.  They will automatically be reloaded the next time you connect or work with Fred.
+The third example will save Fred's current session and save it in Fred-char.set.  It will automatically be reloaded when you next work with Fred.  
+The next example saves Fred's settings to the file Fred23.set.  Use the "load" command to reload these settings.
+The second last example will save all Fred and Amy's settings, all configuration settings, and all globals to the file Full.set.  The next time you start up VipMud, it will ask you if you want to reload this file, and if not, you will be asked if you would like to delete it.
+The last example will save the settings as in the previous example but to the file FredAndAmy.set.  You will need to use the Load command to load this information.  Note that when you load this file, all settings and loaded edit files will be removed, but you will be given a warning.
+
+Related commands: "Load", "Unload", "Reload", "Connect"
+
+
+++5.2.47 Say
+Syntax: #say out-text [Voice-type][|NoVoice][|NoDisplay][|NoReturn][|Current]  
+
+This command speaks and displays text. Out-text is the text which is displayed and/or spoken, and the second parameter contains the options.
+
+The Voice-type option can be one of VoiceOnly, Entry, Output, Edit, Incoming, and System. 
+Voice-type controls where the text is displayed and in what voice it is spoken.  Output and Incoming both display to the top Output window.  Edit and Entry both display to the bottom window, and System displays the text in a system message box. The VoiceOnly voice type indicates that you would like nothing displayed and that you wish to use the settings for the special VoiceOnly voice-type.
+
+For the other options, if you want display only, use the NoVoice option, if you want voice only, use the NoDisplay option.  If you want voice and display, do not use either. the NoDisplay and NoVoice options do not make sense for the Voice-only voice type.
+
+The NoReturn option suppresses the use of a carriage-return/line-feed at the end of each Say command. 
+
+In multisession play, the Current option tells the Say command to display and speak the text regardless of the character currently selected. This is handy when you need to pass along vital information to yourself from non-current sessions.  
+
+Examples:
+#Say {hi there} Incoming
+
+This command will speak and display text in the incoming voice to the output window.  This is the default if no options are specified.
+
+#trigger {Amy is attacked by *} {#say {Better switch over and check Amy} NoDisplay|current}
+
+If you have Fred's session currently selected and Amy encounters a problem, say an attack, a warning message is spoken to you, but not displayed. If the current option was not included, you may never know that Amy was attacked.
+
+#Say {Hitpoints are low!} VoiceOnly
+
+This command will speak a warning using the VoiceOnly voice type. Do not confuse the VoiceOnly voice type and the NoDisplay option.
+
+Related Commands: "SetSpeech"
+
+
+++5.2.48 Send
+#send filename [prefixed-string] [postfixed-string]
+This command will send a file of text to the mud.  No expansion or alias lookups are performed.  As an example, it is useful for posting messages to bulletin boards or executing lists of mud commands. 
+
+the filename should be a standard text file.  You can specify a full path, or if just the filename is used, it  will look in the VIP-Mud folder. If a partial path is used, it will use the default directory as the starting point.  For example, the filename "valhalla\commands.txt" will look in the valhalla folder under the default directory.
+
+The prefix-string and postfix-string values are attached to each line of the file before being send to the mud.  If the postfix-string is missing or does not contain any line feed or carriage return strings, a carriage return is used. 
+
+For example,
+
+#send message.txt {shout } {%crlf}
+
+This command takes each line of a file and prefixes it with the word shout and a space and appends a carriage return /line feed, and then sends it to the mud.
+
+++5.2.49 SetSpeech
+Syntax: #SetSpeech window-type speech-type [voice-type volume rate]
+
+The command allows you to set or change the voice for a specific voice type.
+Voice-type can be one of Entry, Output, Edit, Incoming, System, or VoiceOnly. The Speech-Type can be On, Off, None, STOP, SAPI,  or ScreenReader.
+
+If Sapi is selected, you can also select the voice, volume, and rate. The voice is an integer from 0 for the first voice to the maximum number of Sapi voices minus one for the last voice.  The rate is 1 through 100, and the volume is 0 through 100.
+
+When you select Off, the voice-type specified no longer will speak.  This works across all sessions.  You must specify the same voice-type with the On parameter to resume speech output for that voice-type.
+
+When you select "Stop", this flushes all speech from the Sapi or screen reader queue.  It is equivalent to the tapping of the control key, but only for the voice type specified. It is especially useful when you have turned off the use of control to interrupt speaking and want an alternate key to perform this function for a specific voice-type. A special form of this command will stop speech for all voice-types. The syntax is:
+
+#SetSpeech All Stop  
+
+The following example will set up Control-X to flush the speech from the VoiceOnly type. VoiceOnly probably has been setup with MS Sapi.
+
+#GKey Control-X {#SetSpeech VoiceOnly Stop}
+
+Other Examples:
+#SetSpeech VoiceOnly Sapi  2 100 33
+#Say {Hitpoints are low!} VoiceOnly|current
+
+These commands set the VoiceOnly special voice-type to Sapi, selects the Sapi speech-type, selects the third voice (select 0 for the first voice), sets the volume to full, and sets the rate to 33%.  It then announces in this voice setting that Amy's hit points are low.  The "current" option ensures that the warning is spoken regardless of whether you are  in Amy's session or another session.
+
+The following commands toggle off and on the speaking of incoming text from the mud using the F10 key.
+
+#GKey F10 { 
+    #if {not %defined(SpeechMute)} {#gVar SpeechMute 0}; 
+    #GVar SpeechMute {%eval(not @SpeechMute)} ;
+    #if {@SpeechMute} { 
+        #SetSpeech Incoming  OFF} { 
+        #SetSpeech incoming On}}
+
+A global variable called SpeechMute is used to determine whether the Incoming voice-type has been turned off.  The first line of the key definition makes sure that the variable exists, and if it doesn't, it is created with a value of zero.  Next the variable is switched from true to false or from false to true. 
+It is then tested and if true, speech to the Incoming voice-type is turned off.  Otherwise, speech is turned on.
+
+
+
+++5.2.50 Stop
+#Stop
+
+This command will abort the playback or recording of commands such as an Autowalk sequence.
+
+Example:
+
+#Trigger {You are attacked!} {#stop}
+
+If you happen to be in the middle of an Autowalk, or you are in record mode and you are attacked, the #stop command will return full control of your keyboard back to you and end the recording or playback.
+
+
+Related commands: "Erase" "configure" "Record" "EndRecord" "Pause" "UnPause" and "OK" 
+See the "Recording Commands and Speed Walking" section for more details. 
+
+++5.2.51 Substitute
+Syntax: #sub string
+
+This command is always used in conjunction with a trigger command.  It deletes the triggering line from the input stream and replaces it with string. No further triggering is performed on string.
+
+As well, trigger commands with a substitute portion are executed first, and so this might be a good way of intercepting a certain string that you do not want to trigger.
+
+Example:
+
+#trigger {* tells you '*'} {#sub {%1: %2}}
+
+This  is an example of how to reformat conversations.  If you receive:
+james tells you 'hi'
+the following will be displayed and spoken:
+James: hi
+
+++5.2.52 SysKey
+Syntax: #SysKey function
+
+Always combined with the "Key" command, this command is used to assign many of the VipMud special functions to keystrokes, such as the Escape key to clear a line in the entry window.All of these definitions are performed in the Start.set file, but you can redefine or move them to other set files.  For example, the command to define the clear line function is:
+
+#key  Escape {#SysKey Clear_Line}
+
+Although the functions such as moving between windows and controls can not be reassigned to other keystrokes, the keystrokes used to carry out these functions may be reassigned to SysKey functions or even to your own script commands.
+
+For example, Control-Home is used to move to the beginning of a window.  You could just as easily assign it to the clear line function as shown here.
+
+#key control-Home {#SysKey Clear_line}
+
+You could just as easily assign this keystroke to your own script or Mud command as follows.
+
+#Key  Control-Home {Kill raccoon}
+ 
+In most cases, this is not recommended, especially with important Windows keystrokes such as Tab, the up, down, right, and left arrows, and Alt-F4. 
+
+The #SysKey must be the first and only script command in the Key command. If it is used outside the Key command, it will not produce an error. Actually, it will do nothing at all.
+
+The valid SysKey functions are:
+
+Clear_line 
+
+Clears a blank line in the entry window so that you have a clean line to start a new command. The default key is Escape.
+
+Assign_Alias
+
+Prompts for and assigns an alias to the line the cursor is on in the entry window. If in an edit window, the alias dialog is displayed. The default key is Control-A.
+
+Assign_Trigger
+
+Prompts for a trigger search string and assigns the trigger to the line the cursor is on in the entry window. If in an edit window, the Alias dialog is displayed. The default key is Control-T. 
+
+
+Assign_Key
+
+Prompts for a key name and assigns this key to the line the cursor is on in the entry window. If in an edit window, the Key dialog is displayed. The default key is Control-K.
+
+MOVE_COMMAND
+
+Moves the command the cursor is on in the entry window to one of the open script file buffers. The default key is Control-N.
+
+FIND_OTHER_BRACE
+
+When the cursor is positioned on a left or right brace, it finds and positions the cursor on the corresponding brace. The default is Control-[, Control-], Control-{, or Control-} (they all perform the same function).
+
+DECREASE_SAPI_RATE
+
+Decreases the MS Sapi speech rate by 5%.
+
+INCREASE_SAPI_RATE
+
+Increases the MS Sapi speech rate by 5%.
+
+GET_WORD_FROM_OUTPUT
+
+When the cursor is positioned immediately after one or more characters in an entry window, VipMud searches backwards through the output window until it finds a word that also starts with those characters.  It then replaces the one or more characters with the word it finds. If necessary, you may press the keystroke again to find the next previous matching word. The default key is Control-Space. 
+
+INSERT_TAB_WORD
+
+When the cursor is positioned immediately after one or more characters in the entry window, VipMud searches the Tab database for a word or phrase which begins with the entered one or more characters, and then replaces those characters with the word it finds. If necessary, you may press the keystroke again to find the next matching word.  The default key is Alt-space.
+ 
+RECALL_LINE
+
+When the cursor is positioned at the end of a line immediately after one or more characters in the entry window, VipMud searches backwards to find a line that starts with the same characters and inserts the entire line it finds.  If necessary, you may press the keystroke again to find the previous matching line. The default key is Control-R.
+
+EXECUTE_LINE
+
+Executes the current line or selected text from either an entry or edit window.  The default key is Shift-Enter.
+
+ADD_TAB_WORD
+
+Add the current word or selected text from the entry or output windows to the character's Tab database. The default key is Control-Alt-Space.
+
+Related commands: "Key",  "AutoMenu"
+
+++5.2.53 Tab
+Syntax: #Tab [word-list]
+
+This feature is especially useful when you have a number of words which are hard to remember or spell such as weapons, town or character names. The word-list is one or more words separated by the vertical bar (|) character. To remove words or clear the table, see the UnTab command.
+
+If no  word-list is given, a list showing all words in the table is provided.  Use the up and down arrows to review, escape to exit, Delete to remove a word from the table, and press Enter to add the word to the entry line.  If you are considering using the last method,  you may decide that adding the #tab command to a keystroke makes this method easier to use.
+
+By entering the initial one or more characters followed by Alt-Space in the Entry window, the entire word will be retrieved from the Tab word list.
+
+You can add selected text, either from the entry window or the output window to the table.  Simply select the text and then press Control-Alt-Space.
+
+You can also add the word the cursor is on with the Control-Alt-Space key.  This works from both the entry and output windows. By combining this keystroke with the Control-space keystroke, you can add words very easily.  To do this:
+1. Enter the first one or more characters of a name that was recently displayed in the output window and press Control-Space until you find the word.
+2. The word should be displayed immediately before the cursor in the Entry window.  Just press left-arrow to position yourself on the word.
+3. Press Control-Alt-Space and the word will be added to the table.
+
+See "The Entry Window" section for more details on using these keystrokes.
+
+Tab words are local to the Mud character and are saved and retrieved automatically.  For example, if the Mud is Valhalla and the character reference is Fred, the file would be saved in the fvolder Valhalla in the file Fred.Tab.
+
+Examples:
+
+#TAB Xanotaneous|Henishkalan
+
+This adds two words to the table and immediately saves them to disk.
+
+
+Related command: "UnTab"
+
+++5.2.54 Trigger
+Syntax: #trig search-pattern commands [class] Flags
+
+The Trigger command is probably the most powerful script command, but it must be combined with other commands to make it useful. The Trigger command searches the Mud output text looking for a string that matches the search pattern.  If found, the script and Mud commands are executed.  If the class is specified,  the trigger is associated with that class and will only execute when that class is enabled.  
+
+You can extract information from the Mud output text by using the variables %0 to %99.  The 0% variable will contain the entire matching line, while the other 99 variables will contain the text that was matched by the asterisk wildcard. Note that the numeric variables only hold their values for the life of the script command, and so you should use the #variable command to assign the temporary variable to a permanent one if you need to use them outside the script command, otherwise use the more convenient &VariableName feature instead of a wildcard within the search expression.
+
+You can also search for colors using the color flag. See the "Using Colors" section for more details.
+
+You can give your trigger a name for easier replacement and deletion.  If the first character in the pattern is a string enclosed within angle brackets, VipMud uses the enclosed text as the trigger's name. The name is ignored when searching the incoming text for a trigger. It is also useful to prevent the newest trigger from replacing an older trigger if they have identical patterns.
+You may not want this, and so by creating a unique name on each trigger, one will not replace the other. Note that the pattern is normally the key unless you use the trigger name.  For example:
+#trigger {<Alas1>Alas, you can't go that way.} #erase recording
+#trigger {<Alas2>Alas, you can't go that way.} #stop playback
+
+Each trigger is searched for the same string for different reasons.  One uses it to erase mistakes while recording a speed walk, while the other uses it as a sanity check when playing back speed walk commands.
+
+Here we created a trigger with the name "DroppedSword" that will direct the Mud character to take the sword if the character is disarmed.  Everything within and including the angle brackets are ignored when searching. Refer to the #UnTrigger for more details.
+
+Example:
+
+#trig {* * * hits you with his *.}  {#var severity {%word(%3," ",99}; #if {@severity="severely"} {#play warning.wav}}
+
+
+This trigger will play a warning sound if you are hit severely in a melee round.  It expects text like "The goblin moderately hits you with his sword." and if matched, takes the text that was found with the third wildcard, and just in case there are more than three leading words, takes the last word from the third wildcarded text using the %word function.  If the word is "severely", the warning.wav file is played at full volume.  If the word is "mildly" or "moderately", nothing happens.
+
+Note that the case of the text search string is important.  If you would like the trigger to fire regardless of the case of the text, use the AnyCase flag at the end of the trigger command.  For example:
+
+#trig {* shouts '*fred*'} {shout %1} {} AnyCase
+
+Because you do not know what case people may use to shout your character's name, you should use the AnyCase parameter. 
+
+See the section "Pattern Matching" for more details on writing patterns.  See the "Trigger" section for more information regarding Triggers. See the "Using Colors" section for more information on searching for colors. See the "Classes" section on the use of classes.
+
+Related commands: "UnTrigger" "Substitute"
+
+++5.2.55 UnAlarm
+Syntax: #UnAlarm value
+
+This command removes running alarms.  Value may be a numeric value or a variable containing a numeric value.  This command will remove the alarm identified in value.  If the value is negative, it will kill all alarms.
+
+Example:
+
+#alarm ShoutAlarm 10 {shout Hello everyone!}
+#unalarm @ShoutAlarm
+
+The first command will create an alarm which will shout a greeting to the Mud in ten seconds.  The second command will cancel the larm.  Note that the variable name in the first example does not have a leading at-sign, while the UnAlarm variable must have the at-sign.
+
+The following commands will perform the same function, but if there are any other alarms, they will be stopped as well.
+
+#alarm 10 {shout Hello everyone!}
+#unalarm -1
+
+
+Related commands: "alarm"
+
+++5.2.56 UnAlias
+Syntax: #UnAlias alias-name [class-name]
+
+The UnAlias command removes aliases from VipMud.  If the class-name is included, the alias is only removed if it is in the specified class.  #GUnAlias is the global version of this command.
+
+Examples:
+
+#UnAlias Gt
+#UnAlias GT battle
+
+The first example will delete the GT alias whether or not it is in a class.  The second example will only delete the GT alias if it has been assigned the class "battle".
+
+Related command: "alias"
+
+++5.2.57 UnClass
+Syntax: #UnClass class
+
+Removes the class from all triggers, aliases, and keys.  For example:
+
+#key F10 {disarm troll} battle
+#alias tst {take sword from corpse> battle
+#trig {The troll arrives from the *} {kill troll} battle
+...
+#unclass battle
+
+The above commands are only active and available when the battle class is enabled.  When the above unclass command is executed, the commands are no longer dependant on the battle class.  That is, they are active all the time.
+
+See the "Classes" section for more information on classes.
+
+Related commands: "class" "DelClass"
+
+ 
+++5.2.58 UnGagLine
+Syntax: #UnGagLine
+
+Remove the most recently set GagLine.  This command is seldom used because you usually gag a set number of lines, most often one line.  It may be useful though, when you specify a large number of lines to gag, and the conditions change.
+
+Related Commands: "GagLine", "Gagon" "UnGagOn"
+ 
+++5.2.59 UnGagOn
+Syntax: #UnGagOn
+
+This command stops the continuous gagging of incoming text from the Mud. The following example shows how you might stop the speaking of a picture made from ascii characters displayed whenever you enter village square.
+
+#trigger {You are now in village square*} {#GagOn voice;#class AsciiPicture enable} 
+#trigger {A Fountain of water is here.} #ungag AsciiPicture
+
+The first trigger looks for the string telling you that you have arrived in village square, and then starts gagging any speech until further notice. It also enables the AsciiPicture class. The next trigger will then be activated because the class is enabled. The trigger will start looking for the string identifying the fountain.  Once found, text will be spoken as usual.
+
+It is good to get in the habit of keeping most triggers inactive through classes until they are needed.  Because if you have many active triggers, it will use a noticeable amount of your computer's processing power.
+
+
+Related commands: "Gagline" "Gagon", "UnGagLine"
+
+++5.2.60 UnKey
+Syntax: #unKey keydefinition [class-name]
+
+The UnKey command removes keys from VipMud.  If the class-name is included, the key is only removed if it is in the specified class.  #GUnKey is the global version of this command.
+
+Examples:
+
+#UnKey Shift-F9
+#UnKey Shift-F9  battle
+
+The first example will delete the Shift-f9 key whether or not it is in a class.  The second example will only delete the GT key if it has been assigned the class "battle".
+
+Related command: "key"
+
+++5.2.61 UnLoad
+Syntax: #Unload filename
+
+This command will remove all variables, aliases, triggers, and keys for the specified script file from VipMud's memory.  If the filename does not  have a full path, it will first look in the VipMud folder.  If not found there, it will look in the folder of the current Mud.  For example,
+
+Assume VipMud's folder is c:\VipMud and your current character is in Valhalla.
+
+#unload valhalla.set
+
+VipMud will first look for a file called c:\VipMud\valhalla.set, and then if not found look for a file c:\VipMud\Valhalla\Valhalla.set.
+
+If you specify a partial filename, the results are similar.
+
+#unload Valhalla\valhalla.set
+
+
+VipMud will first look for a file  c:\VipMud\Valhalla.set, and then if not found, it would look for c:\VipMud\valhalla\valhalla\valhalla.set.
+
+Using a full directory path might be less confusing, but it has the problem that your scripts are not easily transferrable.
+
+Related commands: "Load", "Connect", "Offline", "Reload", "Unload" 
+
+++5.2.62 Unpause
+Syntax: #unpause
+
+This command is used to resume the playback and recording of speed walk and recorded commands.  A #pause command is used first to take a break in playback or recording usually to perform other commands not related to the recording.  For example, you are recording a complicated trail through an area and you encounter an aggressive monster.  You do not want to record the battle.  You would use the #pause command, finish the battle, and then enter #UnPause.  These commands are all available in the Recording and Speed Walk menus as well.
+
+Related commands: "pause" "record", "EndRecord", "erase" "Ok" "Stop"
+
+++5.2.63 UnTab
+Syntax: #UnTab wordlist 
+
+The Tab command maintains a table of words and phrases that you can use to quickly add words and phrases to your commands while in the entry window. Refer to the "Entry Window" section for more information on how to use the Alt-Space keystroke.   The #UnTab command removes words from this table. For example,
+
+#UnTab {skunk|raccoon|boar|fox|rabbit|deer}
+
+You might want to do this if you have finished with the newbie areas and might no longer have a need for quick access to the lower level creatures.
+
+Related command: "tab"
+
+++5.2.64 Until
+Syntax: #Until expression commands
+
+This command will execute the command list represented by commands until the expression is true.  The commands will always be executed at least once due to the fact that the expression is checked only after the commands are executed.
+
+Example:
+
+#VAR countdown 10
+#until {@countdown < 1} {#say @countdown;#math countdown {@countdown-1}};#say blastoff
+
+
+The above commands will coun down from 10 to 1 and then finish with "blastoff".
+See the "Use of Expressions in Scripts" section for details on the use of expressions.
+
+Related commands: "While", "ForAll"
+
+++5.2.65 UnTrigger
+Syntax: #UnTrigger trigger-name/search-pattern [class-name
+
+The UnTrigger command removes triggers from VipMud.  If the class-name is included, the trigger is only removed if it is in the specified class.  #GUnTrigger is the global version of this command.
+
+If the trigger was created with a name, the trigger's name can be used to remove it. For example:
+
+#trigger {<droppedWeapon>Your sword slips from your hands.} {take sword}
+#UnTrig DroppedSword
+
+The trigger is first created with the name DroppedSword, and then immediately removed by using its name.
+
+
+Examples:
+
+#Untrigger {A scream escapes your lips *}
+#UnTrigger {A scream escapes your lips *} battle
+
+The first example will delete the trigger whether or not it is in a class.  The second example will only delete the trigger if it has been assigned the class "battle".
+
+Related command: "Trigger"
+
+++5.2.66 UnVariable
+Syntax: UnVariable variable-name 
+
+The UnVariable command removes a variable from VipMud.  #GUnVar is its global counterpart.  Note that the variable name is not proceeded by an at-sign unless you are accessing the variable indirectly. See "Indirect Variables" for more details.
+
+Example:
+
+#UnVar  MonsterName
+
+Removes the MonsterName variable from memory. Here is an indirect usage of the variable name.
+
+
+Related command: "Variable"
+
+++5.2.67 Variable
+Syntax 1: #Var variable-name [value] [DEFAULT-value]
+Syntax 2: @variable-name = value
+
+The variable command defines variables and optionally assigns them values. Variables must be defined before use, otherwise they will contain their name as their value. This will most likely cause an error if an undefined variable is used within a mathematical expression. If you set the "Explicit" configuration option in the Options dialog to false, undefined variables will default to zero if used in numeric expressions and will default to blank if used in string expressions.
+ 
+If the value argument is omitted, an empty string is assigned to the variable.  If both the variable-name and value are omitted, the Variable dialog box is displayed.  This screen allows you to view, modify, add, and delete variables.  See the "Variables" section for more details on variables as well as more information regarding this dialog box.
+
+The second syntax is:
+
+@VariableName = value
+
+This would be equivalent to:
+
+#var VariableName value
+
+Note that with this syntax there is no way to explicitly state that the variable is global nor any way to explicitly include a default  value. In addition, this syntax is only valid when used inside a script.
+
+if you supply a default-value, when you reset a character, the variables will return to the default value.
+
+
+The variable-name does not normally have a leading at-sign unless you are using indirect referencing. See "Indirect Variables" for more details.  
+
+See the "Use of Expressions in Scripts" section for details on the use of expressions.
+
+Related command: "UnVariable"
+
+++5.2.68 WAIT
+Syntax: #Wait seconds [tyepe]
+
+This command will wait a maximum of the number of seconds specified in seconds before executing the next script command.
+
+The seconds value can be specified as a decimal number.  For example:
+
+#Wait .05
+
+will wait .05 seconds before allowing the next command to execute.  Normally second should be relatively low.  If you are considering more than a few seconds, the #Alarm command might be a better command to use.  If you specify the NoEvents type the client literally stops processing input, output, alarms, triggers, and events for the time period specified.  If you need to specify this keyword, make sure seconds is kept very low, otherwise you may encounter timeout errors and other problems.
+
+If you specify the Text keyword, the command will wait until it receives any incoming text from the Mudd. This is useful to ensure that the previous command has completed before moving on to the next command. For example:
+
+Disarm goblin; #wait 4 text; take sword
+
+The above command trys to disarm a goblin, and then it waits up to 4 seconds or until it receives output from the Mud before it tries to take the dropped goblin sword.  The 4 seconds is there just to ensure VipMud doesn't end up in an endless wait loop.  In most Muds and in most cases the Mud does not need the wait command because it automatically waits until the previous command is completed before executing the next command it receives.
+
+The "OK" type is similar to the "Text" type but it waits for the #OK command to be executed rather than waiting for incoming text.  This provides much more control in how the Wait command continues, but it can be problematic if not used correctly.
+
+Example:
+
+give potion to Amy; #wait 3 OK; amy: put potion in bag
+
+These commands assume that there is a prompt trigger available that issues a #OK command whenever the Mud's prompt is displayed.
+These commands will direct your current session's character to give a potion to Amy who is running in another VipMud session on your computer.  It will wait until an #OK command is executed, and in this case, let's assume it is executed from the prompt trigger.  It then switches sessions to Amy using the A: prefix, and then Amy puts the potion in her bag.  Without the wait command, the two commands will be executed almost simultaneously, and the command directing Amy to put the potion in her bag may execute before Amy receives the potion.
+
+Be careful with the Wait command.  Always specify a low number for seconds, and make sure you only have one wait command waiting at any one time in a session, especially for the Text and OK wait types. Make sure you do not nest Wait script commands or you may get yourself in a situation that may cause an endless wait problem.
+ 
+Related commands: "alarm" "unalarm"
+
+++5.2.69 While
+Syntax: #While expression commands
+
+This command will only execute the associated command list while the expression is true.  The commands may never execute if the expression is false.
+
+This command is related to the #Until, and repeat #n times command (n).
+
+Example:
+
+#VAR countdown 10
+#While {@countdown > 1} {
+#say @countdown; #math countdown {@countdown-1}};#say blastoff
+
+
+These commands will coun down from 10 to 1 and then finish with "blastoff".
+
+Related commands: "Until", "ForAll"
+
+++5.2.70 Window
+#Window window-name
+
+This command sets focus to the specified window.  The window must exist.  The following windows are always available:
+Entry
+Output
+ErrorLog
+NewLines
+
+You can also specify a part of the window's file name.  For example:
+#wind Fred
+
+will set focus to the window whose file specification contains the sub-string Fred.  In our case, it will find Fred.set if it is open.
+
+++5.2.71 Write
+Syntax: #Write file-handle value [record-number/NoReturn]
+
+This command will write text to a file identified through the #File command.  The file-handle ties the write command to the actual file name of interest.  File-handles of 1 through 5 indicate the file is sequential, while a value of 6 through 10 identifies the file as random or relative.  
+
+When writing sequential files, If you specify a NoReturn keyword, a carriage-return/line-feed will not be added at the end of each line, effectively creating one long line of text. 
+
+The value can be a literal or a variable.  If a variable is used, it must be proceeded with an at-sign.
+
+You can only specify a record-number if the file-handle is 6 through 10.  That is, the file is random or relative.  You can write records in any order.  You could write the first line at record 13, the next at 100, and the following at location 1.  As an added benefit, unlike sequential files, you can mix reads and writes under the same #file command assignment.
+
+If the file is sequential and it exists already, the write command appends lines to the end of the file.  If it does not exist, the file is created.  If the file exists, but you do not want the current contents of the file, use the #DelFile command to first delete the file.  Note that you can not mix write and read commands under one #file assignment.  You must first close one file assignment before switching to another operation.  For example, this would be illegal for a sequential file:
+
+#file 1 bad.txt
+#write 1 {hi there}
+#read 1 TempVariable
+
+This would work:
+
+#file 1 good.txt
+#write 1 {hi there}
+#close 1
+#file 1 good.txt
+#read 1 TempVariable
+#close 1
+
+Note that the close statements could be omitted because the same file handle was used.  The second File command would close file-handle 1 before trying to use it again.
+
+This is a more complex example.  This alias will follow the specified person, and record his movements.  This might be useful if you would like to record an unfamiliar route.  
+
+#alias Fp {
+    #prompt person {Person's name};
+    follow @person;
+    #file 1 {follow-@person.set};
+    #write 1 {#alias Follow-@person ~{} noReturn;
+
+    #trigger {<Follow>%expand(@person leaves %1.} {
+        #write 1 {%1~;} noReturn}}
+
+#alias fpStop {
+    #close 1;
+    #untrigger Follow} 
+
+The fp alias first prompts the user to enter the person you wish to follow, and then executes the Mud command to follow the specified person.  The file is then assigned with a .Set file suffix with the person being followed in the name as well.  It then writes the first part of the alias command to the file using an escape character to make the left brace a standard character.  A trigger is created with the name "follow" which looks for a line that might look like this:
+
+Fred leaves south.
+
+The direction is added to the file when the matching line is found.  When you want to stop following, the fpStop alias should be executed.  This alias closes the file and deletes the trigger using its name.  The  contents of the file may look something like this:
+
+#alias follow-Fred {north;north;east;north;east;
+
+You might then edit the file and replace the trailing semi-colon with a right closing brace.
+
+Related commands: "Close" "File" "Read" "DelFile"
+See also:  "Check for End of File"
+
+++5.2.72 Repeat
+Syntax: #numeric-value {command-list}
+
+This command allows you to repeat a set of script or Mud commands a set number of times.  The numeric value must be between 1 and 32767 inclusive.  The system value %repeatnum changes to match the number of times the function has iterated.  An alternate to %repeatnum is %i for iteration.  Both system variables will always have the same value.
+ 
+
+Examples:
+
+#10 {buy potion;put potion in bag}
+
+This example will buy a potion and put it in your bag, and repeat this sequence ten times.
+
+#5 {#math countdown {6-%repeatnum};#say @countdown;#wait 1};#say BlastOff
+
+This example displays a countdown from 5 to 1 waiting a second between each number, and then display and speaks the word "blast-off".
+
+
+Related commands: "While" "Until"
+
++5.3 Built-In Functions
+
+++5.3.1 case
+Syntax: %case(v,s1,s2,s3...)
+
+if v=1, return s1, if v=2, return s2, etc.  The value of v must be a whole number in the range of 1 to the maximum number of return values.  The v parameter can be a variable, function, or any expression which results in a value between 1 and the number of case results provided. S may be numeric or alphabetic.  There may be from one to eighteen S values in one case statement.
+ 
+
+Examples:
+
+You have an i value generating a random number from 1 to 4.  The following would speak one of the following phrases in the Case statement.
+
+#say {%case(%random(1,4),"Hello","Good Day","Nice to see you","waz up")}
+
+The following converts a numeric variable called InVal using the following list: 1 goes to 5, 2 goes to 7, 3 goes to 8, 4 goes to 12. The result is saved in the variable Answer.
+
+#var answer %case(@InVal,5,7,8,12)}  
+
+
+++5.3.2 Character Information
+Syntax: %CharInfo(s)
+
+Returns information on the curren character.  S can be any of these values:
+
+MudName = Returns the name of the Mud to which the current character is assigned.
+Name - Returns the name of the current character.
+Password - Returns the password of the current character.
+Reference - Returns the character reference of the current character.
+Connected - Returns 1 if the current character is connected.  Otherwise 0 is returned.
+
+Example:
+
+#alias GiveName {say My name is %charInfo(name).}
+
+By typing in GiveName,, your character could say "My name is Amy." 
+ 
+++5.3.3 ASCII to Character
+Syntax %chr(v)
+
+Returns a character for the ASCII value v. ASCII values are in the range of 1 through 255 and  are the internal values that represent all the printable and non-printable characters. Refer to an ASCII chart for a list of all 255 characters.    
+
+For example, to produce a line feed character, you would use:
+
+%chr(10)
+
+The following will speak the capital letters from A to Z.
+
+#26 {#say %chr(%i+64)} 
+
+#26 executes everything found in the first set of braces 26 times. %i takes on the value 1 through 26 for each time it is executed. 64 is added to this value since the capital letters of the alphabet are represented by the values 65 through 90.
+
+++5.3.4 Check if Connected
+Syntax: %connected(char-ref)
+
+Returns 1 if character reference (CR) has a connection.  If cr is not connected or is not found, 0 is returned.
+
+If you only need to know if there is a connection, and you do not care which character is connected,
+you can check if there are any active connections by omitting the Char-Ref and the enclosing parentheses  
+
+++5.3.5 copy
+Syntax: %copy(s,i,n)
+return a portion of string s, starting at character position I, and returning n characters
+
+
+If you know the position and length of some text in a string, this command can be used to copy the selected text to your trigger.  For example, using the %pos function to find the position of the comma, we will speak the text before the comma.
+<def>
+#var oldString  {This is the text we want, this is the text we do not want}
+#var CommaPosition %pos(",",@oldstring)
+
+ we want the text before the comma and so we must decrease the position by one.
+#math commaPosition {@commaPosition-1}
+#say {%copy(@oldstring,1,@commaPosition)}
+</def>
+
+The text before the comma will be spoken.
+
+It could be done in less steps by using the following commands:
+<def>
+#var oldString  {This is the text we want, this is the text we do not want}
+#say  {%copy(@oldstring,1,%pos(",",@oldstring)-1)}
+</def>
+
+You can nest functions within other functions.  As well, any math performed within a function does not need a math command. 
+
+++5.3.6 Is the Variable Defined
+Syntax: %Defined(v)
+
+Returns 1 if the variable exists either locally or globally. Otherwise 0 is returned. Note that the variable does not have the leading @-sign, which would only be useful in the unlikely event that we would want to indirectly access a variable. 
+
+In the following example, we define the variable abc. Making use of the Case function to readily test and speak the result.  Since it was defined, the word "Defined" will be displayed. If we had omitted the first command, and "abc" was not defined previously, the phrase "not defined" would be displayed.
+
+#var abc
+#say {%case(%defined(abc)+1,"Not defined","defined")}
+
+we add 1 to the result of the %defined function so that the tally will be 1 or 2, which makes it in the range of the case function.  
+
+ 
+++5.3.7 Delete a portion of a string
+Syntax: %delete(s,i,n)
+
+Returns a string with n characters deleted from string s starting at character number i.
+For example,
+
+#var TempVar {I am not going}
+#say %delete(@TempVar,6,4)
+
+In this example we delete the word "not" and also the trailing space. When executed, it will say "I am going."
+
+
+++5.3.8 Delete A List Item by number
+#syntax: %DelNItem(list,n)
+
+Delete item number N from the list. This  returns the updated list.  N is any numeric value from 1 to the maximum number of items in the list.   List can be an expression, variable, or literal.
+
+
+Example:
+
+#say %(delNItem("Gloves!armour!boots",2)
+
+
+The above would display and speak 
+
+gloves!boots
+
+++5.3.9 Delete A List Item by contents
+Syntax: %DelItem(list,s)
+
+Delete the first list item found which contains the string s.  List can be an expression, variable, or literal.
+
+Example:
+
+#say %delItem("gloves|armour|boots","boots")
+
+This command would speak the following:
+
+gloves|armour
+ 
+
+  
+++5.3.10 Check for End of File
+Syntax: %EndOfFile(file-handle)
+
+Returns true if the file assigned by the #File command has reached the end of file. Used to determine when to stop reading.
+
+++5.3.11 Evaluate Expression
+Syntax: %Eval(e)
+
+Returns the evaluated expression e. This allows you to perform math calculations from nearly anywhere in the command.
+
+Example:
+
+#say {You have gained %eval(@Experience - @oldExperience) points}( 
+
+
+++5.3.12 Expand
+Syntax: %expand(s)
+
+Returns a string with all variables expanded once.  Useful in Alias, Key, and Trigger commands to expand variables when loaded, rather than when executed. 
+
+Example:
+
+#var testVar 100
+#alias testAlias {%expand(#say {the value is @testvar})} 
+#var testVar 120
+
+If you enter the alias TestAlias, it will say "The value is 100". If you did not use the %expand function, it would say "The value is 120".
+
+Refer to "Variables" for more details and examples on using this function.
+
+++5.3.13 If Function
+Syntax: %if(e,v1,v2)
+
+Returns the value v1 if the expression e is evaluated to true or evaluated to a non-zero value.  Otherwise, v2 is returned.
+
+
+Example:
+#say {%if(@answer,"Yes the answer is correct","Too bad, the answer is incorrect")}
+
+If the variable Answer is true (that is, the variable does not contain the value zero), the phrase stating the answer is correct is displayed.  Otherwise, the phrase telling you that the answer is incorrect is displayed.
+
+++5.3.14 Does word or Phrase exist in sentence or list
+Syntax: %IfWord(w,s,d)
+
+Check for the existence of the word w in the string s with the delimiter d.  Returns true or the value 1 if it exists, otherwise zero or false will be returned.  The following trigger is very useful to let the group leader have some  control over your character, but also to limit the control to a few command such as enter, k, kill, and flee.
+
+#trigg  {* tells the group '* *'} {
+    #if {%IfWord(%2,enter|k|kill|flee,"|")}  {#exec {%2 %3}}}
+
+ 
+++5.3.15 Is value Numeric
+Syntax: IsNumber(v)
+
+Returns the value 1 if the value v is numeric, otherwise 0 is returned.  Useful for validating user input, or checking data obtained through a trigger.
+
+
+++5.3.16 Return Text Lines from Output Window	
+Syntax: %LastLine(n)
+
+If n is 1, returns the last line displayed in the output window.  If the value is 2, the second last line is returned, and so on.  The values 1 through 9 are valid.
+
+
+The following example speaks the last five lines of the output window . By default, In VIPMud this script is assigned to Control-Shift-5.
+
+#5 {#say {%lastline(6-%repeatnum)} NoDisplay}
+
+The system variable %repeatnum takes on the value 1 through 5 for each iteration. It is subtracted from six to reverse the order the lines are spoken. In this way the fifth line is spoken first, the fourth line is spoken second, and so on. NoDisplay is used in the #say command because we do not want the spoken lines to be redisplayed.
+
+++5.3.17 Returns the Left Portion of a String
+Syntax: %left(s,n)
+
+Returns the first n characters from string s.
+
+This example speaks the first five characters from testvar, which are "12345".
+
+#var TestVar {123456789}
+#say %left(@testvar,5)
+
+++5.3.18 Find the Length of a String
+Syntax: %Length(s)
+
+This returns the length of a result or string.  For example:
+
+#var LengthOfClipboard %Length(%clipboard)
+
+The number of characters in the Windows clipboard is stored in the variable "LengthOfClipboard".
+
+
+++5.3.19 Trim off Leading Spaces
+Syntax: %LTrim(s)
+
+Returns the string s with any leading space characters removed.
+
+
+++5.3.20 Find the Maximum Numeric Value
+Syntax: %max(n1,n2,n3,...)
+
+Returns the highest numeric value from one of the values specified.  A minimum of two and a maximum of ninety-nine values can be specified. The values can be literals, expressions, or variables. 
+
+The following alias is run when you enter "BuyPotions".  You will either buy five potions, or top up your potions to ten.
+
+#alias BuyPotions {Buy %max(5,10-@potionCount) potions}
+
+
+++5.3.21 Find the Minimum Numeric Value
+Syntax: %min(n1,n2,n3,...)
+
+Returns the lowest numeric value from one of the values specified.  A minimum of two and a maximum of ninety-nine values can be specified. The values can be literals, expressions, or variables.
+ 
+#say {%min(@experience,@mana, 100)}
+
+Although this example is probably not very useful, it does speak the lowest value between the variables "experience" and "mana", and the value 100.
+
+++5.3.22 Number of Words in a String
+Syntax: %NumWords(s,[d])
+
+Returns the number of words in the given string s.  The second optional parameter d is the word delimiter, and when omitted, a space is used.  Use a delimiter of vertical bar (|) to check for the number of list items.
+
+
+For example, this expression will speak the second last word in a sentence:
+
+#say {%word(@sentence, ,%numWords(@sentence)-1)}
+
+
+
+++5.3.23 Pick from a List
+Syntax: %pick(list)
+
+Returns an item selected from a list by the user. Refer to the "Pick" command for more details on what can be included in a list.  A maximum of 99 items can be used in a list.
+
+
+Example:
+
+#alias k {kill %pick(p:select monster|rabbit|*fox|witch:Broomhilda)}
+
+In the above example, if you press k and then enter, a list of three monsters are presented.  These are rabbit, fox, and witch. The asterisk indicates that the highlighted selection will be "Fox".  Once one of the monsters has been selected, the command "Kill" followed by either rabbit, fox, or Broomhilda is sent to the MUD. Note how Broomhilda is used rather than the displayed witch. 
+
+++5.3.24 Return the first item from a list
+Syntax: %pop(variable)
+
+Returns the first item from the list.  As well, the variable will be updated removing the first list item.  The variable specified should not normally have an @-sign. List values are separated with a vertical bar (|).  The push and pop functions are usually used together within a script or related scripts.
+
+
+Example:
+#var names {jack|bob|sam|frank}
+#alias sayname {say %pop(names)}
+
+Every time you enter the word SayName, your character on the mud will speak the next name on the list. It will first say jack. Bob will now be the first name in the "names" list variable.  That is, Jack will be removed from the list variable.
+
+Refer to the %push function for more discussion on the pop and push functions.   
+
+++5.3.25 Add an item to the beginning of a List
+Syntax: %push(s1,s2)
+
+Returns the string list resulting from the string list s1 with s2 appended to the beginning of the list. List values are separated with a vertical bar (|).
+
+The push and pop functions are usually used hand in hand to work with stacks. A stack is a list which is handled first in, last out. For example, you want to keep track of all the landmarks in your travels so that you will be able to find your way out, you might want to do the following.
+<def>
+
+Execute these three commands.
+
+#var travels {}
+#alias JustSeen {@travels = %push(@travels,%0)}  
+#alias LookFor {#say %pop(travels)}
+
+Then as you travel, you enter:
+
+justSeen gold palace
+JustSeen iron bridge
+justSeen Wishing Well
+
+If you were to display the list variable @Travels it would contain:
+
+"Wishing Well|Iron Bridge|gold palace
+
+You can then enter the alias "LookFor" to find your way back.  If you were to enter LookFor three times, the following would be spoken:
+
+Wishing Well
+Iron Bridge
+Gold Palace 
+
+If you then displayed the list variable @travels, the variable would be empty since you popped the stack until all the items were displayed.
+</def>
+
+These two functions are a great way to handle objects and events in the reverse order they were found or encountered.
+
+++5.3.26 Locate a String within a String
+Syntax: %pos(s1,s2)
+
+Returns the position of string s1 in string s2.
+
+For example, you want to grab all the text before the comma. 
+
+<def>
+#var oldString  {This is the text we want, this is the text we do not want}
+#var NewString {%copy(@oldstring,1,%pos(",",@oldstring)-1)}
+</def>
+++5.3.27 Change to Proper Name
+Syntax: %proper(s)
+
+Returns the string s converted to a proper name. A proper name has its first character  capitalized with the remaining characters given in lower case.
+
+For example:
+
+#say {%proper(aMY.)}
+
+This would speak and display:
+
+Amy.
+
+
+++5.3.28 Random Number Generation
+Syntax: %random(n1,n2)
+
+Returns a random whole number from n1 to n2.  If n1 is 1 and n2 is 6, this would be equivalen to rolling a six sided dice.
+
+For example, to roll two six-sided dice and speak the result, you would use the following:
+
+#say	 {%eval(%random(1,6)+%random(1,6))}
+
+Note that we did not do the following.
+
+#say {%random(2,12)}
+
+This would give numbers in the same range, but the probability of getting any one number would not be the same as rolling two dice.
+
+++5.3.29 Replacing Strings
+Syntax: %replace(s1,s2,s3)
+
+Returns the result of replacing all occurrences of s2 with s3 from within s1.
+
+
+For example,
+#var s1 {Thexbrownxdogxranxquickly.}
+#var findString x
+#var replaceString {" "}
+ #say {%replace(@s1,@findString,@replaceString)}
+
+The last command would speak "The brown dog ran quickly."
+
+
+++5.3.30 Reverse the Contents of a List
+Syntax: %ReverseList(s)
+
+Returns a list string which holds the reverse of the list string s.  values are separated with a vertical bar (|). 
+
+#var s {A|b|c|d}
+#say {%reverseList(@s)}
+
+
+The last command would speak "d|c|b|a".
+
+
+
+++5.3.31 Returns the Right most portion of a String
+Syntax: %right(s,n)
+
+Returns the last n number of characters from string s.
+
+For example:
+
+#var s {123456789}
+#say {%right(@s,2)}
+
+This displays the last two characters, which is "89", from the string found in the variable s.
+
+
+++5.3.32 Trim off Trailing Spaces
+Syntax: %RTrim(s)
+
+Returns the string s with all trailing spaces removed.
+
+++5.3.33 Sort a List
+Syntax: %sort(s,dir)
+
+Returns the sorted list. The s value is a list string. A list is a string including words and phrases separated by a vertical bar (|). 
+
+The dir value is the direction of the sort.  If omitted or zero, an ascending sort is performed. If not zero, a descending sort is performed.
+
+For example:
+
+#var s {b|c|a|e|d}
+#say {%sort(@s,0)}
+
+The previous command speaks the list in ascending order, namely as "a|b|c|d|e".
+
+#say {%sort(@s,1)}
+
+The previous command speaks the list in descending order, namely  as "e|d|c|b|a".
+
+The sort ignores whether the characters are uppercase or lowercase.
+
+++5.3.34 Find the opposite direction
+Syntax: %SwitchDirection(s)
+
+Returns a string containing the opposite direction of the one included in the string s.  For example, "E" for east might be returned if the string s contains "W".
+
+In this example, we assume that we have created a list of directions taken on a trip.  We now want to find our way back to our starting point.
+
+#var trip {s|E|E|N}
+
+The above could have instead been created by the menu selection "Record".
+
+#aliaS GoBack {#while {%length(@trip)>0} {%SwitchDirection(%pop(trip))}
+
+The "GoBack" alias will continuously pop the trip list while each time switching its direction and sending the new direction to the Mud. Once the list variable "trip" has popped all of its list items, the command will finish and your character should have made its way back to its starting point. We used several functions in this example so that we can illustrate another way they might be used. 
+
+See also the #Dir command.
+
+++5.3.35 Trim leading and trailing Spaces
+Syntax: %trim(s)
+
+Returns string s with all leading and trailing spaces removed.
+
+
+For example, the following commands will return the string "The time has come.". Note that the leading and trailing spaces were removed. 
+
+#var s1 {"   The time has come.  "}
+#var s1 {%trim(@s1)}
+
+++5.3.36 Find the Value of a Variable
+Syntax: %var(s)
+
+
+Returns the value contained in variable s. You can include the @-sign on the variable name if you need to access the value indirectly.
+
+Example:
+
+#var a1 a2
+#var a2 a3
+#say %var(@a1)
+
+This demonstrates how you could display a variable value indirectly. The variable A1 contains the value "A2", and the variable A2 contains the value "A3". The say command above displays the value "A3". See "Indirect Variables" for more details.
+
+++5.3.37 Extract a Specific Word
+Syntax: %word(s,d,n)
+
+Returns word number n in string s using d as the delimiter. The delimiter is normally a space for text strings and a vertical bar for lists, but any delimiter can be specified. If the delimiter is not a space, word will return strings that may not be considered words.
+
+For example:
+
+#say {%word("a|b|c","|",2)}
+
+This would return the second item in the list, which is "b".
+
+If n is larger than the number of words, the last word will be retrieved. 

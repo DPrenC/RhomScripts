@@ -1,0 +1,4 @@
+name: rhomloader
+version: "1.0"
+author: rhomdur
+description: carga un proyecto de scripts en desarrollo desde una carpeta externa.

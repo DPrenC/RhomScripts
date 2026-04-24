@@ -1,0 +1,393 @@
+;Módulo: magia_arcana.set
+;Versión: 1.1, 01/01/2021
+;Descripción: Configs que deben heredar todas las clases que utilicen magia de tipo arcana.
+;Autores: eyrhien y Rhomdur.
+
+
+;Generales:
+
+#GTrigger {[¡]* resiste los efectos de tu hechizo!} {
+#Play {RL\Hechizos\Resiste hechizo.wav}
+} {}
+
+#GTrigger {*Te estremeces y pierdes la concentraci?n!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Combate\Pierdes concentracion.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {El destino de tu hechizo ha desaparecido.} {
+#Play {RL\Hechizos\Fuera de rango.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+
+;Formular:
+
+#GTrigger {Preparas los componentes del hechizo.} {
+#Play {RL\Hechizos\Preparas hechizo.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {*Comienzas a formular el hechizo *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Hechizo propio.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {Pronuncias el c?ntico: *} {
+#Play {RL\Hechizos\Pronuncias.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+
+;Imágenes:
+
+#GTrigger {*[¡]Tus im?genes se desvanecen!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+FEventos %0;
+#Play {RL\Hechizos\Pieles_espejos off.wav}
+} {} AnyCase
+
+#GTrigger {Tus clones ilusorios se dividen y reorganizan, haciendo que tu total de imágenes suba a *} {
+#Play {RL\Hechizos\renueva espejos.wav}
+} {} AnyCase
+
+
+;Piel de piedra:
+
+#GTrigger {Concentras tu energ?a m?gica para formular el hechizo 'piel de piedra'.} {
+#Play {RL\Hechizos\piel de piedra conjurando.wav}
+} {} AnyCase
+
+#GTrigger {Tu piel queda cubierta por * fin?simas, pero resistentes, capas de piedra.} {
+#Play {RL\Hechizos\piel de piedra conjurado.wav}
+} {} AnyCase
+
+#GTrigger {Tu piel de piedra se endurece y fortalece mágicamente, haciendo que tu total de capas de piedra suba a *} {
+#Play {RL\Hechizos\Piel de piedra renueva.wav}
+} {} AnyCase
+
+
+;Escudo de energía:
+
+#GTrigger {Un invisible escudo de energ?a se materializa a tu alrededor.} {
+#Play {RL\Hechizos\Escudo conjurado.wav}
+} {} AnyCase
+
+#GTrigger {Tu escudo de energ?a parpadea, avisándote de que su poder está a punto de acabar.} {
+#Play {RL\Hechizos\Escudo parpadea.wav}
+} {} AnyCase
+
+#GTrigger {Tu escudo de energ?a parpadea ligeramente antes de desaparecer.} {
+#Play {RL\Hechizos\Escudo desaparece.wav}
+} {} AnyCase
+
+
+;Protecciones:
+
+#GTrigger {Tu hechizo cubre a * con un aura * brillante.} {
+#Play {RL\Hechizos\Proteas.wav}
+} {} AnyCase
+
+
+;Premonición:
+
+#GTrigger {En tu mente se proyecta una imágen premonitoria: Una inminente premonición se vislumbra en tu mente cuando ves que estás apunto de *} {
+#Play {RL\Hechizos\Premonicion 1.wav}
+} {} AnyCase
+
+#GTrigger {En tu mente se proyecta una imágen premonitoria: Un eléctrico espasmo que azota de repente tu mente hace inevitable el fugaz parpadeo*} {
+#Play {RL\Hechizos\Premonicion 2.wav}
+} {} AnyCase
+
+
+;Precognicion:
+#GTrigger {*Reconoces el hechizo de * como '*'.} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Precognicion.wav};
+#If {@ModoE = 1} {
+ #Say {%2! %2!} NoDisplay|Incoming;
+ #GagLine Voice
+}
+} {} AnyCase
+
+
+;Augurio de oen.
+#GTrigger {[#] En tu mente se proyecta un augurio del ataque * de *; tras él, los sucesos acaecen de forma inminente pero exáctamente igual a como te*} {
+#Play {RL\Hechizos\augurio 1.wav}
+} {} AnyCase
+
+
+;Ver realmente:
+
+#GTrigger {Untas en tus ojos la 'sal de revan'.} {
+#Play {RL\Hechizos\Ver realmente 1.wav}
+} {} AnyCase
+
+#GTrigger {S?bitamente dejas de ver el mundo con la claridad mental que ten?as hasta ahora.} {
+#Play {RL\Hechizos\Ver realmente 3.wav}
+} {} AnyCase
+
+#GTrigger {Tu vista se ciega un instante y de pronto adquieres una consciencia que va más all? de la simple vista f?sica.} {
+#Play {RL\Hechizos\Ver realmente 2.wav}
+} {} AnyCase
+
+
+;Invisibilidad:
+
+#GTrigger {Vuelves a ser visible ante los ojos de los mortales.} {
+#Play {RL\Hechizos\invis off.wav}
+} {} AnyCase
+
+#GTrigger {Desapareces.} {
+#Play {RL\Hechizos\invis on.wav}
+} {} AnyCase
+
+
+;Hechizos de ataque variados:
+
+#GTrigger {*Creas una ilusión similar a *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\magia sombras mayores.wav};
+#If {@ModoE = 1} {
+ #Say {%1} NoDisplay|Incoming;
+ #GagLine Voice
+}
+} {}
+
+#GTrigger {*misiles m?gicos surgen de tus dedos e impactan infaliblemente sobre *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\proyectil.wav};
+#If {@ModoE = 1} {
+ #Say {%1} NoDisplay|Incoming;
+ #GagLine Voice
+}
+} {}
+
+#GTrigger {*meteoros diminutos surgen de tu mano y estallan sobre *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\meteoros.wav};
+#If {@ModoE = 1} {
+ #Say {%1} NoDisplay|Incoming;
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {* El cuerpo de * sufre terribles sacudidas debido a una potente descarga eléctrica.} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\presa sacudidora.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {*El aire se congela como si un chorro en forma de cono helado surgiera de tus manos, y la parte más ancha golpea de lleno a *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\cono de frio.wav};
+#If {@ModoE = 1} {
+ #GagLine Voice
+}
+} {} AnyCase
+
+#GTrigger {*Trazas con ambas manos un rect?ngulo en el aire y una enorme ventana aparece justo detr?s de * entre una gran humareda chispeante.} {
+#Play {RL\Hechizos\Defenestrar.wav}} {}
+
+
+;Desintegrar:
+
+#GTrigger {*Extiendes las palmas de tus manos formando un triángulo hacia * y un mortal rayo de energía le golpea de lleno, disgregando sus átomos*} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\desintegrar.wav}
+} {} AnyCase
+
+#GTrigger {*Extiendes las palmas de tus manos bruscamente hacia adelante y lanzas una ráfaga de energía mágica que desintegra por completo el cuerpo de *} {
+#Play {RL\Hechizos\desintegrar propina.wav}
+} {} AnyCase
+
+
+;Teleport:
+
+#GTrigger {Juntas tus manos formando un triángulo y te concentras en el hechizo 'teleportación'.} {
+#Play {RL\Hechizos\Teleport inicio.wav}
+} {} AnyCase
+
+#GTrigger {Pronuncias el cántico: 'trans ikrat ondomendo wiclat skrauwen'} {
+#Play {RL\Hechizos\Teleport.wav}
+} {} AnyCase
+
+
+;Flechas mágicas:
+
+#GTrigger {*[¡]Disparas una flecha de hielo a *!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Flechas.wav}
+} {} AnyCase
+
+#GTrigger {*Tu flecha corta el aire, dejando tras de sí una estela de perlas de hielo, y se estalla contra el cuerpo de *} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\flecha de hielo.wav}
+} {}
+
+#GTrigger {*[¡]Disparas * flechas de fuego a *!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Flechas.wav}
+} {} AnyCase
+
+#GTrigger {*[¡]Disparas una flecha envenenada a *!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Flechas.wav}
+} {} AnyCase
+
+#GTrigger {*[¡]Disparas una flecha ?cida a *, impregnando su cuerpo con un líquido corrosivo!} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Hechizos\Flechas.wav}
+} {} AnyCase
+
+;Anillo topacio:
+
+#GTrigger {Frotas tu Anillo Topacio mientras susurras la palabra de mando.} {
+#Play {RL\Items\Topacio 1.wav}
+} {} AnyCase
+
+#GTrigger {*Alzas tu Anillo Topacio al frente mientras susurras la palabra de mando.} {
+FFiltroCanales %0;
+#If {@FlagFiltroCanales = 1} {#Abort};
+#Play {RL\Items\Topacio 1.wav}
+} {} AnyCase
+
+#GTrigger {Un rayo de energía negativa surge de la palma de tu mano y golpea a * absorbiendo parte de su esencia vital.} {
+#Play {RL\Hechizos\Rayo.wav}
+} {} AnyCase
+
+;Clarividencia:
+
+#GTrigger {((( * )))} {
+FEventos {Clarividencia: %1};
+#Play {RL\Hechizos\Clarividencia.wav}
+} {}
+
+
+;Keys:
+
+#GKey alt-a {
+#If {@ModoJ = 2} {
+ f4 xp
+} {
+ f4 x
+}
+}
+
+#GKey alt-s {
+#If {@ModoJ = 2} {
+ f3 xp
+} {
+ f3 x
+}
+}
+
+#GKey alt-d {
+#If {@ModoJ = 2} {
+ f2 xp
+} {
+ f2 x
+}
+}
+
+#GKey alt-f {
+#If {@ModoJ = 2} {
+ f1 xp
+} {
+ f1 x
+}
+}
+
+#GKey alt-q {
+#If {@ModoJ = 2} {
+ f12 xp
+} {
+ f12 x
+}
+}
+
+#GKey alt-w {
+#If {@ModoJ = 2} {
+ f11 xp
+} {
+ f11 x
+}
+}
+
+#GKey alt-e {
+#If {@ModoJ = 2} {
+ f10 xp
+} {
+ f10 x
+}
+}
+
+#GKey alt-r {
+#If {@ModoJ = 2} {
+ f9 xp
+} {
+ f9 x
+}
+}
+
+#GKey alt-z {
+#If {@ModoJ = 2} {
+ f8 xp
+} {
+ f8 x
+}
+}
+
+#GKey alt-x {
+#If {@ModoJ = 2} {
+ f7 xp
+} {
+ f7 x
+ }
+}
+
+#GKey alt-c {
+#If {@ModoJ = 2} {
+ f6 xp
+} {
+ f6 x
+}
+}
+
+#GKey alt-v {
+#If {@ModoJ = 2} {
+ f5 xp
+} {
+ f5 x
+}
+}
+
