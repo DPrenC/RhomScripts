@@ -47,6 +47,16 @@ local system_info = {
   "Scripts para Reinos de leyenda en el cliente Mudlet, especialmente diseñados para el uso con lectores de pantalla.",
 }
 
+local function interface_message(message, color)
+  color = color or "gray"
+
+  if type(cecho) == "function" then
+    cecho(string.format("<%s>%s<reset>\n", color, message))
+  else
+    print(message)
+  end
+end
+
 -- ============================================================================
 -- CARGA DE MÓDULOS
 -- ============================================================================
@@ -82,10 +92,11 @@ local function load_module(module_name, register)
 end
 
 -- Mensaje inicial
-print("\nInicializando " .. system_info.name .. "...")
+interface_message("")
+interface_message(system_info.name .. " - inicializando...")
 
 -- Cargar módulos del sistema
-print("\nCargando módulos...")
+interface_message("  Cargando módulos...")
 
 -- Cargar primero el módulo debug para poder registrar el resto
 RhomScripts.modules.debug = load_module("debug", false)
@@ -125,6 +136,7 @@ RhomScripts.modules.pruebas = load_module("pruebas", true)
 RhomScripts.modules.keys = load_module("keys", true)
 RhomScripts.modules.aliases = load_module("aliases", true)
 RhomScripts.modules.triggers = load_module("triggers", true)
+interface_message(string.format("  Módulos: %d cargados", modules_loaded))
 
 -- Crear alias locales para compatibilidad y facilidad de uso
 local config = RhomScripts.modules.config
@@ -147,7 +159,7 @@ config.load()
 modes.init(config.all())
 
 -- 3. Registra todos los atajos de teclado
-print("\nCargando atajos de teclado...")
+interface_message("  Registrando atajos de teclado...")
 local keys_result = keys.registrar()
 if keys_result and keys_result.errors > 0 then
   load_errors = load_errors + keys_result.errors
@@ -155,9 +167,10 @@ end
 if keys_result then
   keys_loaded = keys_result.success
 end
+interface_message(string.format("  Atajos de teclado: %d registrados", keys_loaded))
 
 -- 4. Registra todos los aliases/comandos personalizados
-print("\nCargando aliases...")
+interface_message("  Registrando aliases...")
 local aliases_result = aliases.registrar()
 if aliases_result and aliases_result.errors > 0 then
   load_errors = load_errors + aliases_result.errors
@@ -165,9 +178,10 @@ end
 if aliases_result then
   aliases_loaded = aliases_result.success
 end
+interface_message(string.format("  Aliases: %d registrados", aliases_loaded))
 
 -- 5. Registra todos los triggers
-print("\nCargando triggers...")
+interface_message("  Registrando triggers...")
 local triggers_result = triggers.registrar()
 if triggers_result and triggers_result.errors > 0 then
   load_errors = load_errors + triggers_result.errors
@@ -175,6 +189,7 @@ end
 if triggers_result then
   triggers_loaded = triggers_result.success
 end
+interface_message(string.format("  Triggers: %d registrados", triggers_loaded))
 
 
 -- ============================================================================
@@ -192,34 +207,25 @@ debug.set_system_info({
 })
 
 -- Mensajes finales
-print("\n" .. string.rep("=", 60))
 if load_errors == 0 then
-  print(sysinfo.name .. " cargados correctamente")
+  interface_message(sysinfo.name .. " cargados correctamente")
 else
-  print(sysinfo.name .. " cargados con errores")
+  interface_message(sysinfo.name .. " cargados con errores", "orange")
 end
-print(string.rep("=", 60))
 
 -- Resumen en una línea
 local summary = string.format("%d módulos, %d atajos de teclado, %d aliases, %d triggers", 
   modules_loaded, keys_loaded, aliases_loaded, triggers_loaded)
-print(summary)
+interface_message("  " .. summary)
 
 if load_errors > 0 then
-  print("⚠ Error en la carga, los scripts no funcionarán correctamente.")
+  interface_message("  Error en la carga: los scripts no funcionarán correctamente.", "orange")
 end
 
-print(string.rep("=", 60))
-print(sysinfo.name .. " v" .. sysinfo.version)
-print("Por " .. sysinfo.author)
-print(string.rep("=", 60) .. "\n")
+interface_message("  " .. sysinfo.name .. " v" .. sysinfo.version .. " | Por " .. sysinfo.author)
+interface_message("")
 
 -- Lanza un evento global para notificar que la inicialización está completa
 -- Otros scripts pueden escuchar este evento para ejecutar código post-inicialización
 raiseEvent("rl.init.done")
 raiseEvent("rhomscripts.ready", sysinfo.version)
-
-
-keys.listar_teclas()
-aliases.listar_aliases()
-triggers.listar_triggers()

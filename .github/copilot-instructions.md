@@ -37,6 +37,17 @@ En cada cambio, indicar:
 - riesgos o supuestos
 - pruebas realizadas o no realizadas
 
+## RhomLoader y empaquetado
+
+Cuando el usuario pregunte como empaquetar RhomLoader o como cargar sus scripts desde Mudlet:
+- explicar el flujo automatico con `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\package_rhomloader.ps1`
+- explicar que el empaquetador inserta temporalmente la ruta absoluta de la carpeta que contiene `init.lua`
+- indicar que debe conectarse en Mudlet usando el perfil que este usando y pegar `lua installPackage("ruta completa del .mpackage")`
+- la ruta del comando para Mudlet debe usar `/`, nunca `\`
+- si el usuario pide que se haga automaticamente, usar el agente `Empaquetador RhomLoader` o ejecutar el script de empaquetado
+- no dejar rutas personales en `RhomLoader/src/scripts/rhomloader/code.lua`; al finalizar debe quedar `PONER_RUTA_AQUI`
+- no preparar para commit `RhomLoader/build/` ni archivos `.mpackage`
+
 ## Contexto multiagente
 
 Cuando se use trabajo con multiples agentes:

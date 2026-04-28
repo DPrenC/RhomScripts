@@ -1,11 +1,11 @@
---------------------------------------------------
+﻿--------------------------------------------------
 --  RhomLoader (paquete Mudlet)
 --  Carga un proyecto externo rhomscripts desde disco
 --------------------------------------------------
 
--- ===== CONFIGURACIÓN =====
-local BASE_PATH = "C:/Users/DPrenC/proyectos/scrips lua/rhomscripts/" -- CAMBIA ESTO
-local MODULE_PREFIX = "rhomscripts" -- prefijo de módulos a recargar
+-- ===== CONFIGURACION =====
+local BASE_PATH = "C:/Users/DPrenC/OneDrive - UNED/Documentos/proyectos/RhomScripts/rhomscripts/" -- RUTA LOCAL PARA EMPAQUETADO
+local MODULE_PREFIX = "rhomscripts" -- prefijo de modulos a recargar
 
 --------------------------------------------------
 -- Logging
@@ -72,7 +72,7 @@ local function loadProject()
 end
 
 --------------------------------------------------
--- Public API (global único)
+-- Public API (global unico)
 --------------------------------------------------
 _G.RhomLoader = _G.RhomLoader or {}
 
