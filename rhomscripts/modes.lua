@@ -40,6 +40,14 @@ modes.key_bindings = {
   },
   {
     type = "simple",
+    modifiers = mudlet.keymodifier.Shift,
+    key = mudlet.key.F11,
+    action = function() modes.cycle_modo_juego(-1) end,
+    name = "Shift+F11",
+    desc = "Ciclar entre diferentes modos de juego (retroceder)"
+  },
+  {
+    type = "simple",
     key = mudlet.key.F12,
     action = function() modes.toggle("silent") end,
     name = "F12",
@@ -64,6 +72,12 @@ modes.aliases = {
     pattern = "^modoe$",
     action = function() modes.toggle("experto") end,
     name = "modoe",
+    desc = "Alternar modo experto"
+  },
+  {
+    pattern = "^ModoE$",
+    action = function() modes.toggle("experto") end,
+    name = "ModoE",
     desc = "Alternar modo experto"
   },
   {
@@ -189,6 +203,8 @@ function modes.set_flag(name, value)
   elseif name == "mono" then
     apply_mono(value)
   end
+
+  audio.play(value and "RL/Modos/On.wav" or "RL/Modos/Off.wav", { volume = 80, key = "rhom:modo:" .. name })
 end
 
 function modes.toggle(name)
@@ -205,6 +221,7 @@ function modes.set_modo_juego(value)
   end
   modes.state.modo_juego = value
   config.set("modo_juego", value)
+  audio.play("RL/Modos/Boton.wav", { volume = 80, key = "rhom:modo:juego" })
   apply_modo_juego(value)
 end
 

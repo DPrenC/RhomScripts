@@ -13,23 +13,9 @@ local pruebas = {}
 -- CONFIGURACIÓN DE ATAJOS DE TECLADO
 -- ============================================================================
 
-pruebas.key_bindings = {
-  {
-    type = "modifier",
-    modifiers = mudlet.keymodifier.Control,
-    key = mudlet.key.P,
-    action = function()
-      -- Simula la recepción de una línea desde el MUD usando eventos
-      local linea = "esto es una prueba de triggers"
-      echo("\n[TEST] Línea de prueba enviada: '" .. linea .. "'\n")
-      
-      -- Lanzar evento para que los triggers lo procesen
-      raiseEvent("rhomscripts.test.line", linea)
-    end,
-    name = "Ctrl+P",
-    desc = "Enviar línea de prueba simulando entrada del MUD"
-  },
-}
+-- No se registran teclas de diagnostico para no pisar macros funcionales.
+-- Las pruebas locales quedan disponibles mediante aliases.
+pruebas.key_bindings = {}
 
 -- ============================================================================
 -- CONFIGURACIÓN DE TRIGGERS
@@ -74,8 +60,9 @@ function pruebas.info()
   echo(string.rep("=", 60) .. "\n")
   echo("MÓDULO DE PRUEBAS\n")
   echo(string.rep("=", 60) .. "\n")
-  echo("Tecla de prueba:\n")
-  echo("  Ctrl+P - Simula la línea 'esto es una prueba de triggers' desde el MUD\n")
+  echo("Aliases de prueba:\n")
+  echo("  test trigger [texto] - Simula una linea desde el MUD\n")
+  echo("  diag lector - Ejecuta diagnostico del lector\n")
   echo("\nTrigger de prueba:\n")
   echo("  Detecta la palabra 'prueba' en cualquier contexto y muestra un mensaje\n")
   echo("\nFunciones disponibles:\n")
