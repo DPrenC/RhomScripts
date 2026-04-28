@@ -6,7 +6,7 @@ name: "Migracion VIPMud a Lua"
 
 ## Objetivo
 
-Migrar comportamiento funcional desde .set a Lua sin copiar limitaciones historicas innecesarias.
+Migrar comportamiento funcional desde .set a Lua sin copiar limitaciones historicas innecesarias y utilizando estructuras y sintaxis moderna de lua no disponible en vipmud.
 
 ## Proceso de migracion
 

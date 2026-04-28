@@ -36,12 +36,8 @@ El objetivo no es copiar estructuras antiguas, sino conservar la logica funciona
 - `sounds/`: recursos de audio organizados por categoria
 
 ## Recursos binarios de sonido
+Deben utilizarse de la misma manera que en los scripts originales, reproduciéndose en los mismos casos a través de las funciones de mudlet para reproducción de sonidos.
 
-Los archivos binarios de `sounds/` forman parte legitima del proyecto.
-
-- Se incorporan progresivamente segun se implementan nuevas funcionalidades.
-- No deben tratarse como cambios anomalos por defecto.
-- Cualquier nueva funcionalidad que dispare audio debe documentar la ruta del recurso asociado.
 
 ## Flujo de trabajo recomendado
 

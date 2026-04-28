@@ -13,7 +13,8 @@ Producir cambios Lua pequenos, claros y compatibles con Mudlet.
 
 - Mantener funciones pequenas y con responsabilidad unica.
 - Preferir tablas modulo con retorno explicito al final del archivo.
-- Usar comprobaciones defensivas para APIs de Mudlet (por ejemplo, verificar que una funcion existe antes de llamarla).
+- nunca usar comprobaciones defensivas para APIs de Mudlet (por ejemplo, verificar que una funcion existe antes de llamarla). Si se llama una función de mudlet y no existe es mejor que el error sea claro para buscar la función correcta.
+- Busca la función necesaria en la documentación de mudlet, y asegúrate que existe antes de utilizarla.
 - Mantener mensajes de error claros y accionables.
 - No introducir globals nuevas salvo necesidad real de integracion.
 
