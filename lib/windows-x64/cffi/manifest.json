@@ -1,0 +1,60 @@
+{
+  "cffi-lua": {
+    "version": "0.2.4",
+    "commit": "1d6d54b4068eefc6dc4c4455175b6d0e530fa72a"
+  },
+  "libffi": {
+    "version": "3.4.4",
+    "commit": "41fc1ec58b987922d66bdc7a7531d3a1b34b3983",
+    "link": "static",
+    "source": "Snapshot del fork meson-port usado por el wrap oficial de cffi-lua"
+  },
+  "platform": "windows-x64",
+  "toolchain": "LLVM-MinGW 20261104 UCRT x86_64",
+  "build_tools": {
+    "meson": "1.12.1",
+    "ninja": "1.13.2",
+    "pefile": "2024.8.26"
+  },
+  "sources": [
+    {
+      "repository": "q66/cffi-lua",
+      "commit": "1d6d54b4068eefc6dc4c4455175b6d0e530fa72a",
+      "url": "https://codeload.github.com/q66/cffi-lua/zip/1d6d54b4068eefc6dc4c4455175b6d0e530fa72a",
+      "sha256": "b5f1a22786be067c19d06ce1512178241e86349a8d961dac01487eeeed3d7f0e"
+    },
+    {
+      "repository": "xclaesse/libffi",
+      "commit": "41fc1ec58b987922d66bdc7a7531d3a1b34b3983",
+      "url": "https://codeload.github.com/xclaesse/libffi/zip/41fc1ec58b987922d66bdc7a7531d3a1b34b3983",
+      "sha256": "bfb117ec3fe114a8257b38836762558d1da5f553c069f80f073178ab596b5f7d"
+    }
+  ],
+  "lua_host": {
+    "filename": "lua51.dll",
+    "sha256": "14e82371a879105f6d99aa96d80a76c4d4e9ab1b61f095382c0f102d5506bd98",
+    "imported_runtime": "lua51.dll",
+    "headers": "Lua 5.1.5"
+  },
+  "cffi.dll": {
+    "sha256": "f937d2c52af7b2ca4c85ef9585d98266cd1d3f71af94d55541c1b327e374f8bd",
+    "bytes": 313344,
+    "imports": [
+      "KERNEL32.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-private-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "lua51.dll"
+    ],
+    "exports_checked": [
+      "luaopen_cffi"
+    ]
+  },
+  "notes": [
+    "No incluye ni sustituye Lua ni modifica Mudlet.",
+    "Las fuentes se verifican por SHA-256 antes de extraer.",
+    "La carga y llamadas Win32 requieren validación real independiente."
+  ]
+}

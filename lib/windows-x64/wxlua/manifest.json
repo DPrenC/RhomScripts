@@ -1,0 +1,95 @@
+{
+  "wxLua": {
+    "version": "3.2.0.2",
+    "commit": "d80dddbd78a1f93ea5f40e163f6d246da28a65ed",
+    "bindings": [
+      "core",
+      "base"
+    ]
+  },
+  "wxWidgets": {
+    "version": "3.2.8",
+    "port": "msw",
+    "unicode": true,
+    "accessibility": true,
+    "link": "static"
+  },
+  "platform": "windows-x64",
+  "toolchain": "LLVM-MinGW 20261104 UCRT x86_64",
+  "build_tools": {
+    "cmake": "4.4.4",
+    "ninja": "1.13.2",
+    "pefile": "2024.8.26"
+  },
+  "sources": [
+    {
+      "archive": "toolchain.zip",
+      "url": "https://github.com/mstorsjo/llvm-mingw/releases/download/20261104/llvm-mingw-20261104-ucrt-x86_64.zip",
+      "sha256": "552191b5754c49a5a20723276a6fc56541ea1922c4c50b7b669022333fc1b40f"
+    },
+    {
+      "archive": "wxwidgets.tar.bz2",
+      "url": "https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.tar.bz2",
+      "sha256": "c74784904109d7229e6894c85cfa068f1106a4a07c144afd78af41f373ee0fe6"
+    },
+    {
+      "archive": "wxlua.zip",
+      "url": "https://codeload.github.com/pkulchenko/wxlua/zip/d80dddbd78a1f93ea5f40e163f6d246da28a65ed",
+      "sha256": "7409ae4383c448a6e97205e4df7e1ffa28f592135aebf2b9a9e669835bb223cc"
+    },
+    {
+      "archive": "lua.tar.gz",
+      "url": "https://www.lua.org/ftp/lua-5.1.5.tar.gz",
+      "sha256": "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333"
+    }
+  ],
+  "lua_host": {
+    "filename": "lua51.dll",
+    "sha256": "14e82371a879105f6d99aa96d80a76c4d4e9ab1b61f095382c0f102d5506bd98",
+    "imported_runtime": "lua51.dll",
+    "headers": "Lua 5.1.5"
+  },
+  "wx.dll": {
+    "sha256": "da7cb982a7ad80a2b8d81b13c843f568b52668f8bcd11590f1301b7ba2767449",
+    "bytes": 14465024,
+    "imports": [
+      "ADVAPI32.dll",
+      "COMCTL32.dll",
+      "GDI32.dll",
+      "KERNEL32.dll",
+      "OLEACC.dll",
+      "OLEAUT32.dll",
+      "SHELL32.dll",
+      "SHLWAPI.dll",
+      "USER32.dll",
+      "UxTheme.dll",
+      "VERSION.dll",
+      "WINSPOOL.DRV",
+      "WS2_32.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-filesystem-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-multibyte-l1-1-0.dll",
+      "api-ms-win-crt-private-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-time-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "comdlg32.dll",
+      "lua51.dll",
+      "ole32.dll"
+    ],
+    "exports_checked": [
+      "luaopen_wx"
+    ]
+  },
+  "notes": [
+    "No se incluye ni sustituye lua51.dll.",
+    "No modifica Mudlet, PATH del sistema ni el índice Git.",
+    "La carga y el comportamiento requieren validación real independiente."
+  ]
+}
