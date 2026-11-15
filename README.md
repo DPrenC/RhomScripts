@@ -1,30 +1,85 @@
 # RhomScripts
 
-RhomScripts es un proyecto independiente de scripts Lua para jugar a [Reinos de Leyenda](https://www.reinosdeleyenda.es/) con Mudlet y un lector de pantalla externo. Nace de la migración de los scripts de VIPMud de Rhomdur. Su objetivo es recuperar sus funciones de forma gradual y aprovechar los datos y servicios que el juego ya ofrece a través de sus scripts oficiales.
+Proyecto de migracion y modernizacion de scripts para Reinos de Leyenda.
 
-## Estado del proyecto
+[Documentación del proyecto](doc/README.md) · [Planes de implementación](doc/planes/README.md) · [Historial de cambios](doc/CHANGELOG.md)
 
-RhomScripts está en desarrollo temprano. La arquitectura general ya está organizada en módulos y el arranque reúne una primera base utilizable: configuración, lector de consola, historial de canales, atajos de teclado y avisos sonoros. La migración del resto de funciones de VIPMud y la preparación de una versión instalable siguen en curso.
+- Version: 1.0
+- Autor: Rhomdur
+- Stack principal: Lua para Mudlet
 
-El entorno objetivo es la [última versión estable de Mudlet](https://github.com/Mudlet/Mudlet/releases/latest) en Windows de 64 bits. Se han realizado pruebas de integración con Mudlet 5.1.1 en perfiles aislados y desconectados. Quedan por comprobar el uso conectado al juego y la experiencia con un lector de pantalla externo. Las ventanas usan controles nativos y los avisos de voz se envían mediante `announce`, la función estándar de Mudlet.
+## Objetivo
 
-## Qué puedes hacer
+RhomScripts reescribe desde cero un conjunto de scripts historicos en formato `.set` (VIPMud) hacia Lua moderno para Mudlet.
 
-- **Configurar RhomScripts y el paquete oficial.** Ctrl+Mayús+C abre el configurador. Permite ajustar los volúmenes, la retención del historial, el comportamiento de las ventanas y las preferencias de los scripts oficiales. Guardar aplica los cambios y conserva las preferencias en el perfil de Mudlet. [Uso del configurador](doc/README.md#configurador-y-preferencias).
-- **Leer y copiar líneas de la consola.** Ctrl+1 a Ctrl+9 lee desde la última línea con contenido. Ctrl+Mayús+1 a Ctrl+Mayús+9 copia la línea correspondiente con el teclado español de España. También puedes usar `leerlinea N` y `copiarlinea N`. [Guía del lector de líneas](doc/lector.md).
-- **Consultar las comunicaciones.** Mayús+F1 abre el historial y Alt+F1 lee el último mensaje de la categoría seleccionada. Hay una vista global y categorías por canal, con los mensajes más recientes primero y silencio temporal por canal. El historial se borra al desconectar o recargar RhomScripts. Las acciones para responder y copiar mensajes están pendientes. [Guía del historial de canales](doc/comunicaciones.md).
-- **Consultar los atajos y el estado.** Ctrl+Mayús+H alterna la ayuda de teclado. Mientras está activa, los atajos de RhomScripts anuncian su función. `listkeys` los enumera y `rhomestado` muestra y anuncia el estado de la carga, el paquete oficial, la conexión y los datos del juego. [Atajos de RhomScripts](doc/teclado.md#pulsaciones-migradas) y [monitor de estado](doc/arranque.md#consulta).
+El objetivo no es copiar estructuras antiguas, sino conservar la logica funcional y mejorar:
 
-## Integración con los scripts oficiales
+- mantenibilidad
+- modularidad
+- legibilidad
+- robustez ante errores
+- accesibilidad con lector de pantalla
 
-RhomScripts está diseñado para funcionar junto con `RLMud_Config`, el paquete oficial de Reinos de Leyenda para Mudlet. Al arrancar, reutiliza el paquete instalado en el perfil. Si falta, lo descarga de la fuente oficial y lo instala. Espera a que termine su inicialización local y aplica las preferencias guardadas. Esta preparación puede completarse con el perfil desconectado del juego.
+## Alcance funcional
 
-El paquete oficial sigue gestionando servicios como el mapa, su interfaz y el sonido MSP. RhomScripts usa los eventos GMCP de Reinos de Leyenda para construir su propio historial accesible, que puede usarse con el panel oficial oculto. Recibir los mensajes del juego requiere conexión y la habilitación de GMCP y de las comunicaciones.
+- Cliente objetivo: Mudlet
+- Juego objetivo: Reinos de Leyenda
+- Accesibilidad: lector de pantalla externo; sin uso ni compatibilidad con SAPI. Anuncios estándar por ahora.
+- Idioma de desarrollo y documentacion: espanol
 
-## Cómo se organiza
+## Estructura del repositorio
 
-- **Arranque e integración.** `init.lua` coordina la carga y la recarga. `arranque.lua` prepara las bibliotecas nativas wxLua y cffi, integra el paquete oficial y centraliza el estado de la sesión.
-- **Funciones y preferencias.** `configuracion.lua` guarda las preferencias en `config.json` dentro del perfil. `configurador.lua`, `lector.lua` y `comunicaciones.lua` implementan las funciones de uso diario. `keys.lua` y `aliases.lua` registran sus atajos y comandos.
-- **Interfaz y audio.** `ui.lua` comparte la infraestructura de las ventanas nativas, que se preparan al arrancar y se reutilizan. `sonidos.lua` cataloga los WAV de interfaz y comunicaciones desde `sonidos/`. `audio.lua` reproduce por clave y aplica los volúmenes de cada grupo y el general. [Guía de sonidos](doc/sonidos.md).
+El repositorio Git abarca todo el proyecto y se abre desde la carpeta raíz de RhomScripts. Las rutas de esta guía y de las instrucciones para desarrolladores parten de esa raíz.
 
-Consulta el [historial de cambios de RhomScripts](CHANGELOG.md) para conocer el avance de la migración.
+- `rhomscripts/`: carpeta de despliegue para los usuarios. Contiene los módulos Lua, las bibliotecas de ejecución, las licencias y los recursos integrados.
+- `rhomscripts/sonidos/`: archivos de audio de RhomScripts, organizados por grupo. `sonidos.lua` genera el catálogo al arrancar y `audio.lua` reproduce por clave.
+- `RhomLoader/src/`: fuentes del cargador; `RhomLoader/muddler.yml`: manifiesto
+- `muddler/`: herramienta de empaquetado
+- `scripts/`: herramientas y pruebas de desarrollo.
+- `doc/`: manuales de usuario, planes, historial de cambios, contratos, validación y fuentes de referencia.
+- `scripts_vipmud/`: scripts originales en formato `.set` como referencia funcional
+- `doc/doc_vipmud.txt`: referencia del lenguaje/command set de VIPMud
+- `sounds/`: colección de origen para la migración desde VIPMud.
+- `rhomscripts old/`: módulos archivados para su revisión durante la migración.
+
+## Diseño de distribución
+
+Los usuarios descargarán la carpeta `rhomscripts/` como parte de la distribución. El actualizador previsto mantendrá al día sus archivos. El resto del árbol se usa para el desarrollo. RhomLoader es el cargador local de desarrollo.
+
+Al arrancar, RhomScripts construye el catálogo a partir de las carpetas de sonidos y muestra un resumen textual. La reproducción por clave aplica los volúmenes de la solicitud, del grupo y general. El empaquetado público, las políticas avanzadas de reproducción y el actualizador siguen pendientes.
+
+Consultar las [decisiones de arquitectura y distribución](doc/decisiones.md), la [presentación de RhomScripts](doc/usuario/presentacion.md) y la [guía de sonidos](doc/usuario/sonidos.md).
+
+## Recursos binarios de sonido
+Deben utilizarse de la misma manera que en los scripts originales, reproduciéndose en los mismos casos a través de las funciones de mudlet para reproducción de sonidos.
+
+
+## Flujo de trabajo recomendado
+
+1. Analizar comportamiento original en `scripts_vipmud/`.
+2. Traducir intencion funcional a modulos Lua en `rhomscripts/`.
+3. Mantener contratos modulares simples (cada modulo expone funciones y datos claros).
+4. Validar compatibilidad operativa en Mudlet.
+5. Usar `RhomLoader/muddler.yml` para el cargador local de desarrollo. El empaquetado público de RhomScripts sigue pendiente.
+
+## Convenciones del proyecto
+
+- Priorizar claridad frente a trucos de sintaxis.
+- Nombrado y comentarios en espanol tecnico.
+- Evitar dependencias externas innecesarias.
+- No introducir logica especulativa: implementar solo requisitos confirmados.
+- Preservar la arquitectura modular.
+
+## Colaborar en RhomScripts
+
+Abre la raíz del repositorio y prepara las herramientas con `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup_validation.ps1`. Antes de editar, revisa los cambios que ya existan y acuerda quién se ocupa de cada archivo compartido. En la entrega indica qué cambió, cómo se comprobó y el siguiente paso si queda trabajo.
+
+Durante la edición elige comprobaciones focalizadas. El responsable de integrar ejecuta o asigna `.\scripts\validate.ps1` sobre el resultado integrado y añade `-Mudlet` cuando corresponda. Consulta la [guía de validación](doc/validacion.md) para preparar Mudlet y compartir la evidencia.
+
+La [guía de colaboración](doc/contexto-multiagente.md#coordinación) describe el reparto y los traspasos entre desarrolladores y agentes. El [contrato de IA](AGENTS.md) enlaza las instrucciones por tarea. Los seis perfiles de proyecto se generan desde [roles.json](doc/agentes/roles.json) con `python scripts/sync_agents.py`.
+
+## Validación y documentación
+
+[Guía de validación](doc/validacion.md), [documentación oficial descargada](doc/mudlet/README.md), [contratos de APIs](doc/contratos-mudlet.md) y [plan de migración](doc/migracion.md).
+
+Las funciones de Mudlet se llaman directamente y las ausentes deben lanzar error. Las pruebas reales se realizan cuando sean necesarias, en un perfil aislado y desconectado.

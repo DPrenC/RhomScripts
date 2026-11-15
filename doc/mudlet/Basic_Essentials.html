@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:Basic Essentials - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"aZQfOU54fQZ2NpkDzSFOYwAAAAY","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:Basic_Essentials","wgTitle":"Basic Essentials","wgCurRevisionId":21574,"wgRevisionId":21574,"wgArticleId":157,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Mudlet API","Mudlet Manual"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:Basic_Essentials","wgRelevantArticleId":157,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],
+"wgULSAcceptLanguageList":[],"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","jquery.makeCollapsible.styles":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","jquery.makeCollapsible","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cjquery.makeCollapsible.styles%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Mudlet API documentation for basic functions like send, echo, display and debugc."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="Basic Essentials"/>
+
+	<meta property="og:description" content="Mudlet API documentation for basic functions like send, echo, display and debugc."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:Basic_Essentials"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_Basic_Essentials rootpage-Manual_Basic_Essentials skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:Basic Essentials</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Basic_Essentials"><span class="tocnumber">1</span> <span class="toctext">Basic Essentials</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#debugc"><span class="tocnumber">1.1</span> <span class="toctext">debugc</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#display"><span class="tocnumber">1.2</span> <span class="toctext">display</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#echo"><span class="tocnumber">1.3</span> <span class="toctext">echo</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#printDebug"><span class="tocnumber">1.4</span> <span class="toctext">printDebug</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#printError"><span class="tocnumber">1.5</span> <span class="toctext">printError</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#send"><span class="tocnumber">1.6</span> <span class="toctext">send</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="Basic_Essentials">Basic Essentials</span></h1>
+<p>These functions are generic functions used in normal scripting. These deal with mainly everyday things, like sending stuff and echoing to the screen.
+</p>
+<h2><span class="mw-headline" id="debugc">debugc</span></h2>
+<dl><dt>debugc(content)</dt>
+<dd>Again this will not send anything to anywhere. It will however print not to the main window, but only to the errors view. You need to open that window to see the message.</dd></dl>
+<dl><dd>See also: <a href="/w/Manual:Introduction#Runtime_errors_aka_Errors_View" title="Manual:Introduction">Errors View</a></dd></dl>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Do not use this to display information to end-users. It will be hard to find. It is mainly useful for developing/debugging. Does not echo to the debug window
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">debugc</span><span class="p">(</span><span class="s2">&quot; Trigger successful!&quot;</span><span class="p">)</span>
+<span class="c1">-- Text will be shown in errors view, not to main window.</span>
+</pre></div>
+<h2><span class="mw-headline" id="display">display</span></h2>
+<dl><dt>display(content)</dt>
+<dd>This is much like echo, in that is will show text at your screen, not send anything to anywhere. However, it also works with other objects than just text, like a number, table, function, or even many arguments at once. This function is useful to easily take a look at the values of a lua table, for example. If a value is a string of letters, it'll be in quotes, and if it's a number, it won't be quoted.</dd></dl>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Do not use this to display information to end-users. It may be hard to read. It is mainly useful for developing/debugging.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">myTable</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">-- create an empty lua table</span>
+<span class="n">myTable</span><span class="p">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s2">&quot;Hello there&quot;</span> <span class="c1">-- add a text</span>
+<span class="n">myTable</span><span class="p">.</span><span class="n">bar</span> <span class="o">=</span> <span class="mi">23</span> <span class="c1">-- add a number</span>
+<span class="n">myTable</span><span class="p">.</span><span class="n">ubar</span> <span class="o">=</span> <span class="kr">function</span> <span class="p">()</span> <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">)</span> <span class="kr">end</span> <span class="c1">-- add more stuff</span>
+<span class="n">display</span><span class="p">(</span> <span class="n">myTable</span> <span class="p">)</span> <span class="c1">-- take a look inside the table</span>
+</pre></div>
+<h2><span class="mw-headline" id="echo">echo</span></h2>
+<dl><dt>echo([miniconsoleName or labelName], text)</dt>
+<dd>This function appends text at the end of the current line.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>miniconsoleName:</i> (optional) the miniconsole to echo to, or:</li>
+<li><i>labelName:</i> (optional) the label to echo to.</li>
+<li><i>text:</i> text you'd like to see printed. You can use \n in an echo to insert a new line. If you're echoing this to a label, you can also use styling to color, center, increase/decrease size of text and various other formatting options <a rel="nofollow" class="external text" href="http://doc.qt.io/qt-5/richtext-html-subset.html">as listed here</a>.</li></ul>
+<p>See also: <a href="/w/Manual:Lua_Functions#moveCursor" title="Manual:Lua Functions">moveCursor()</a>, <a href="/w/Manual:Lua_Functions#insertText" title="Manual:Lua Functions">insertText()</a>, <a href="/w/Manual:Lua_Functions#cecho" title="Manual:Lua Functions">cecho()</a>, <a href="/w/Manual:Lua_Functions#decho" title="Manual:Lua Functions">decho()</a>, <a href="/w/Manual:Lua_Functions#hecho" title="Manual:Lua Functions">hecho()</a>
+</p>
+<div class="toccolours mw-collapsible mw-collapsed" style="overflow:auto;">
+<div style="font-weight:bold;line-height:1.6;">Technical Detail</div>
+<div class="mw-collapsible-content">
+<p>As of Mudlet 4.8+, a single line is capped to 10,000 characters (this is when ~200 at most will fit on one line on your screen).
+</p>
+</div></div>
+<p><br />
+</p>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- a miniconsole example</span>
+
+<span class="c1">-- first, determine the size of your screen</span>
+<span class="kd">local</span> <span class="n">windowWidth</span><span class="p">,</span> <span class="n">windowHeight</span> <span class="o">=</span> <span class="n">getMainWindowSize</span><span class="p">()</span>
+
+<span class="c1">-- create the miniconsole</span>
+<span class="n">createMiniConsole</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="n">windowWidth</span><span class="o">-</span><span class="mi">650</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">650</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">setBackgroundColor</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">69</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)</span>
+<span class="n">setMiniConsoleFontSize</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="c1">-- wrap lines in window &quot;sys&quot; at 40 characters per line - somewhere halfway, as an example</span>
+<span class="n">setWindowWrap</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+
+<span class="n">echo</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span><span class="s2">&quot;Hello world!</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">cecho</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;:OrangeRed&gt;This is random spam with the same background</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">cecho</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;blue:OrangeRed&gt;and this is with a blue foreground. &quot;</span><span class="p">)</span>
+<span class="n">cecho</span><span class="p">(</span><span class="s2">&quot;sys&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;bisque:BlueViolet&gt;Lastly, this is with both a foreground and a background.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- a label example</span>
+
+<span class="c1">-- This example creates a transparent overlay message box to show a big warning message &quot;You are under attack!&quot; in the middle </span>
+<span class="c1">-- of the screen. Because the background color has a transparency level of 150 (0-255, with 0 being completely transparent </span>
+<span class="c1">-- and 255 opaque) the background text can still be read through.</span>
+<span class="kd">local</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">getMainWindowSize</span><span class="p">()</span>
+<span class="n">createLabel</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">300</span><span class="p">,(</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span><span class="mi">250</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">resizeWindow</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">70</span><span class="p">)</span>
+<span class="n">moveWindow</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">300</span><span class="p">,(</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="mi">100</span> <span class="p">)</span>
+<span class="n">setBackgroundColor</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">204</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">echo</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,</span> <span class="s">[[&lt;p style=&quot;font-size:35px&quot;&gt;&lt;b&gt;&lt;center&gt;&lt;font color=&quot;red&quot;&gt;You are under attack!&lt;/font&gt;&lt;/center&gt;&lt;/b&gt;&lt;/p&gt;]]</span><span class="p">)</span>
+</pre></div>
+<h2><span class="mw-headline" id="printDebug">printDebug</span></h2>
+<dl><dt>printDebug(msg, [showStackTrace])</dt></dl>
+<dl><dd>Prints a debug message in green to the error console in the script editor only. Does not echo to the debug window or the main console. Includes stack trace if showStackTrace is included and not nil or false.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#printError" title="Manual:Lua Functions">printError</a>, <a href="/w/Manual:Lua_Functions#debugc" title="Manual:Lua Functions">debugc</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.14</span><span class="version-label-plus">+</span></div>
+<div class="toccolours mw-collapsible mw-collapsed" style="overflow:auto;">
+<div style="font-weight:bold;line-height:1.6;">Technical Note</div>
+<div class="mw-collapsible-content">
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This will not be echoed to the main console even if the option to echo Lua errors to the main console is turned on. Does not echo to the debug window. As such you can use it for debugging information without fear it will be shown unless someone goes looking for errors.
+</p>
+</div></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>msg:</i></li></ul>
+<dl><dd>string to echo to the error console</dd></dl>
+<ul><li><i>showStackTrace:</i></li></ul>
+<dl><dd>(optional) boolean true if you want to include the stack trace, leave off if you do not.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- print a debug message to the error console for troubleshooting purposes, when you don&#39;t want to echo the information to the main screen.</span>
+<span class="c1">-- the only difference between this and debugc is this includes information on the script/alias/trigger/etc and line it was called from, whereas debugc does not.</span>
+<span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Switching to chaos mode&quot;</span><span class="p">)</span>
+
+<span class="c1">-- Want to record that something occurred, and include stacktrace so you can see what path the code was taking, but you don&#39;t want to halt execution or have it show up in main screen or in scary red.</span>
+<span class="n">printDebug</span><span class="p">(</span><span class="s2">&quot;Something unexpected occurred but we can recover from it. Still, we want to be able to notice and troubleshoot it with extra information.&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+</pre></div>
+<h2><span class="mw-headline" id="printError">printError</span></h2>
+<dl><dt>printError(msg, [showStackTrace], [haltExecution])</dt></dl>
+<dl><dd>Prints an error message in red to the error console in the script editor. Can optionally include stacktrace information and halt execution.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#printDebug" title="Manual:Lua Functions">printDebug</a>, <a href="/w/Manual:Lua_Functions#debugc" title="Manual:Lua Functions">debugc</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.14</span><span class="version-label-plus">+</span></div>
+<div class="toccolours mw-collapsible mw-collapsed" style="overflow:auto;">
+<div style="font-weight:bold;line-height:1.6;">Technical Note</div>
+<div class="mw-collapsible-content">
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This WILL be echoed to the main console if the option to echo Lua errors to the main console is turned on. You should not use this for idle debugging information, but actual errors that may put big red error lines in the main window.
+</p>
+</div></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>msg:</i></li></ul>
+<dl><dd>string to echo to the error console</dd></dl>
+<ul><li><i>showStackTrace:</i></li></ul>
+<dl><dd>(optional) true if you want to include the stack trace, leave off if you do not.</dd></dl>
+<ul><li><i>haltExecution:</i></li></ul>
+<dl><dd>(optional) true if you want to halt execution. You must pass a value for showStackTrace in order to halt execution.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- print an error message but do not include extra stack information or halt execution.</span>
+<span class="c1">-- this is similar to debugc except it include more information on the place it was called from</span>
+<span class="c1">-- and will show up in red and echo to the main console if the option for errors to echo there is selected.</span>
+<span class="n">printError</span><span class="p">(</span><span class="s2">&quot;Your maxhp is below your currenthp and our game doesn&#39;t allow for that. HAX?!&quot;</span><span class="p">)</span>
+
+<span class="c1">-- Something bad happened, for sure, but your script can recover.</span>
+<span class="c1">-- Make sure this is something important enough it might make it to the main window as a big red error.</span>
+<span class="c1">-- but we are not halting execution, since we can carry on in some capacity</span>
+<span class="n">printError</span><span class="p">(</span><span class="s2">&quot;gmcp values for this thing went missing, will carry on using defaults but you should tell somebody about this.&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+
+<span class="c1">-- print an error message to the error console for troubleshooting purposes. </span>
+<span class="c1">-- Prints stack trace for troubleshooting and halts execution (because you cannot continue without the configuration, presumably)</span>
+<span class="c1">-- similar to using error(msg) but includes the stacktrace information.</span>
+<span class="n">printError</span><span class="p">(</span><span class="s2">&quot;Our entire configuration seems to have gone missing!&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+</pre></div>
+<h2><span class="mw-headline" id="send">send</span></h2>
+<dl><dt>send(command, showOnScreen)</dt>
+<dd>This sends "command" directly to the network layer, skipping the alias matching. The optional second argument of type boolean (print) determines if the outgoing command is to be echoed on the screen.</dd></dl>
+<p>See also: <a href="/w/Manual:Lua_Functions#sendAll" title="Manual:Lua Functions">sendAll()</a>, <a href="/w/Manual:Lua_Functions#speedwalk" title="Manual:Lua Functions">speedwalk()</a>
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  If you want your command to be checked as if it's an alias, use <a href="/w/Manual:Miscellaneous_Functions#expandAlias" title="Manual:Miscellaneous Functions">expandAlias()</a> instead - send() will ignore them.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  The game server can choose not to show commands sent on screen (for example, if you're typing in a password).
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello Jane&quot;</span><span class="p">)</span> <span class="c1">--echos the command on the screen</span>
+<span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello Jane&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="c1">--echos the command on the screen</span>
+<span class="n">send</span><span class="p">(</span><span class="s2">&quot;Hello Jane&quot;</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="c1">--does not echo the command on the screen</span>
+
+<span class="c1">-- use a variable in the send:</span>
+<span class="n">send</span><span class="p">(</span><span class="s2">&quot;kick &quot;</span><span class="o">..</span><span class="n">target</span><span class="p">)</span>
+
+<span class="c1">-- to send directions:</span>
+<span class="n">speedwalk</span><span class="p">(</span><span class="s2">&quot;s;s;w;w;w;w;w;w;w;&quot;</span><span class="p">)</span>
+
+<span class="c1">-- to send many things:</span>
+<span class="n">sendAll</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;open door e&quot;</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="s2">&quot;get item&quot;</span><span class="p">,</span> <span class="s2">&quot;sit&quot;</span><span class="p">)</span>
+</pre></div>
+<!-- 
+NewPP limit report
+Cached time: 20260217075641
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.058 seconds
+Real time usage: 0.063 seconds
+Preprocessor visited node count: 126/1000000
+Post‐expand include size: 1025/2097152 bytes
+Template argument size: 8/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 11974/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   19.931      1 -total
+ 23.47%    4.678      1 Template:TOC_right
+ 22.91%    4.566      6 Template:Note
+ 18.53%    3.693      2 Template:MudletVersion
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:157-0!canonical and timestamp 20260217075641 and revision id 21574
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:Basic_Essentials&amp;oldid=21574">https://wiki.mudlet.org/index.php?title=Manual:Basic_Essentials&amp;oldid=21574</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/w/Category:Mudlet_API" title="Category:Mudlet API">Mudlet API</a></li><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3ABasic+Essentials" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3ABasic+Essentials" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:Basic_Essentials">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:Basic_Essentials&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:Basic_Essentials">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:Basic_Essentials&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:Basic_Essentials&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:Basic_Essentials" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:Basic_Essentials" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:Basic_Essentials&amp;oldid=21574" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:Basic_Essentials&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 28 April 2024, at 11:32.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.058","walltime":"0.063","ppvisitednodes":{"value":126,"limit":1000000},"postexpandincludesize":{"value":1025,"limit":2097152},"templateargumentsize":{"value":8,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":11974,"limit":5000000},"timingprofile":["100.00%   19.931      1 -total"," 23.47%    4.678      1 Template:TOC_right"," 22.91%    4.566      6 Template:Note"," 18.53%    3.693      2 Template:MudletVersion"]},"cachereport":{"timestamp":"20260217075641","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":444});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1bb4b7ccbc6',t:'MTc5Mzk4NzQ2NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1bb4b7ccbc6',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20260217075641 -->
+</html>

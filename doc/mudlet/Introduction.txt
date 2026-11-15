@@ -1,0 +1,2125 @@
+Mudlet: Introduction
+
+Fuente oficial: https://wiki.mudlet.org/w/Manual:Introduction
+Copia consultable; véase manifest.json para fecha, hash y atribución.
+
+Other languages:
+Deutsch
+ • ‎
+English
+ • ‎
+Nederlands
+ • ‎
+Türkçe
+ • ‎
+français
+ • ‎
+italiano
+ • ‎
+polski
+ • ‎
+suomi
+ • ‎
+Ελληνικά
+ • ‎
+русский
+ • ‎
+العربية
+ • ‎
+한국어
+
+Thank you for choosing Mudlet.  This page will help you get started with the basics and introduce you to the various screens and automation tools that Mudlet provides.  Many areas of Mudlet have tool-tips displayed when you hover over a button or other element to provide more help.
+
+# Connection Window
+
+The connection dialog is the first screen you will be greeted with when starting Mudlet.  This window is how you set up your initial connection parameters and begin connecting to your game. 
+
+Connection window showing pre-configured games
+
+Note
+ 
+Note:
+  The first time Mudlet is run, some options cannot be edited until you create your first new profile or after you start your first game.
+
+## Pre-Configured Games
+
+In the left of the window, you will notice a list of several MUD games. To play, select one from the list and click the "Connect" button. 
+
+Note
+ 
+Note:
+  Game admins: like to see your game added to Mudlet? Visit 
+Listing Your MUD
+.
+
+## New Connections
+
+If you're using Mudlet with an unlisted game or for other telnet services, you'll want to click on the 
+New
+ button then enter a name for the profile (perhaps your character or game name) in the 
+Profile name
+ section.  Next enter your 
+Server address
+ and 
+port
+, these are typically listed on the game website.
+
+Creating a new game connection
+
+Note
+ 
+Note:
+  Connection parameters cannot be edited while a connection is in progress for a selected profile.
+
+To connect to a game securely (via 
+TLS
+ or SSL) tick the 'Secure' box in the profile connection settings:
+
+Secure-connection.png
+
+Note
+ 
+Note:
+  Game admins/developers: check out 
+our sample configuration
+ page or this 
+example of a TLS proxy using nginx
+ for some examples on how to setup a secure connection for your game.
+
+## Connecting via telnet:// links
+
+Mudlet registers itself as a handler for 
+telnet://
+ and 
+telnets://
+ URI schemes. This means you can connect to a game by clicking a link on a website or running it from the command line:
+
+telnet://aardmud.org:4000
+
+telnets://securemud.example.com
+
+When Mudlet receives a telnet link, it will:
+
+Look for an existing profile matching the server address and port
+
+If found, load that profile and connect
+
+If not found, create a new profile and connect
+
+telnets://
+ links enable TLS encryption automatically. The default port is 23 for 
+telnet://
+ and 992 for 
+telnets://
+.
+
+For MUD administrators:
+ You can add these links to your website so players can connect with a single click:
+
+<
+a
+ 
+href
+=
+"telnet://yourmud.com:4000"
+>
+Play Now
+</
+a
+>
+
+<
+a
+ 
+href
+=
+"telnets://yourmud.com:4000"
+>
+Play Now (secure)
+</
+a
+>
+
+## Automatic Login
+
+If your game takes in the characters name first and password next, Mudlet can automatically login for you. To make use of this feature in the Options tab type your name and password into the relevant sections as seen below.
+
+Enter character name and password for automatic login
+
+All passwords by default are stored securely in the computers credential store - which means you can't just open up the file with the password and look at it.
+
+Toggle password storage in profile or computer
+
+When the password is stored securely on the computer, you can find it in the credential manager.
+
+Passwords stored securely in Windows
+
+Passwords stored securely in Linux
+
+Passwords stored securely in macOS
+
+Note
+ 
+Note:
+  The drawback of storing the password on the computer itself, however, is that if you use cloud sync for your profiles - the password won't the synchronised.  You can go to Special Options in Mudlet's Preferences and change the password to be stored within the profile to make that work, if you'd like the password to be portable but visible in plaintext.
+
+## Discord Rich Presence
+
+Since version 3.14 forward, Mudlet supports Discord Rich Presence integration for games using GMCP.  
+
+This feature can only be enabled on the pre-configured games which currently also support the feature.  For more information, read about 
+Discord GMCP
+
+# Main Window
+
+The main window is where you interact with your chosen game.  Thanks to Mudlet's graphical user capabilities this window can look vastly different depending on which game you play or how you choose to set it up.  The main elements always remain the same though as seen below.
+
+default game screen with descriptions
+
+Toolbar preferences including; icons sizes, toggling visibility and other display options can be found under Preferences -> General.
+
+Preferences screen showing toolbar options.png
+
+## Default Shortcuts
+
+Script editor: Show Map
+(ALT + E): (ALT + M)
+
+Script editor: Compact input line
+(ALT + E): (ALT + L)
+
+Script editor: Preferences
+(ALT + E): (ALT + P)
+
+Script editor: Notepad
+(ALT + E): (ALT + N)
+
+Script editor: Package manager
+(ALT + E): (ALT + O)
+
+Script editor: Module manager
+(ALT + E): (ALT + I)
+
+Script editor: MultiView
+(ALT + E): (ALT + V)
+
+Script editor: Mute all media
+(ALT + E): (ALT + K)
+
+Script editor: Play
+(ALT + E): (ALT + C)
+
+Script editor: Disconnect
+(ALT + E): (ALT + D)
+
+Script editor: Reconnect
+(ALT + E): (ALT + R)
+
+Script editor: Close profile
+(ALT + E): (ALT + W)
+
+Script editor: Toggle Time Stamps
+(ALT + E): (CTRL + ALT + T)
+
+Script editor: Toggle Replay
+(ALT + E): (CTRL + ALT + R)
+
+Script editor: Toggle Logging
+(ALT + E): (CTRL + ALT + L)
+
+Script editor: Toggle Emergency Stop
+(ALT + E): (CTRL + ALT + S)
+
+## Lua
+
+Mudlet uses 
+Lua 5.1
+ as the scripting language.
+
+## Command Line
+
+Mudlets command line is especially designed for playing MUD and MUSH games. It aims at reducing the amount of typing by using autocompletion and tab completion schemes that are optimized for typical game playing situations. The command line offers tab completion (TAB key with or without shift) and autocompletion (cursor up and cursor down keys).
+
+Tab completion
+ searches the last 100 lines in the game output buffer for words matching the word that you are currently typing. This is useful if you have to type complicated long names. You only have to type the first letters and then press the tab key until the proposal is what you want.
+
+Autocompletion
+ tries to match your current typing with your command history. Example: If you typed the same command a while ago, you only have to start typing the first couple of letters and then press the cursor up key until the proposal matches the command that you want to use.
+
+Command history
+ - if you haven’t started to type anything yet, you can browse through your command history with the cursor up and cursor down keys. However, if you have started typing pressing cursor up will result in a shot at autocompletion.
+
+Escape key
+ - to get out of autocompletion you can press the ESC key any time. After pressing ESC the entire text gets selected and you can overwrite it or get back into command history mode.
+
+### Command-line Shortcuts
+
+The command line has some built in keyboard shortcuts.
+
+Tab: Up or Down
+Tab completion, see this technical manual section .: Command line history, see this technical manual section .
+
+Tab: Home
+Tab completion, see this technical manual section .: Move cursor to beginning of line.
+
+Tab: End
+Tab completion, see this technical manual section .: Move cursor to end of line.
+
+Tab: CTRL+A
+Tab completion, see this technical manual section .: Select all.
+
+Tab: CTRL+F
+Tab completion, see this technical manual section .: Move cursor to search bar.
+
+Tab: SHIFT+Enter
+Tab completion, see this technical manual section .: Create an additional input line.
+
+Tab: SHIFT+Left
+Tab completion, see this technical manual section .: Highlight one character left of the cursor (or unhighlight if already highlighted).
+
+Tab: SHIFT+Right
+Tab completion, see this technical manual section .: Highlight one character right of the cursor (or unhighlight if already highlighted).
+
+Tab: CTRL+Left
+Tab completion, see this technical manual section .: Move cursor one word to the left.
+
+Tab: CTRL+Right
+Tab completion, see this technical manual section .: Move cursor one word to the right.
+
+Tab: Backspace
+Tab completion, see this technical manual section .: Deletes the character to the left of the cursor.
+
+Tab: CTRL+Backspace
+Tab completion, see this technical manual section .: Remove one word left of the cursor.
+
+Tab: Delete
+Tab completion, see this technical manual section .: Deletes the character to the right of the cursor.
+
+Tab: CTRL+Delete
+Tab completion, see this technical manual section .: Remove one word right of the cursor.
+
+Tab: SHIFT+CTRL+Left
+Tab completion, see this technical manual section .: Highlight one word left of cursor.
+
+Tab: SHIFT+CTRL+Right
+Tab completion, see this technical manual section .: Highlight one word right of cursor.
+
+Tab: CTRL+C
+Tab completion, see this technical manual section .: Copies the selected text to the clipboard.
+
+Tab: CTRL+Insert
+Tab completion, see this technical manual section .: Copies the selected text to the clipboard.
+
+Tab: CTRL+K
+Tab completion, see this technical manual section .: Deletes to the end of the line.
+
+Tab: CTRL+V
+Tab completion, see this technical manual section .: Pastes the clipboard text into line edit.
+
+Tab: SHIFT+Insert
+Tab completion, see this technical manual section .: Pastes the clipboard text into line edit.
+
+Tab: CTRL+X
+Tab completion, see this technical manual section .: Deletes the selected text and copies it to the clipboard.
+
+Tab: SHIFT+Delete
+Tab completion, see this technical manual section .: Deletes the selected text and copies it to the clipboard.
+
+Tab: Ctrl+Z
+Tab completion, see this technical manual section .: Undoes the last operation.
+
+Tab: Ctrl+Y
+Tab completion, see this technical manual section .: Redoes the last undone operation.
+
+Tab: PgUp
+Tab completion, see this technical manual section .: Scroll up one page in the main window buffer
+
+Tab: PgDn
+Tab completion, see this technical manual section .: Scroll down one page in the main window buffer
+
+Tab: Ctrl+Enter
+Tab completion, see this technical manual section .: Return to the bottom of the main window buffer
+
+See also: 
+QT manual
+
+## Logging Output to text or HTML Log Files
+
+Press on the little button with the blue folder with the green arrow icon on the lower right side of the command line to turn on plain text logging. Click again to stop logging. 
+
+Folder-downloads.png
+
+This will inform you about the file name and path of the log file. If you want to log in color you can choose to log to files in HTML format, but note that due to the nature of HTML, these log files tend to get very large quickly.  This, along with other options, can be set in the 
+Preferences
+ window (Alt+P).
+
+Log files can be found at the Mudlet home directory in your profile directory. To get the path to your Mudlet home directory you can type on the command line:
+
+lua
+ 
+getMudletHomeDir
+()
+
+Log files are stored in "<mudletHomeDir>/logs". Each profile has its own <mudletHomeDir> path. Log files have a similar naming convention to the autosaved profiles: date#time.txt or date#time.html
+
+## Split Screen
+
+Mudlet has a split screen: if you scroll up in the game text screen (or any other mini console window), the screen will split in two parts. The lower part will follow the game output while the upper part will stay focused on your scrolling: this way you can read easier through old passages without missing what is going on at the moment. Split screen can be activated via the scroll bar, page up / page down keys or the mouse wheel.
+
+Scrolling back to the end will close the split screen automatically. A click on the middle mouse button will close the split screen immediately as well as pressing 
+Ctrl+Enter
+ on the keyboard (
+command+return
+ for mac). The size of the 2 parts of the split screen can be modified by dragging the separator bar in the middle with the mouse. Split screen can be helpful when selecting text in order to copy it to trigger editor e.g. when making triggers. If you don’t use split screen when selecting text, new arriving text will upset your selection.
+
+To scroll quicker, hold 
+Ctrl
+ while scrolling. Conversely, to scroll just one line at a time hold 
+Shift
+ (available in Mudlet 4.11+).
+
+## Multi Session Gaming
+
+Mudlet lets you play several simultaneous game sessions. However, currently we have the restriction that you cannot use the same profile twice. Consequently, if you want to play three characters on the same game at the same time, you need to make 3 profiles with 3 different names e.g. 
+[email protected]
+, 
+[email protected]
+ etc.
+
+Each profile will be shown in a new tab as a session of its own. That means, your old session will not be stopped, when you start a second one. When you have more than one active session, try clicking the menu button "MultiView" to see them all together.
+
+You can switch between profiles (characters) by pressing 
+Ctrl+Tab
+ or select a particular one with 
+Ctrl+<number of tab>
+.
+
+Want to be able to control all your profiles at once for games that allow multiplaying? Check out 
+a package just for this
+. On Mudlet 4.10 and earlier, a pre-installed 
+send-to-all-profiles
+ package provided control through the :<command> alias.
+
+# Automation and Scripting
+
+## Game Rules
+
+It is possible to create an Artificial Intelligence (AI) that does everything you can do in a game. Even more so, an AI can outperform you in every routine operation, depending on the complexity of the task.  Because scripting is so powerful, it can give you a competitive advantage that some people consider unfair or even cheating. In some cases it can have much more far reaching consequences on a game, such as inflation, loss of balance in terms of game-mechanics or, ultimately, a complete crash of in-game economy. For these and various other reasons the administrators and owners of some games forbid or limit the use of automation tools.
+
+By including scripting support in Mudlet, we effectively give you the ability to create and utilize AI toolkits. However, 
+we do not endorse or promote the usage of automation if it is prohibited in your game!
+ Keep in mind that by cheating you can lessen the quality of gameplay for both your fellow players and yourself.
+
+## Automation Features
+
+Mudlet offers a vast array of standard features to automate or otherwise improve your gaming experience. These include, but are not limited to:
+
+Aliases
+
+User-defined text input, which is converted into a different, usually longer input before being sent to the game.
+
+e.g. typing 
+gg
+ to have 
+get gold from ground;put gold in bag
+ be sent to the game.
+
+Variables
+
+allow the user to store text, numbers, tables, etc. for easier use inside scripts.
+
+Triggers
+
+execute user-defined commands upon receiving specific out from the game,
+
+e.g. the game sends: 
+You see Elyssa standing here.
+ and Mudlet automatically sends 
+wave to Elyssa
+ back to the game
+
+Keybindings
+
+also known as hotkeys, allow executing certain user-defined commands by simultaneously pressing a specific combination of keys
+
+e.g. pressing 
+CTRL+H
+ to send 
+say Hello Miyuki!
+ to the game or play 'La Marseillaise'
+
+Timers
+
+delay the execution of a command or execute it after a specified period of time.
+
+e.g. Display a reminder to visit the questmaster after 30 minutes.
+
+Scripts
+
+write a custom GUI or reusable functions
+
+Make use of Mudlet's Lua capabilities and 
+API
+.
+
+Events (Advanced)
+
+allow the user to make triggers for specific events like when Mudlet has connected to the game, or even user-defined events to use in complex system making.
+
+To get started on programming in Mudlet, 
+watch these screencasts
+ that explain the basics that'll help you get started. 
+
+Note
+ 
+Note:
+   Mudlet users tend to use the word 
+script
+ interchangeably.  A script is a section of code that performs a task.  Scripts can be used in aliases, timers, triggers, etc.. and do not only have to be written in the 
+Script Editor / Scripts
+ section.  Although once you become a more advanced script writer you will find ways to reuse code by using 
+functions
+ which are typically written in the 
+Scripts
+ section.
+
+Keep on reading for an introduction to each of these Mudlet features.
+
+# A Quick Note on Combining Text
+
+Throughout this introduction (and the wiki itself) you will see various methods to combine two 
+strings
+ (words, variables, characters, etc) together.  One commonly used method is by using two periods, ie. 
+..
+ to concatenate things together, another method is using the 
+function
+ 
+f
+.  You can 
+read more about this now
+, or just follow along with the introduction and you will get familiar with this concept as we progress.
+
+# Aliases
+
+Aliases are the most basic way of automating the gameplay - you can use aliases to shorten the amount of typing you do. Aliases convert one command into longer or multiple commands.  Aliases are defined in the Script Editor (Alt+E) under Aliases (Ctrl+2).  See more detailed info here: 
+Manual:Alias Engine
+
+To shorten multiple commands;
+
+ gg
+
+could sending be these commands to the game instead;
+
+ get gold
+ put gold in bag
+
+saving you from having to type both of these lines every time you see some gold.  See how you can create an alias like this in the next section.
+
+## Making an Alias
+
+To make our 
+gg
+ alias open the 
+Script Editor
+ (Alt+E) and click on the 
+Aliases
+ button (Ctrl+2), and then click on the 
+Add
+ button (Ctrl+N).  This will make a new blank alias for you and we will fill in the details.
+
+A new blank alias.
+
+The 
+Name:
+ field is optional - it’s mainly used for the alias list on the left as an easy way to distinguish between all of the aliases you will likely write. Let's name it 
+Get gold
+ for now.  
+
+The 
+Pattern:
+ field is where you type a regex pattern to describe the command you'll enter to make your new alias spring into action.  Our alias pattern is 
+gg
+ which will perform the larger get and put commands.  Since this is a regex pattern though, we will use 
+^gg$
+.  More on this later (
+or read about it now here
+).
+
+The 
+Command:
+ field is where we put our larger commands.  Here we put our two commands, 
+get gold;;put gold in bag
+.  The semi-colon separates the line into two commands to send to the game.
+
+gg alias with name, pattern and commmand
+
+Click the 
+save
+ button and close the Script Editor window.  Now when you type 
+gg
+ into the command line, Mudlet will send 
+get gold;;put gold in bag
+.
+
+Note
+ 
+Note:
+  When saving an alias, the symbol for unsaved items disappears and makes way for a little blue checkbox. If this box is checked the alias is active. If the blue box is empty, the alias is deactivated and will not work until you press the 
+activate
+ toggle padlock icon.
+
+## Regex Patterns in Aliases
+
+Mudlet uses Perl regular expression aliases. 
+Regex
+ is a special way of matching patterns of words. For the beginners it is enough to think of them as a general way to specify the words itself and their placement within the line. For basic aliases know that the character 
+^
+ symbolizes the beginning of the line and the character 
+$
+ symbolizes the end of the line. 
+
+If you want to make an alias 
+tw
+ that sends the command 
+take weapon
+, you don’t have to care about placement or pattern matching in general. All you need to do is fill 
+^tw$
+ in the 
+Pattern
+ field and type 
+take weapon
+ in the 
+Command
+ field, then save.  If we didn't do this then sending the command 
+twiddle
+ would match because they both contain the letters 'tw'.
+
+Some basic examples can be found on the 
+Regex
+ page.  More advanced usage will be described throughout the manual.
+
+## Alias Scripts
+
+You’re walking around the epic dungeon of the Unholy Firedragon gathering roots in order to brew a potion and thus restore the growth of hair on Farmer Benedict’s bald head. Once you see a root, you need to:
+
+open the bag of tools
+get the sickle of damnation from the bag of tools
+cut the root of hair-growth
+<wait 5 seconds>
+clean the sickle of damnation of deadly root acid
+put the sickle of damnation in the bag of tools
+close the bag of tools
+open the magical bag of storing
+take the root
+put the root into the magical bag of storing
+close the magical of storing
+
+And once you’re done, do the exact same thing nine more times… thrice a day!
+
+Alternatively, you can just create an alias that would do this all with a single command - for example, 
+quest
+.  Since there is so many commands it doesn't make sense to use the Command field.  We instead will put all of this in a Lua script which makes it easier to read and modify later.  Here's a sneak peek on what you should have in the end: 
+
+Quest alias.png
+
+Now typing 
+quest
+ on the command line will execute the script and gather all the ingredients to brew up the potion.
+
+This example forgoes using the 
+Command
+ field and instead uses the larger Lua script area below it.  It makes use of a few Mudlet Lua functions to send the commands to the game and performs the same thing as our simple example of getting gold does; notably the 
+send
+ function.  More on this later (
+or read about it now here
+).  We could thus turn our get gold example into this;
+
+ send("get gold")
+ send("put gold in bag")
+
+You should remove the commands from the 
+Command
+ field and 
+gg
+ will now perform that same thing.  This sets us up for more advanced scripting in the future, e.g. getting different objects to put in a bag through 
+variables
+ or making a targetting alias for killing enemies.
+
+## Making a Targetting Alias
+
+Making an alias that will remember your target will make it easier to use your skills and save you the hassle of typing the target in all the time.  Note the use of 
+Regex
+ and Lua scripting in this example and try to become familiar with the basic concepts.  
+
+Open the 
+Script Editor / Aliases
+ and do the following:
+
+In the 
+Name:
+ field, call it
+
+Targeting system
+
+In the 
+Pattern:
+ field, place the following:
+
+ ^t (.+)$
+
+That will match all commands that you type in the format of 
+t <any words>
+ - it'll match 
+t rat
+, 
+t tsol'aa
+, 
+t human
+, etc.
+
+Since we will use a script here, we do not need to place anything in the Command field.
+
+Next in the 
+script box
+ add this:
+
+target
+ 
+=
+ 
+matches
+[
+2
+]
+
+echo
+(
+"My target is now: "
+ 
+..
+ 
+target
+ 
+..
+ 
+"
+\n
+"
+)
+
+Our script does the following;
+
+assigns a variable called 
+target
+ with the value of 
+matches[2]
+.  
+matches[2]
+ comes from the pattern matching 
+Regex
+ is performing and capturing for you.  More on variables later (or read about 
+global variables here
+).
+
+sends a notification line (only to you on in the main screen, not to the game) via the 
+echo
+ function showing that the variable 
+target
+ now contains whatever matched when you typed in the alias 
+t
+.  More about the echo function later (
+or read about it now here
+).
+
+Note
+ 
+Note:
+  You can also echo lines that are coloured by using 
+cecho
+ (coloured echo) as in the example screenshot.  See a list of 
+all available colours here
+.
+
+A simple targetting alias.
+
+That's it - whenever you use alias pattern 
+t
+, your target will be remembered in the 
+target
+ variable.
+
+Next, you'd like to make use of this variable in your skills or spells - so make another alias that will do the actual attacking for you! Here's an example one:
+
+Pattern:
+
+^dk$
+
+Script:
+
+send
+(
+"dirt kick "
+..
+target
+)
+
+This alias will dirt kick the target when you type in 
+dk
+. Feel free to adjust the alias pattern and script as you see fit.
+
+How about a healing function?
+
+Pattern:
+
+ ^heal$
+
+Script:
+
+send("cast 'cure critical' " .. target)
+
+### Optional Target
+
+You can also make an alias with an optional target:
+
+  ^cs(?: (.+))?$
+
+with this example script:
+
+send
+(
+"cast spell at "
+..
+(
+matches
+[
+2
+]
+ 
+or
+ 
+target
+))
+
+Now the target, if it is supplied, is going to be in 
+matches[2]
+, otherwise it will revert to the one you set earlier with your targeting system.  Good for fighting multiple enemies, but keeping a main foe on the ready.
+
+## Built-in aliases
+
+The following aliases are available by default in new Mudlet profiles.
+
+Alias: lua
+Description: Run Lua code from the input line.
+Examples: lua print("hello") lua 2+2 lua clearWindow()
+
+Alias: `echo
+Description: Simulate text from the game to test your triggers. You can use $ for a new line.
+Examples: `echo You see a rabbit cross the road. `echo line1$line2
+
+Alias: baseui
+Description: Show, hide or re-dock Mudlet's starter interface . Available in Mudlet 5.0 +
+Examples: baseui baseui hide baseui show baseui dock
+
+If an alias on the list isn't working for you - try copying it from a new profile, since existing profiles will not get new aliases as they're introduced to Mudlet.
+
+# Variables
+
+Variables are containers for data. In Mudlet's scripting language (Lua), they can store numbers, words, booleans (true or false) or tables. You can use variables to store important information like how much gold do you have, your hit points or an enemy target like described in our aliases introduction.
+
+The syntax for making a variable remember a number is the following - you can create them directly in the 
+Script Editor
+ (Alt+E) in a 
+new script
+ (Ctrl+3):
+
+variable
+ 
+=
+ 
+1234
+
+Or to make it remember some text:
+
+my_name
+ 
+=
+ 
+"Bob"
+
+As we touched on in the alias introduction, variables can also be made directly when performing an alias or matching a trigger.
+
+It will then appear in the 
+Variables
+ view, like so:
+
+Variables view.png
+
+Note
+ 
+Note:
+  The variables view doesn't automatically refresh, but it can be refreshed by clicking the 
+Variables
+ button.
+
+You can also do basic maths easily, for example:
+
+ hp = 100 + 25        -- hp now equals 125
+ hp = hp * 2          -- the value of hp multiplied by 2
+
+To concatenate strings together, you can use the 
+..
+ expression:
+
+my_full_name
+ 
+=
+ 
+"Bob "
+ 
+..
+ 
+"the Builder"
+
+Don't forget to use a space when you're concatenating two variables together:
+
+firstname
+ 
+=
+ 
+"Apple"
+
+lastname
+ 
+=
+ 
+"Red"
+
+-- bad: will produce "AppleRed"
+
+full_name
+ 
+=
+ 
+firstname
+ 
+..
+ 
+lastname
+
+-- good: will produce "Apple Red"
+
+full_name
+ 
+=
+ 
+firstname
+ 
+..
+ 
+" "
+ 
+..
+ 
+lastname
+
+You can also edit and delete variables from the variables view. Be careful when changing or deleting existing variables made by third-party scripts - you might break them. If that happens, re-opening the profiles will restore the variables back to working order.
+
+Note
+ 
+Note:
+  While you can create variables in the Variables view, remember that they won't be saved when Mudlet shuts down - if you'd like them to be more permanent, create scripts with the variables instead.  
+More advanced information on variables is available here.
+
+## String Interpolation
+
+String Interpolation is a fancy term for inserting a variable name into the string itself using placeholder syntax.  This method uses the shorthand 
+f
+ function, which is best shown with some examples (
+further reading here
+).
+
+gold
+ 
+=
+ 
+5
+
+echo
+(
+f
+(
+"I have {gold} gold coins."
+))
+
+You can see we added the 
+f
+ function to the echo and wrapped the variable named 
+gold
+ with curly parentheses.  This will display in exactly the same way as:
+
+gold
+ 
+=
+ 
+5
+
+echo
+(
+"I have "
+ 
+..
+ 
+gold
+ 
+..
+ 
+" gold coins."
+))
+
+You can use either method and decide which is best for you.  You will see both types used throughout this manual.
+
+# The send function
+
+To send a command to the game from a script, you can use the send() function. Data inside the quotes is sent to the game.
+
+For example, the following code sends the command to eat bread:
+
+send
+(
+"eat bread"
+)
+
+If you’d like to include variables in the send command, you need to prefix and suffix them with two dots outside the quotes, like this:
+
+send
+(
+"My target is "
+ 
+..
+ 
+target
+ 
+..
+ 
+".  What's yours?"
+)
+
+If your commands ends with a variable, you don't need the two dots after:
+
+send
+(
+"Hi, my name is "
+ 
+..
+ 
+character
+)
+
+Should you want to include double quotes, use a double set of square brackets like this:
+
+send
+(
+[[say "Hi, I'm new here!"]]
+)
+
+When inserting a variable, you'd use the ]] and [[ appropriately:
+
+send
+(
+[[poke ]]
+..
+victim
+)
+
+To send many directions, use 
+speedwalk()
+:
+
+speedwalk
+(
+"n;e;s;w;"
+)
+
+To send many actions, use 
+sendAll()
+:
+
+sendAll
+(
+"attack"
+,
+ 
+"cast magic missile"
+)
+
+# The echo function
+
+To show text to yourself you can use the 
+echo()
+ function from a script.  This does not send any commands to the game, it is simply a way to give yourself visual feedback.  For example, the following code will display "Time to eat dinner!" on your screen:
+
+echo
+(
+"Time to eat dinner!"
+)
+
+If you’d like to include variables in your echo, you concatenate (put together) the value of your variable to the text:
+
+my_gold
+ 
+=
+ 
+5
+
+echo
+(
+"I have "
+ 
+..
+ 
+my_gold
+ 
+..
+ 
+" pieces of gold!
+\n
+"
+)
+
+If you'd like to include a new line in your text, insert 
+\n
+ for it:
+
+echo
+(
+"this echo
+\n
+is on
+\n
+three lines!"
+)
+
+-- comes out at:
+
+this
+ 
+echo
+
+is
+ 
+on
+
+three
+ 
+lines
+!
+
+Coloured echoes are performed with the 
+cecho
+ function and using html-like colour tags. 
+
+ cecho("<blue>My target is now: <red>" .. target .. "<reset>\n")
+
+There are also 
+decho
+ and 
+hecho
+ functions which can use RGB or hexadecimal colour codes.  You can read more about them in the 
+Mudlet API
+.
+
+# Seeing errors in your code
+
+Undoubtedly you'll be making mistakes when you're coding! To err is human, after all. There are two types of mistakes you can make in general: when the words you've typed in make no sense to Lua at all, or they do make sense, but they don't do what you actually thought and intended them to do - or other circumstances are preventing it from working at that point in time.
+
+## Syntax errors aka Ladybugs
+
+When you type something in that doesn't make sense to Lua, it's called a 
+syntax error
+. Mudlet will realize this and show you a little ladybug, and also tell you on which line the mistake is. Here's an example:
+
+Syntax error.png
+
+The 
+echo()
+ function on line 3 is missing a closing bracket - every bracket in Lua that's not green needs to be closed. Mudlet showed you a ladybug symbol on the alias, to indicate that the alias has a problem. It also showed you that the ( bracket should be closed on line 3. To fix this, you'd add the 
+)
+, save, and the warning will disappear.
+
+## Runtime errors aka Errors View
+
+Another type of mistake is when what you typed in makes sense to Lua when you typed it in, but when it's time for code to be actually run, something wrong happens. For example, you asked Lua to 
+eecho("hey!")
+ - this is valid, you typed it in right, but there is one problem - <coded>eecho doesn't exist. So when you run the alias, nothing actually happens. Why?
+
+Mudlet puts all problems that happen when things are run into the Errors view. It is hidden by default, open it from the 
+Script Editor
+ (Alt+E) and pressing the exclamation 
+Error button
+ (Ctrl+8). This is where the error is logged by default - not in your main window, so you aren't spammed when you make a mistake in a piece of code that happens very often.  
+
+Note
+ 
+Note:
+  If you do wish to see the errors in your main window you can change your preferences (Alt+P) (Preferences -> Main display -> Echo Lua errors to the main console).
+
+Opening it up will show this:
+
+Buggy alias.png
+
+Let's analyse the message that's shown to us. 
+object:<chat>
+ is the Mudlet name you gave to the thing which errored. 
+function
+ will tell you 
+Alias
+, 
+Trigger
+, 
+Script
+ or something else - this helps you locate the problematic item in question.
+
+Next red line is the actual error: it's saying that on line 1, 
+eecho
+ is a 
+nil value
+. In Lua, 
+nil
+ means doesn't exist. Hence what it's telling you is that 
+eecho
+ does not actually exist!  Change it to 
+echo
+, run it again, and there will be no errors.
+
+As you tinker with Mudlet you will become more familiar with the errors shown and be able to quickly debug your scripts.  
+
+Note
+ 
+Note:
+  If you need help with a script you can also ask on our friendly 
+Discord server
+.
+
+## Debug Window
+
+Launched from the Script Editor window via the ladybug icon (or Ctrl+8), the debug window provides additional information about how your scripts are compiling and running, successfully or not.  
+
+Debug window.png
+
+Debug window showing errors and multiple profiles.png
+
+Each profile open will write to the same debug window, but will be prepended with a unique (alphabetic) identifier.
+
+# Triggers
+
+Triggers are an automation feature offered in most game clients. They help you respond quicker to a particular situation and generally make things more convenient for you since you need to do less manual work.  Your triggers can perform all the repetitive tasks for you like eating and drinking or keeping spells maintained.
+
+The way a trigger works is simple - you define a response to an incoming line from the game.  The incoming line will need to match the 
+trigger pattern
+ and the response will be your script (or some other feature available in Mudlet like playing sounds).  When the trigger "sees" this text in the game output, it will run the commands you have selected.
+
+The trigger window is similar to the Alias window in that you need fill in the three main elements; trigger name, trigger pattern and trigger response (a command, script, sound, etc). 
+
+## Example - Basic Pickup Trigger
+
+Scenario: whenever you see gold laying on the ground you want to pick it up
+
+In the 
+Name:
+ field, type 
+pickup gold automatically
+.  Remember this is an arbitrary name that helps you identify it in the trigger list on the left.
+
+Decide on the text the game sends and how you want to react.  We notice that every time there is gold on the ground the game sends:
+
+  Some gold has been dropped here.
+
+Type 
+Some gold has been dropped here.
+ in the data field titled "1".  This is the 
+trigger pattern
+ section that Mudlet will respond to.  Check the trigger drop-down type on the right of the line says "substring" to match the phrase on any line received from the game
+
+Now you type 
+get gold;;put gold in bag
+ in the 
+Command
+ field.  This will be the command that the trigger will send to your game whenever the trigger fires.
+
+Finally click "Save Item" to save your gold pickup trigger.  The blue checkbox icon in front of the trigger name (in the trigger tree on the left side) gets checked. The trigger is now activated.  Drop some gold on the ground and look around.  Did you automatically pick it back up?
+
+Trigger-example-1.png
+
+Note
+ 
+Note:
+  Trigger pattern type 'exact match' or 'start of line' would also be appropriate here.  See more information on the 
+different trigger types here
+.
+
+As the trigger is active, each time the phrase 
+Some gold has been dropped here.
+ appears in the game output your trigger will issue the command 
+get gold
+ and 
+put gold in bag
+ automatically. It will repeat this as long as the trigger stays active.
+
+## Disabling Triggers
+
+When you want to stop a trigger from responding to game output simply select the trigger from the list and then click on the padlock icon to deactivate it. The check mark will vanish and the trigger will stop firing until you re-enable it again via the padlock icon. 
+
+## Trigger Groups
+
+You can also put triggers in a group via the 
+Add Group
+ button and lock a group of triggers or an entire trigger branch. If you do that, all triggers in this group or branch will be locked until you remove the lock again. The locking starts from the root of the tree down to the end. As soon as a lock is met the trigger engine will skip the locked branch. Locking and unlocking branches is one of the most common actions you have to take care of when playing. For example, you can turn on your defensive triggers when engaging into a battle and you turn them off afterwards, or you turn on your harvesting triggers only when you are going to harvest.  
+
+Locked-triggers.png
+
+Above, the defensive triggers are active but the harvest triggers are inactive.
+
+## Highlighting of Trigger Patterns
+
+When starting out it is helpful to use Mudlet's built-in highlight triggers to highlight the text that has been a match for a trigger (trigger pattern match) to get the hang of the different trigger and pattern types. Click on the 
+highlight trigger
+ option and pick a foreground and a background color that you like to highlight your trigger with. When the trigger matches it automatically highlight its pattern. It is a quick and easy way of highlighting words that are important to you at the moment. You don’t have to know anything about scripting, regular expressions, etc to use highlight triggers. Just type in the word you like to be highlighted, select appropriate colors, save the new trigger and activate it.
+
+Highlight example 2.png
+
+Some gold has been dropped here.
+ will be highlighted in red, with a yellow background.
+
+## Further Reading
+
+Triggers can get quite advanced and further examples with triggers can be found on the 
+regex examples page
+.
+
+To read more about 
+trigger pattern
+ matching types, 
+read this part of the manual
+.
+
+# Keybindings
+
+Note
+ 
+Note:
+ 
+A basic number-pad movement keybinding package can be found on the forums
+.
+
+Keybindings (also known as hotkeys or macros) allow you to press a button to execute a script and are in many respects very similar to aliases. However, instead of typing in what you want to be done (maybe including additional parameters) and pressing Enter, you simply hit a single key (or combination of keys) to let Mudlet do the work.
+
+Open the 
+Script Editor
+ (Alt+E) and click the 
+Keybindings
+ button (Ctrl+5).  The keybinding window is similar to the Alias window in that you need fill in the three main elements; keybinding name, keybinding (the actual keypress combination) and keybinding response (the command or script).
+
+New-keybinding.png
+
+## Example - Number Pad Movement
+
+You wish to use the number pad for moving around in game instead of having type north, south, east and west.
+
+You have decided, number pad 8 will be north, south will be number pad 2, east is number pad 6 and west is number pad 4.
+
+Create a new keybinding and in the 
+Name:
+ field put
+
+North
+
+Command:
+ will be the exact command you want to substitute for your keypress.  In this case the command is north.
+
+north
+
+Keybinding:
+ is the actual key combination to set.  Click the 
+Grab New Key
+ button to the right of this field and hit the number pad 8 on your keyboard.
+
+Save your new keybinding.
+
+New-keybinding-north.png
+
+Note
+ 
+Note:
+  When saving a keybinding, the symbol for unsaved items disappears and makes way for a little blue checkbox. If this box is checked the keybinding is active. If the blue box is empty, the keybinding is deactivated and will not work until you press the activate toggle padlock icon. 
+
+Note
+ 
+Note:
+  Keybindings can also be in 
+groups
+, just like aliases and triggers.
+
+Continue this same procedure for south, east and west.
+
+## Example - Target System
+
+Let's build on the targetting system we created during the alias tutorial.
+
+Scenario: you regularly fight goblins.  They tend to get the jump on you with a surprise attack so you have decided it's quicker to hit a keybinding than typing out 
+t goblin
+ in the midst of battle.  But you also don't want to lose the target you were tracking after the goblin fight is over.
+
+You want two keybindings to instantly set your target to one or the other.  You have decided on Ctrl+G for targetting goblins, Ctrl+O for reverting to the old target.
+
+We need to use the Lua script section as this is not a basic game command.
+
+#### Part 1
+
+Create a new keybinding and in the 
+Name:
+ field put
+
+Target Goblins
+
+Command:
+ will be left blank as we will utilise the script section.
+
+Keybinding:
+ is the actual key combination to set.  Click the 
+Grab New Key
+ button to the right of this field and hit the 
+Ctrl
+ and 
+g
+ keys.
+
+In the script section we will modify our targetting script slightly to save an old target.
+
+ oldTarget = target or "not set"
+ target = "goblin"
+ echo("My target is now: " .. target .. " (old target: " .. oldTarget .. ")\n")
+
+Save your new keybinding.
+
+Keybind-target-goblin.png
+
+What does this script do?
+
+we set a variable 
+oldTarget
+ to an existing target set with the 
+t
+ alias, but if that's not set we will use 
+not set
+ as a placeholder to remind us
+
+we set the variable 
+target
+ to 
+goblin
+
+we echo our change as a notification
+
+### Part 2
+
+Create another keybinding and in the 
+Name:
+ field put
+
+Target Old Target
+
+Command:
+ will be left blank as we will utilise the script section.
+
+Keybinding:
+ is the actual key combination to set.  Click the 
+Grab New Key
+ button to the right of this field and hit the 
+Ctrl
+ and 
+o
+ keys.
+
+In the script section we will recall our old target.
+
+target = oldTarget or "not set"
+echo("My target is now: " .. target .. "\n")
+
+Save your new keybinding.
+
+Target-old-keybinding.png
+
+What does this script do?
+
+we set a variable 
+target
+ back to its 
+oldTarget
+ we saved earlier alias, but if that's not set we will use 
+not set
+ as a placeholder to remind us
+
+we echo our change as a notification
+
+### Usage
+
+Let's see how this would work in action.
+
+You get a quest to hunt down a brigand.  Set your target to brigand using the alias 
+t brigand
+
+Wander stealthily along the path, alas, you get surprised by goblins.
+
+Hit Ctrl+G on your keyboard to temporarily switch to targetting goblins, making full use of your other skill and spell aliases to dirt kick and cast fireball.
+
+After triumph, hit Ctrl+O to revert your target back to hunting the brigand.
+
+# Timers
+
+Timers can be used to execute a specific command at a certain time, after a certain time or once every so often. They can be created in the 
+Script Editor
+ or directly from a script (via aliases, triggers, keybindings, etc) with the latter being the most flexible.
+
+## via Script Editor
+
+You can only create recurring timers with the Script Editor i.e. ones that will continually execute a script over and over again, but you have the advantage of being able to identify and turn them on of off easily with the interface.
+
+Open the 
+Script Editor
+ (Alt+E) and click on 
+Timers
+.  
+
+Scenario: You want to be reminded every 30 minutes to check in with your quest master for a new quest.
+
+Create a new timer with the 
+Add Item
+ button.
+
+In the 
+Name:
+ field, add
+
+quest check reminder
+
+Leave the 
+Command:
+ field blank, as we will call a simple script instead.
+
+Set the timer to 30 minutes.
+
+In the 
+Script
+ section type
+
+echo("Reminder!  Check to see if the quest master has any new quests.")
+
+The result should resemble the screenshot.
+
+Timer-example.png
+
+Adding some colouring to make it stand out with 
+cecho
+, and never forget to quest again.
+
+Note
+ 
+Note:
+  When saving a timer, the symbol for unsaved items disappears and makes way for a little blue checkbox. If this box is checked the timer is active. If the blue box is empty, the timer is deactivated and will not work until you press the activate toggle padlock icon. 
+
+## via Script Code
+
+More advanced timer usage is available with scripts and using the 
+tempTimer
+ function.
+
+The syntax to use a simple countdown timer that performs an action after a period then stops is this:
+
+tempTimer
+(
+seconds
+,
+ 
+[[code]]
+)
+
+Seconds needs to be a number (with an optional decimal point) that is the time until the 
+code
+ executes, e.g. 
+1
+ or 
+0.5
+ as 1 second or half a second).
+
+Code can be any commands which you want executed surrounded in square brackets, 
+[[
+ and 
+]]
+.
+
+Here's an example which you can copy and put in your code directly:
+
+-- this timer will greet you exactly 2 seconds after it was made
+
+tempTimer
+(
+2
+,
+ 
+[[ echo("hello!\n") ]]
+)
+
+You can combine both normal and timed commands, for example as code in an alias or keybinding:
+
+-- this code will let you go north immediately, then go east after 2 seconds 
+
+send
+(
+"n"
+)
+
+tempTimer
+(
+2
+,
+ 
+[[ send("e") ]]
+)
+
+Note
+ 
+Note:
+  All timers which are made at the same time, will start counting from this common point in time, not relative to each other - so if you want to make one timer go off 1 second after another, 
+don't do this
+:
+
+-- incorrect:
+
+tempTimer
+(
+1
+,
+ 
+[[ echo("hello!\n") ]]
+)
+
+tempTimer
+(
+1
+,
+ 
+[[ echo("how are you?\n") ]]
+)
+
+Both of these timers will go off at once, because both started together, right away! Instead, 
+do this
+:
+
+-- correct:
+
+tempTimer
+(
+1
+,
+ 
+[[ echo("hello!\n") ]]
+)
+
+tempTimer
+(
+2
+,
+ 
+[[ echo("how are you?\n") ]]
+)
+
+Note
+ 
+Note:
+  An alternate way to using [[ brackets ]] is to wrap the commands using function style as below. (This is available since Mudlet 3.5).  This helps retain syntax highlighting (colouring) in the script editor, which you may find easier to read.
+
+-- this timer will greet you exactly 2 seconds after it was made
+
+tempTimer
+(
+2
+,
+ 
+function
+()
+ 
+echo
+(
+"hello!
+\n
+"
+)
+ 
+end
+)
+
+That's it for the basics of scriptable timers in Mudlet. Want to know more? Here is a 
+full description of timers in Mudlet
+.
+
+# Buttons
+
+You can use Mudlet to create simple buttons on your screen without much coding at all.  They can be attached to bars at the top, left or right side of the screen. Each of these locations can contain an infinite number of button bars that are shown when active or hidden when inactive. You can also create drop-down menus or two-state buttons - ones that you can click on and they stay pressed down.
+
+To get started with buttons, 
+make a group
+ (buttons have to be in a group to show) and add buttons inside them. Active buttons or groups to make them be visible. Here's an example - by making a new group and a button inside it, and activating both, we got a button to spawn:
+
+Buttons Start.png
+
+Buttons show 
+in the order they appear in
+ - so if you'd like one button to be above another, just drag it visually in the editor!
+
+## Menus
+
+An important use case for buttons is to have various menus which contain a number of checkbox buttons or sub menus in order to quickly set various scripting configuration or other options in your scripts. To start a menu of buttons, create another group inside your toolbar group and add individual buttons inside it, like so:
+
+Buttons Menu.png
+
+To change the side of Mudlet that the buttons use, change the 
+Dock area <side>
+ option and save. You can also make buttons align themselves top to bottom or left to right with the 
+Orientation <horizontal or vertical>
+ option.
+
+Changing button group position.png
+
+## Making buttons do stuff
+
+Buttons are half as useful only being there. You can also make them do commands for you for when you press them! To make a button do your command, or alias, or anything - type it into the 
+Command on Button Down
+ field. Pressing the button will do that command then:
+
+Button command.png
+
+You can also make a button do two things, toggling between each. To do that, 
+enable the 
+Push Down Button
+ option, and type the command you'd like your button to do when it's released in the 
+Command on Button Up
+ field. 
+
+Alternating button.png
+
+Note
+ 
+Note:
+
+If you'd like to include & in the button name, put double && - a single & will act as a mnemonic to underline the shortcut letter.
+
+## Coloring & customizing buttons
+
+To change how your buttons look, you put descriptions into the 
+CSS Style Sheet
+ field, in the format of 
+<a word describing something>: <how it should look>;
+. For example, if you'd like to make the button be red, put 
+background-color: red;
+ into the CSS box:
+
+Red button.png
+
+A full list of names you can use to customize your buttons view is 
+available here
+. Take note of how that page has the descriptions inside {} brackets - you don't need them, only paste what's inside them in Mudlet.
+
+Applying some skills, we can make our buttons look much more aesthetic:
+
+Sexy Buttons.png
+
+This was the code used, feel free to start your buttons off with it:
+
+color
+:
+ 
+white
+;
+ 
+background
+-
+color
+:
+ 
+orange
+;
+ 
+font
+-
+size
+:
+ 
+12
+px
+;
+
+padding
+:
+ 
+6
+px
+;
+
+border
+-
+radius
+:
+ 
+5
+px
+;
+
+Users with OS Windows 10 may find that for Mudlet versions 4.11+, the 
+background-color: <colour>;
+ is not changing the background as expected. This can be fixed by changing the border of the button. For example 
+border: none;
+. Although that may destroy the size of button and it has to be set manualy. To achieve somehow similar size to default buttons you can use something like this:
+
+background
+-
+color
+:
+ 
+<
+your_colour
+>
+;
+
+border
+:
+ 
+1
+px
+ 
+solid
+ 
+gray
+;
+
+width
+:
+ 
+90
+px
+;
+ 
+height
+:
+ 
+25
+px
+;
+
+margin
+:
+ 
+1
+px
+;
+
+font
+-
+size
+:
+ 
+14
+px
+;
+
+## Managed layouts
+
+To get your buttons to align into rows or columns (that depends on their orientation), add a number to the 
+Number of columns or rows
+ field. Here's an example with two columns on the left:
+
+Two row alignment.png
+
+Here's another example with three columns on the left:
+
+Three column alignment.png
+
+Note
+ 
+Note:
+
+ To leave a gap before the first button in a bar, set 
+Offset of first button
+. It counts empty slots, from 0 up to one less than the number of columns or rows, so it only becomes available once a bar has more than one of them. Before 5.0 Mudlet shifted the first button along by one every time the toolbar was saved instead, with no way to set it. 
+Mudlet Version
+Available in Mudlet
+5.0
++
+
+## Making Buttons with Labels
+
+Labels can also be used to make buttons.  They are far more flexible and you can design 
+almost any UI
+ you can dream up considering they are simply 
+clickable images
+.
+
+We'll start by making twelve buttons along the top of our screen.
+
+-- set a 10% margin from the top border to provide space
+local width, height = getMainWindowSize()
+setBorderTop(height/10)
+
+-- create some variable space so we don't pollute global variables
+MyButtons = {}
+
+-- create a label for the entire margin, for now
+MyButtons.Top = Geyser.Label:new({
+  name = "MyButtons.Top",
+  x = 0, y = 0,
+  width = "100%",
+  height = "10%",
+})
+
+-- create a horizontal box to organise the buttons equally
+MyButtons.TopHBox = Geyser.HBox:new({
+  name = "MyButtons.TopHBox",
+  x = 0, y = 0,
+  width = "100%",
+  height = "100%",
+},MyButtons.Top)
+
+-- add some buttons to the HBox using a Geyser label
+for i=1,12 do
+  MyButtons["MyButton"..i] = Geyser.Label:new({
+    name = "MyButtons.Button"..i,
+  },MyButtons.TopHBox)
+  MyButtons["MyButton"..i]:echo("<center>My Button "..i)
+end
+
+Basic top button layout, made with labels.
+
+The main function creating the button labels is Geyser.Label.  You should now see the results as above.  A bit plain, you could add some CSS to spark things up a bit.
+
+-- add some buttons to the HBox using a Geyser label
+for i=1, 12 do
+  MyButtons["MyButton"..i] = Geyser.Label:new({
+    name = "MyButtons.Button"..i,
+  },MyButtons.TopHBox)
+  MyButtons["MyButton"..i]:echo("<center>My Button "..i)
+
+  -- colour my buttons with CSS
+  MyButtons["MyButton"..i]:setStyleSheet([[
+    background-color: rgba(135,206,250,100);
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    qproperty-wordWrap: true;
+  ]])
+end
+
+Much better.  But currently they are just twelve pretty labels that don't perform any function.  Let's make them clickable with 
+setClickCallback
+
+setClickCallback
+ assigns a function to a Geyser label that will be called when the mouse is clicked on the label.  This function has similar methods for double clicking, hovering, etc.. all of which can be found in the 
+Geyser manual
+.  Let's keep it straightforward for now with a single click.  Consider the following addition;
+
+-- add some buttons to the HBox using a Geyser label
+for i=1,12 do
+  MyButtons["MyButton"..i] = Geyser.Label:new({
+    name = "MyButtons.Button"..i,
+  },MyButtons.TopHBox)
+  MyButtons["MyButton"..i]:echo("<center>My Button "..i)
+
+  -- colour my buttons with CSS
+  MyButtons["MyButton"..i]:setStyleSheet([[
+    background-color: rgba(135,206,250,100);
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    qproperty-wordWrap: true;
+  ]])
+  
+  -- make our buttons clickable
+  MyButtons["MyButton"..i]:setClickCallback(function() echo("My Button " ..i.." clicked!\n") end)
+end
+
+CSS labels acting as clickable buttons.
+
+You should now be able to click the button and see the echo to the main screen.
+
+### Incorporating Adjustable Containers
+
+Adjustable Containers
+ are a Geyser element that provides a flexible, user configurable, dockable window.  Let's move our buttons to one of these containers and see what else we can do.
+
+-- create some variable space so we don't pollute global variables
+MyButtons = {}
+
+-- create an adjustable container for more flexibility
+MyButtons.Top = Adjustable.Container:new({
+  name = "MyButtons.Top",
+  x = 0, y = 0,
+  width = "100%",
+  height = "10%",
+})
+
+-- create a horizontal box to organise the buttons equally
+MyButtons.TopHBox = Geyser.HBox:new({
+  name = "MyButtons.TopHBox",
+  x = 0, y = 0,
+  width = "100%",
+  height = "100%",
+},MyButtons.Top)
+
+-- add some buttons to the HBox using a Geyser label
+for i=1, 12 do
+  MyButtons["MyButton"..i] = Geyser.Label:new({
+    name = "MyButtons.Button"..i,
+  },MyButtons.TopHBox)
+  MyButtons["MyButton"..i]:echo("<center>My Button "..i)
+
+  -- colour my buttons with CSS
+  MyButtons["MyButton"..i]:setStyleSheet([[
+    background-color: rgba(135,206,250,100);
+    border-style: solid;
+    border-width: 1px;
+    border-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    qproperty-wordWrap: true;
+  ]])
+  
+  -- make our buttons clickable
+  MyButtons["MyButton"..i]:setClickCallback(function() echo("My Button " ..i.." clicked!\n") end)
+end
+
+Labels in an adjustable container, docked to the top border.
+
+We removed the setBorderTop code because the adjustable container can be docked to a border by right clicking on the title bar and a margin is automatically created.  It is docked to the top border in this example.
+
+The container can be resized and moved around or perhaps changed to a VBox for slick left and right border docking.
+
+Resized and undocked adjustable container with clickable labels acting as buttons.
+
+This example can be further expanded to add images to the labels, highlighting when hovering over labels or even multi-state buttons with variables to track the state.  Your imagination is the only limit.
+
+## Making Buttons with Geyser.Button
+
+Mudlet 4.18 introduced yet another way to create buttons using the Geyser.Button element.  Head over to the 
+Geyser manual
+ for some ideas on how to use a Geyser.Button in your GUI.
+
+# Scripts
+
+A script is a piece of code written in the Lua language very much like the above examples in aliases, triggers, etc.  They are typically more extensive (such as creating a graphical user interface), but can also be simple helper functions which can save a lot on typing.  By using scripts you gain access to the 
+full API
+ which can, for example, create triggers and aliases programmatically, respond to 
+events
+, or 
+create gauges
+ to track your health.
+
+Note
+ 
+Note:
+   Mudlet users tend to use the word 
+script
+ interchangeably.  A script is a section of code that performs a task.  Scripts can be used in aliases, timers, triggers, etc.. and do not only have to be written in the 
+Script Editor / Scripts
+ section.  Although once you become a more advanced script writer you will find ways to reuse code by using 
+functions
+ which are typically written in the Scripts section.  These are the types of scripts we are discussing in this section of the manual.
+
+Scripts are edited in the Script Editor (Alt+E), Scripts tab (Ctrl+3).
+
+## Functions
+
+Functions are pieces of code that perform a certain task, much like a response to a trigger or a button press.  Functions are the basis for 
+reusable code
+ and allow you to write some code once and reuse it many times over.  Functions are 
+called
+ whenever they need to be 
+run
+.  You are already familiar with 
+send
+ and 
+echo
+, those are both functions being called when we want them to run.
+
+### Example: spellup function
+
+For example, we have made a button called 
+spellup
+.  We also have an alias 
+spellup
+ that performs exactly the same thing.  We also have a trigger that identifies when we have been dispelled that again performs the exact same thing.  
+
+The problem now is that we have three different areas of code to maintain.  What if we wanted to change the spells slightly?  We would need to change the code in all three sections.  This is a perfect use case for a function.  
+
+To create a new script, open the Script Editor (Alt+E) and the Scripts tab (Ctrl+3). 
+
+Add a New Item (Ctrl+N) and in the 
+Name
+ field type 
+Spellup Functions
+.  Ignore event handlers for now as that is an advanced topic and add the following example to the script section: 
+
+function spellup()
+   send("cast bless")
+   send("cast haste")
+   send("cast fly")
+   send("cast sanctuary")
+end
+
+We use the 
+function
+ keyword followed by whatever we wish to name this function, in this case 
+spellup
+, followed by some parentheses.  We added some commands to send to the game using the 
+send
+ keyword (which is in itself a function call).  We then 
+end
+ or close the function off.
+
+Now in our button, alias and trigger our script to cast those four spells would simply be:
+
+ spellup()
+
+The function 
+spellup()
+ is found by Mudlet and runs (or 
+executes
+) whatever the function contains, in our case casting four spells.
+
+For further reading about scripts check out the 
+scripting part of the manual
+.
+
+# Final Thoughts
+
+We hope this has given you a solid introduction to using Mudlet.  As you can see it is a very advanced MUD client capable of handling a variety of tasks in many ways.  The key takeaway is defining your problem first then using the appropriate method to resolve it.
+
+I want to be able to drink automatically when thirsty.  Trigger.
+
+I want to cut down on repetitive typing.  Alias.
+
+I want to save my game every 10 minutes.  Timer.
+
+I want a hotkey to quit the game when I see the boss coming.  Keybinding.
+
+Note
+ 
+Note:
+  We strive to provide good documentation and would appreciate any feedback on clarity or further helpful examples.  Join us on the 
+forums
+ or 
+Discord
+.  
+
+Happy MUDding!

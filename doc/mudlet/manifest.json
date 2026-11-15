@@ -1,0 +1,92 @@
+[
+  {
+    "page": "Lua_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:Lua_Functions",
+    "html": "Lua_Functions.html",
+    "text": "Lua_Functions.txt",
+    "sha256": "09c9a39b3d2cced373bb9ada3d0e32e9ce5ccec8d6e4ea844a9ddfecbed02003",
+    "retrieved_utc": "2026-11-06T17:51:09.706712+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Mudlet_Object_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:Mudlet_Object_Functions",
+    "html": "Mudlet_Object_Functions.html",
+    "text": "Mudlet_Object_Functions.txt",
+    "sha256": "0defbfe1f08e0f9ccb2cbe84a7b0434efc1c7535b4d67b1263900d7777daebd9",
+    "retrieved_utc": "2026-11-06T17:51:05.010297+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Miscellaneous_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions",
+    "html": "Miscellaneous_Functions.html",
+    "text": "Miscellaneous_Functions.txt",
+    "sha256": "1cc281867fd9a4f50d892d9d6e7e46b941fdd0b633cd37f81b69b64a54b76305",
+    "retrieved_utc": "2026-11-06T17:51:05.268653+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Basic_Essentials",
+    "url": "https://wiki.mudlet.org/w/Manual:Basic_Essentials",
+    "html": "Basic_Essentials.html",
+    "text": "Basic_Essentials.txt",
+    "sha256": "a2688fdc6b3ed497703b4f39712f121ef05454168adf608a61c1866377f10e44",
+    "retrieved_utc": "2026-11-06T17:51:06.206936+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "File_System_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:File_System_Functions",
+    "html": "File_System_Functions.html",
+    "text": "File_System_Functions.txt",
+    "sha256": "e27d764ac375f09ff7e3f4b5b7e974da7c95c9e6f05ad3ba5fa5e97330f9387b",
+    "retrieved_utc": "2026-11-06T17:51:06.181769+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Table_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:Table_Functions",
+    "html": "Table_Functions.html",
+    "text": "Table_Functions.txt",
+    "sha256": "ac58832d45810022dd03c048c4d95b45ca7f836876a59407295afadc1a0e2042",
+    "retrieved_utc": "2026-11-06T17:51:07.590058+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "String_Functions",
+    "url": "https://wiki.mudlet.org/w/Manual:String_Functions",
+    "html": "String_Functions.html",
+    "text": "String_Functions.txt",
+    "sha256": "ea27c704dff05d65059fb7dc5268731d071581b5db7f64150bcf7ff5f44fc622",
+    "retrieved_utc": "2026-11-06T17:51:07.699394+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Trigger_Engine",
+    "url": "https://wiki.mudlet.org/w/Manual:Trigger_Engine",
+    "html": "Trigger_Engine.html",
+    "text": "Trigger_Engine.txt",
+    "sha256": "6171a299a6c82692c4eea195bb1a6beadc332015f37d21d68fe9326b840ab860",
+    "retrieved_utc": "2026-11-06T17:51:08.716157+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Event_Engine",
+    "url": "https://wiki.mudlet.org/w/Manual:Event_Engine",
+    "html": "Event_Engine.html",
+    "text": "Event_Engine.txt",
+    "sha256": "4554a51fa5dd2228deec615e1a4894422c7bf0bd23f4f049d3a1e4b96703e60c",
+    "retrieved_utc": "2026-11-06T17:51:09.326003+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  },
+  {
+    "page": "Introduction",
+    "url": "https://wiki.mudlet.org/w/Manual:Introduction",
+    "html": "Introduction.html",
+    "text": "Introduction.txt",
+    "sha256": "8afb11dc02923f55ad4265e12d1594a3a1b57c5fe74662891b2609e8a60fe5aa",
+    "retrieved_utc": "2026-11-06T17:51:09.810712+00:00",
+    "license": "Contenido de Mudlet Wiki: consultar aviso de licencia y atribución en el HTML original."
+  }
+]

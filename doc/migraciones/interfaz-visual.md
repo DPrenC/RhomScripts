@@ -1,0 +1,69 @@
+# Interfaz visual compartida (retirada)
+
+Documento histórico: este panel y su alias se han eliminado. Sus pruebas corresponden a la implementación anterior; no describen la ventana nativa actual.
+
+## Alcance
+
+Capa de presentación conectada al configurador y a las listas existentes. Los dominios conservan selección, valores y acciones; el panel recibe una vista y delega las operaciones. No interpreta de nuevo el texto del juego ni mantiene una segunda configuración. Los anuncios y sonidos siguen perteneciendo al comportamiento existente.
+
+El diseño es un panel lateral acoplable de Mudlet con cabecera, ruta, filas seleccionables, detalle, acciones y ayuda. Seleccionar una fila no ejecuta su acción. La selección por teclado y por ratón es la misma. El configurador tiene prioridad sobre las listas entrantes. Ocultar el panel libera el espacio de su ventana acoplada sin cerrar el dominio. No escribe los bordes de la consola.
+
+## Contratos documentales
+
+Consulta: 7 de noviembre de 2026. Última estable oficial: [Mudlet 5.1.1](https://github.com/Mudlet/Mudlet/releases/tag/Mudlet-5.1.1). Esto identifica el objetivo documental; la versión realmente ejecutada y sus resultados corresponden al informe de validación.
+
+`Geyser.Container:new(cons, container)` crea y devuelve el contenedor; `cons` incluye nombre, posición y dimensiones. `move(x, y)` y `resize(width, height)` cambian restricciones; `show()` y `hide()` controlan visibilidad de la jerarquía. No se documenta un retorno funcional para esos cambios ni una versión mínima individual. [Referencia oficial](https://www.mudlet.org/geyser/files/geyser/Geyser.Container.html). Se contrastó también el [fuente del tag estable](https://github.com/Mudlet/Mudlet/blob/Mudlet-5.1.1/src/mudlet-lua/lua/geyser/GeyserContainer.lua).
+
+`Geyser.Container:delete()` elimina recursivamente hijos y retira los registros de seguimiento de Geyser. Existe en el fuente estable 5.1.1, no solo en la documentación mutable. No se usa `deleteLabel` directamente sobre objetos Geyser vivos: esa función elimina el elemento de Mudlet pero por sí sola no mantiene el registro de Geyser. La documentación consultada no fija versión mínima ni retorno de `delete()`.
+
+`Geyser.UserWindow:new(cons)` devuelve una ventana con raíz Geyser propia. Las opciones `docked=true`, `dockPosition="right"`, `restoreLayout=false` y `autoDock=true` crean un panel acoplado. Los elementos interiores se construyen pasando esa ventana como padre. `show()` y `hide()` permiten ocultarla y recuperarla; `delete()` realiza la limpieza recursiva y `type_delete()` elimina además la raíz auxiliar vacía. No se documenta versión mínima individual. Con `docked=true` se ignoran posición y tamaño iniciales; `resize(width, height)` solo redimensiona una ventana flotante. [Referencia UserWindow](https://www.mudlet.org/geyser/files/geyser/Geyser.UserWindow.html), [fuente estable](https://github.com/Mudlet/Mudlet/blob/Mudlet-5.1.1/src/mudlet-lua/lua/geyser/GeyserUserWindow.lua).
+
+`getUserWindowSize(windowName)` devuelve ancho y alto del interior, en píxeles; está documentada desde 4.6.1. El evento `sysUserWindowResizeEvent` entrega `(event, x, y, windowname)`; el panel debe filtrar su nombre antes de redistribuir filas. La sección del evento no especifica versión mínima. [API oficial](https://wiki.mudlet.org/w/Manual:UI_Functions#getUserWindowSize), copia [Lua_Functions.txt](../mudlet/Lua_Functions.txt); [evento oficial](https://wiki.mudlet.org/w/Manual:Event_Engine#sysUserWindowResizeEvent), copia [Event_Engine.txt](../mudlet/Event_Engine.txt).
+
+`Geyser.Label:new(cons, container)` crea la etiqueta. `echo(message, color, format)` admite formato HTML; para mostrar datos del juego como texto hay que escapar los caracteres de marcado. `setStyleSheet(css)` aplica una hoja de estilo de Qt a la etiqueta. `setClickCallback(func, ...)` registra el callback que recibe al final una tabla de evento; `event.button` identifica el botón, por ejemplo `LeftButton`. Estos métodos de cambio no documentan un retorno útil ni una versión mínima individual. [Referencia](https://www.mudlet.org/geyser/files/geyser/Geyser.Label.html), [fuente estable](https://github.com/Mudlet/Mudlet/blob/Mudlet-5.1.1/src/mudlet-lua/lua/geyser/GeyserLabel.lua). El callback de clic aparece en el fuente estable aunque no figura en el índice actual de LDoc.
+
+`getBorderRight()` devuelve el ancho reservado derecho en píxeles; versión mínima documentada: 4.0. `setBorderRight(size)` establece esa reserva, excluida del área de texto; no se documentan versión mínima ni retorno. `getMainWindowSize()` devuelve ancho y alto en píxeles; no se indica versión mínima. [Funciones de interfaz oficiales](https://wiki.mudlet.org/w/Manual:UI_Functions#getBorderRight). Copia local: [Lua_Functions.txt](../mudlet/Lua_Functions.txt), secciones del mismo nombre.
+
+`registerAnonymousEventHandler(eventName, functionReference[, oneShot])` devuelve el identificador; la referencia directa a función y el identificador están documentados desde 3.5. `killAnonymousEventHandler(id)` elimina ese registro, disponible desde 3.5; no se documenta retorno. [Referencia oficial](https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions#registerAnonymousEventHandler), copia [Miscellaneous_Functions.txt](../mudlet/Miscellaneous_Functions.txt).
+
+`sysWindowResizeEvent` se emite al redimensionar la ventana principal y al cambiar bordes. Por ello un manejador que escribe bordes necesita impedir reentrada y evitar escrituras sin cambios. El evento entrega nombre y nuevas dimensiones; el panel puede consultar las dimensiones actuales mediante `getMainWindowSize()`. [Motor de eventos](https://wiki.mudlet.org/w/Manual:Event_Engine#sysWindowResizeEvent), copia [Event_Engine.txt](../mudlet/Event_Engine.txt). No consta versión mínima en la sección consultada.
+
+## Coexistencia con el paquete oficial
+
+Se inspeccionó el XML oficial descargado e instalado por las pruebas previas, sin modificarlo. `RL_gui_inicializar_bordes` pone los cuatro bordes a cero y reserva el derecho al 30% del ancho. La retirada de su interfaz también restablece bordes. El origen funcional sigue siendo [RLMud_Config.zip](https://mudlet.reinosdeleyenda.es/RLMud_Config.zip); un archivo histórico no demuestra que el servidor no lo haya cambiado.
+
+La inspección del coordinador identifica además que `RL_gui_redimensionar_ui` repone bordes en cada cambio de tamaño. Una reserva manual adicional puede competir con ese comportamiento. Se elige `Geyser.UserWindow` acoplada y componentes hijos, sin llamar a `setBorderRight` ni modificar reservas oficiales. Las APIs de bordes anteriores quedan documentadas como alternativa evaluada, no como dependencia del diseño elegido. No se deben modificar ni ocultar los contenedores del paquete oficial.
+
+## Filas y accesibilidad
+
+Se recomienda un conjunto acotado de filas reutilizadas según la altura disponible y una página calculada a partir de la selección. Así el elemento seleccionado siempre pertenece al grupo visible y se evita depender de una API de desplazamiento no verificada. El estado indica posición y total. Los textos completos deben poder consultarse en el detalle.
+
+La presentación usa un indicador textual de selección además del color. Sus actualizaciones no generan anuncios ni sonidos adicionales. El teclado conserva los contratos actuales; el clic selecciona y las acciones explícitas delegan al dominio. Esto no demuestra todavía accesibilidad de los controles gráficos con el lector externo: requiere observación real. Una API ausente debe propagar el error.
+
+`Geyser.ScrollBox:new(cons, container)` crea el área desplazable; contiene un `Geyser.Container` cuya altura mínima conserva una fila y todos los controles. La ventana puede encogerse por debajo de esa altura sin perder acceso a las acciones mediante sus barras de desplazamiento. Se verificó el constructor y la eliminación recursiva en el [fuente estable](https://github.com/Mudlet/Mudlet/blob/Mudlet-5.1.1/src/mudlet-lua/lua/geyser/GeyserScrollBox.lua) y el [manual oficial](https://wiki.mudlet.org/w/Manual:Geyser#Add_a_scrollable_box). No consta mínima individual ni retorno funcional de sus cambios de tamaño; el constructor devuelve el objeto.
+
+`Label:setAccessibleName(name)` y `Label:setAccessibleRole(role)` establecen el nombre y el papel accesibles; se usa el valor documentado `"button"` para controles pulsables. Devuelven `true` o `nil, motivo`, comprobados mediante `assert`. Existencia y contrato verificados en [GeyserLabel.lua del tag estable](https://github.com/Mudlet/Mudlet/blob/Mudlet-5.1.1/src/mudlet-lua/lua/geyser/GeyserLabel.lua); no consta mínima individual en esa referencia. No se altera la política estándar de `announce(texto)`.
+
+`Label:setToolTip(txt[, duration])` proporciona el texto completo al pasar el ratón por una etiqueta cuyo contenido se recorte. La duración predeterminada es diez segundos; el método no devuelve valor. El texto se escapa igual que en `echo`. Contrato contrastado en el mismo fuente estable; no consta mínima individual. Los nombres accesibles y la lectura del dominio conservan también el texto completo.
+
+El nombre interno de la ventana incorpora `getProfileName()`, que devuelve el nombre del perfil como cadena, para distinguir los perfiles abiertos sin exponer una ruta codificada larga al lector. [API oficial](https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions#getProfileName), copia local [Miscellaneous_Functions.txt](../mudlet/Miscellaneous_Functions.txt). La sección consultada no fija versión mínima.
+
+## Uso y extensión
+
+`rhompanel` y `rhompanel mostrar` muestran el panel; `rhompanel ocultar` lo oculta. Se utiliza una orden de mostrar explícita, en vez de depender de una inversión de visibilidad que podría quedar desincronizada si el usuario cierra mediante el botón nativo de Qt. `interfaz.visible` representa la visibilidad solicitada por RhomScripts, no una consulta a Qt.
+
+`listas.vista()` y `configurador.vista()` devuelven descriptores con `titulo`, `ruta`, `items` (entradas con `texto`), `indice`, `detalle`, `ayuda`, `seleccionar(indice)` y `acciones` (entradas con `texto` y `ejecutar()`). Devuelven `nil` sin herramienta activa. No guardan ni ejecutan operaciones. Cada cambio notifica mediante `interfaz.actualizar()`; una apertura explícita utiliza `interfaz.mostrar()`. El renderizador prioriza el configurador y después la lista activa. Para incorporar otro dominio se implementa el mismo descriptor y se añade su política de elección en `obtener_vista`; no existe un registro dinámico de proveedores en esta primera implementación.
+
+Los atajos se conservan en `keys.lua` y se resuelven en los dominios. Esta tarea comparte la presentación y la selección; no centraliza el controlador del teclado. Los callbacks visuales delegan a las funciones existentes. La recarga de `init.lua` llama a `interfaz.destruir()` antes de sustituir módulos; elimina la ventana y los manejadores conservados por identificador.
+
+## Validación, 7 de noviembre de 2026
+
+Corrección tras la prueba física del usuario: la sincronización entre las funciones de navegación y la vista está comprobada, pero el control contextual del teclado no está implementado. El usuario observa que izquierda/derecha llegan al configurador mientras arriba/abajo siguen actuando sobre el texto. Tab permite alcanzar botones. Abrir el panel no asigna el foco a una lista nativa ni recibe notificaciones Lua al abandonarlo. La selección compartida no demuestra captura de las teclas físicas. Véase [requisito y limitación de foco](foco-teclado-panel.md).
+
+`scripts/validate.ps1 -Mudlet` pasó los nueve controles locales: sintaxis Lua 5.1/LuaJIT, 77 casos por runtime, Luacheck sin avisos, PCRE2, documentación, política de APIs, empaquetado aislado y comprobación de diff. La integración terminó con `STATUS OK` en Mudlet real 5.1.1, última estable consultada por el ejecutor. Evidencia local ignorada por Git: `.tools/mudlet-integration/runs/29bbd73944e6438f98de5841e3e2fd17/result.txt`.
+
+Los diez casos nuevos compartidos ejercitan creación, callbacks de selección y acción separados, anuncios sin duplicación desde el renderizador, ajustes numéricos y booleanos, Escape, confirmación de restablecimiento, prioridad del configurador, páginas, marcado escapado, ocultación, error ante API geométrica ausente y recarga. La prueba real cambia una ventana a flotante, la redimensiona a 360 por 375, consulta dimensiones y comprueba con getters de Geyser que controles y ayuda quedan dentro del contenido desplazable; después vuelve a acoplarla. Las restricciones de Geyser se almacenan como cadenas con unidad, por lo que se usan getters para comprobar píxeles. Los callbacks se instrumentan delegando a Geyser real; invocarlos no equivale a un clic físico de Qt.
+
+La inspección del árbol accesible de Windows encontró el panel, los textos y botones con nombres legibles. La captura de pantalla falló con `FrameArrived timed out` y `window capture timed out`, y el intento de clic de escritorio falló con `coordinate input geometry is unavailable`. Se retiró únicamente el proceso propio del perfil visual aislado. No se afirma revisión gráfica completada, clic físico verificado ni percepción real con el lector externo. No se conectó al juego ni se modificó el portapapeles o los perfiles personales.
+
+Límite pendiente de observación física: en ventanas pequeñas, tras desplazar manualmente hacia las acciones, el ScrollBox puede conservar su desplazamiento al navegar por teclado. La página contiene el elemento seleccionado, pero no se ha verificado que el desplazamiento manual vuelva a mostrarlo automáticamente. Los textos largos pueden recortarse en una fila o detalle de altura fija; se conservan completos en ayuda emergente, nombre accesible y lectura del dominio. El diseño no añade una API de desplazamiento automático sin contrato documentado.

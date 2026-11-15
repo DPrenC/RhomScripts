@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:File System Functions - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"apsDUr9kHjh9o2fDCiRNIwAAAAE","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:File_System_Functions","wgTitle":"File System Functions","wgCurRevisionId":23341,"wgRevisionId":23341,"wgArticleId":274,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Mudlet API","Mudlet Manual"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:File_System_Functions","wgRelevantArticleId":274,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],
+"wgULSAcceptLanguageList":[],"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Mudlet API documentation for functions interacting with the file system."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="File System Functions"/>
+
+	<meta property="og:description" content="Mudlet API documentation for functions interacting with the file system."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:File_System_Functions"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_File_System_Functions rootpage-Manual_File_System_Functions skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:File System Functions</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#File_System_Functions"><span class="tocnumber">1</span> <span class="toctext">File System Functions</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#io.exists"><span class="tocnumber">1.1</span> <span class="toctext">io.exists</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#lfs.attributes"><span class="tocnumber">1.2</span> <span class="toctext">lfs.attributes</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#openMudletHomeDir"><span class="tocnumber">1.3</span> <span class="toctext">openMudletHomeDir</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="File_System_Functions">File System Functions</span></h1>
+<p>A collection of functions for interacting with the file system.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Mudlet also includes LuaFileSystem.  See their <a rel="nofollow" class="external text" href="https://lunarmodules.github.io/luafilesystem/manual.html">manual</a> for more details.
+</p>
+<h2><span class="mw-headline" id="io.exists">io.exists</span></h2>
+<dl><dt>io.exists(path)</dt>
+<dd>Checks to see if a given file or folder exists.</dd>
+<dd>If it exists, it’ll return the Lua true boolean value, otherwise false.</dd>
+<dd>See <a href="/w/Manual:Miscellaneous_Functions#lfs.attributes" title="Manual:Miscellaneous Functions">lfs.attributes()</a> for a cross-platform solution.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- This example works on Linux only</span>
+<span class="kr">if</span> <span class="n">io</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/home/vadi/Desktop&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;This folder exists!&quot;</span><span class="p">)</span>
+<span class="kr">else</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;This folder doesn&#39;t exist.&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- This example will work on both Windows and Linux.</span>
+<span class="kr">if</span> <span class="n">io</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/home/vadi/Desktop/file.tx&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;This file exists!&quot;</span><span class="p">)</span>
+<span class="kr">else</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;This file doesn&#39;t exist.&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h2><span class="mw-headline" id="lfs.attributes">lfs.attributes</span></h2>
+<dl><dt>infoTable = lfs.attributes(path)</dt>
+<dd>Returns a table with detailed information regarding a file or directory, or nil if path is invalid / file or folder does not exist.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">fileInfo</span> <span class="o">=</span> <span class="n">lfs</span><span class="p">.</span><span class="n">attributes</span><span class="p">(</span><span class="s2">&quot;/path/to/file_or_directory&quot;</span><span class="p">)</span>
+<span class="kr">if</span> <span class="n">fileInfo</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">fileInfo</span><span class="p">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;directory&quot;</span> <span class="kr">then</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Path points to a directory.&quot;</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">fileInfo</span><span class="p">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;file&quot;</span> <span class="kr">then</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Path points to a file.&quot;</span><span class="p">)</span>
+    <span class="kr">else</span>
+        <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Path points to: &quot;</span><span class="o">..</span><span class="n">fileInfo</span><span class="p">.</span><span class="n">mode</span><span class="p">)</span>
+    <span class="kr">end</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">fileInfo</span><span class="p">)</span> <span class="c1">-- to see the detailed information</span>
+<span class="kr">else</span>
+    <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;The path is invalid (file/directory doesn&#39;t exist)&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h2><span class="mw-headline" id="openMudletHomeDir">openMudletHomeDir</span></h2>
+<dl><dt>openMudletHomeDir()</dt></dl>
+<dl><dd>Opens the current home directory of the current profile in your local system's file browser. This can be used to review or modify data stored there.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#getMudletHomeDir" title="Manual:Lua Functions">getMudletHomeDir()</a></dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">openMudletHomeDir</span><span class="p">()</span>
+</pre></div>
+<!-- 
+NewPP limit report
+Cached time: 20260904174346
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.034 seconds
+Real time usage: 0.215 seconds
+Preprocessor visited node count: 57/1000000
+Post‐expand include size: 512/2097152 bytes
+Template argument size: 4/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 3568/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  134.941      1 -total
+  1.61%    2.167      1 Template:MudletVersion
+  1.57%    2.113      1 Template:TOC_right
+  0.62%    0.840      1 Template:Note
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:274-0!canonical and timestamp 20260904174346 and revision id 23341
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:File_System_Functions&amp;oldid=23341">https://wiki.mudlet.org/index.php?title=Manual:File_System_Functions&amp;oldid=23341</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/w/Category:Mudlet_API" title="Category:Mudlet API">Mudlet API</a></li><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3AFile+System+Functions" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3AFile+System+Functions" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:File_System_Functions">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:File_System_Functions&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:File_System_Functions">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:File_System_Functions&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:File_System_Functions&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:File_System_Functions" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:File_System_Functions" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:File_System_Functions&amp;oldid=23341" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:File_System_Functions&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 4 September 2026, at 08:30.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.034","walltime":"0.215","ppvisitednodes":{"value":57,"limit":1000000},"postexpandincludesize":{"value":512,"limit":2097152},"templateargumentsize":{"value":4,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":3568,"limit":5000000},"timingprofile":["100.00%  134.941      1 -total","  1.61%    2.167      1 Template:MudletVersion","  1.57%    2.113      1 Template:TOC_right","  0.62%    0.840      1 Template:Note"]},"cachereport":{"timestamp":"20260904174346","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":266});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1bc9f797591',t:'MTc5Mzk4NzQ2NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1bc9f797591',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20260904174346 -->
+</html>

@@ -1,0 +1,35 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "RhomScripts: preparar herramientas de validación",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/setup_validation.ps1"],
+      "problemMatcher": []
+    },
+    {
+      "label": "RhomScripts: validar localmente",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/validate.ps1"],
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "RhomScripts: validar con Mudlet real",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/validate.ps1", "-Mudlet"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "RhomScripts: actualizar documentación oficial",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/update_docs.ps1"],
+      "problemMatcher": []
+    }
+  ]
+}

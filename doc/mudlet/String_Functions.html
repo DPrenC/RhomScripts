@@ -1,0 +1,1028 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:String Functions - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"Z_PtUqTLS9_D8bv_GMij8wAAAAA","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:String_Functions","wgTitle":"String Functions","wgCurRevisionId":22267,"wgRevisionId":22267,"wgArticleId":160,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Pages with syntax highlighting errors","Mudlet Manual","Mudlet API"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:String_Functions","wgRelevantArticleId":160,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],
+"wgRestrictionMove":[],"wgULSAcceptLanguageList":["en","en-us"],"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","jquery.makeCollapsible.styles":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","jquery.makeCollapsible","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cjquery.makeCollapsible.styles%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Mudlet API documentation for functions used to manipulate strings."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="String Functions"/>
+
+	<meta property="og:description" content="Mudlet API documentation for functions used to manipulate strings."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:String_Functions"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_String_Functions rootpage-Manual_String_Functions skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:String Functions</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#String_Functions"><span class="tocnumber">1</span> <span class="toctext">String Functions</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#addWordToDictionary"><span class="tocnumber">1.1</span> <span class="toctext">addWordToDictionary</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#cecho2string"><span class="tocnumber">1.2</span> <span class="toctext">cecho2string</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#decho2string"><span class="tocnumber">1.3</span> <span class="toctext">decho2string</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#f"><span class="tocnumber">1.4</span> <span class="toctext">f</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#getDictionaryWordList"><span class="tocnumber">1.5</span> <span class="toctext">getDictionaryWordList</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#hecho2string"><span class="tocnumber">1.6</span> <span class="toctext">hecho2string</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#removeWordFromDictionary"><span class="tocnumber">1.7</span> <span class="toctext">removeWordFromDictionary</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#spellCheckWord"><span class="tocnumber">1.8</span> <span class="toctext">spellCheckWord</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="#spellSuggestWord"><span class="tocnumber">1.9</span> <span class="toctext">spellSuggestWord</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#string.byte.2C_utf8.byte"><span class="tocnumber">1.10</span> <span class="toctext">string.byte, utf8.byte</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="#string.char.2C_utf8.char"><span class="tocnumber">1.11</span> <span class="toctext">string.char, utf8.char</span></a></li>
+<li class="toclevel-2 tocsection-13"><a href="#string.cut"><span class="tocnumber">1.12</span> <span class="toctext">string.cut</span></a></li>
+<li class="toclevel-2 tocsection-14"><a href="#string.dump"><span class="tocnumber">1.13</span> <span class="toctext">string.dump</span></a></li>
+<li class="toclevel-2 tocsection-15"><a href="#string.enclose"><span class="tocnumber">1.14</span> <span class="toctext">string.enclose</span></a></li>
+<li class="toclevel-2 tocsection-16"><a href="#string.ends"><span class="tocnumber">1.15</span> <span class="toctext">string.ends</span></a></li>
+<li class="toclevel-2 tocsection-17"><a href="#string.find.2C_utf8.find"><span class="tocnumber">1.16</span> <span class="toctext">string.find, utf8.find</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#string.findPattern"><span class="tocnumber">1.17</span> <span class="toctext">string.findPattern</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#string.format"><span class="tocnumber">1.18</span> <span class="toctext">string.format</span></a></li>
+<li class="toclevel-2 tocsection-20"><a href="#string.genNocasePattern"><span class="tocnumber">1.19</span> <span class="toctext">string.genNocasePattern</span></a></li>
+<li class="toclevel-2 tocsection-21"><a href="#string.gfind"><span class="tocnumber">1.20</span> <span class="toctext">string.gfind</span></a></li>
+<li class="toclevel-2 tocsection-22"><a href="#string.gmatch.2C_utf8.gmatch"><span class="tocnumber">1.21</span> <span class="toctext">string.gmatch, utf8.gmatch</span></a></li>
+<li class="toclevel-2 tocsection-23"><a href="#string.gsub.2C_utf8.gsub"><span class="tocnumber">1.22</span> <span class="toctext">string.gsub, utf8.gsub</span></a></li>
+<li class="toclevel-2 tocsection-24"><a href="#string.len.2C_utf8.len"><span class="tocnumber">1.23</span> <span class="toctext">string.len, utf8.len</span></a></li>
+<li class="toclevel-2 tocsection-25"><a href="#string.lower.2C_utf8.lower"><span class="tocnumber">1.24</span> <span class="toctext">string.lower, utf8.lower</span></a></li>
+<li class="toclevel-2 tocsection-26"><a href="#string.match.2C_utf8.match"><span class="tocnumber">1.25</span> <span class="toctext">string.match, utf8.match</span></a></li>
+<li class="toclevel-2 tocsection-27"><a href="#string.patternEscape.2C_utf8.patternEscape"><span class="tocnumber">1.26</span> <span class="toctext">string.patternEscape, utf8.patternEscape</span></a></li>
+<li class="toclevel-2 tocsection-28"><a href="#string.rep"><span class="tocnumber">1.27</span> <span class="toctext">string.rep</span></a></li>
+<li class="toclevel-2 tocsection-29"><a href="#string.reverse.2C_utf8.reverse"><span class="tocnumber">1.28</span> <span class="toctext">string.reverse, utf8.reverse</span></a></li>
+<li class="toclevel-2 tocsection-30"><a href="#string.split"><span class="tocnumber">1.29</span> <span class="toctext">string.split</span></a></li>
+<li class="toclevel-2 tocsection-31"><a href="#string.starts"><span class="tocnumber">1.30</span> <span class="toctext">string.starts</span></a></li>
+<li class="toclevel-2 tocsection-32"><a href="#string.sub.2C_utf8.sub"><span class="tocnumber">1.31</span> <span class="toctext">string.sub, utf8.sub</span></a></li>
+<li class="toclevel-2 tocsection-33"><a href="#string.title"><span class="tocnumber">1.32</span> <span class="toctext">string.title</span></a></li>
+<li class="toclevel-2 tocsection-34"><a href="#string.trim"><span class="tocnumber">1.33</span> <span class="toctext">string.trim</span></a></li>
+<li class="toclevel-2 tocsection-35"><a href="#string.upper.2C_utf8.upper"><span class="tocnumber">1.34</span> <span class="toctext">string.upper, utf8.upper</span></a></li>
+<li class="toclevel-2 tocsection-36"><a href="#utf8.charpos"><span class="tocnumber">1.35</span> <span class="toctext">utf8.charpos</span></a></li>
+<li class="toclevel-2 tocsection-37"><a href="#utf8.escape"><span class="tocnumber">1.36</span> <span class="toctext">utf8.escape</span></a></li>
+<li class="toclevel-2 tocsection-38"><a href="#utf8.fold"><span class="tocnumber">1.37</span> <span class="toctext">utf8.fold</span></a></li>
+<li class="toclevel-2 tocsection-39"><a href="#utf8.insert"><span class="tocnumber">1.38</span> <span class="toctext">utf8.insert</span></a></li>
+<li class="toclevel-2 tocsection-40"><a href="#utf8.ncasecmp"><span class="tocnumber">1.39</span> <span class="toctext">utf8.ncasecmp</span></a></li>
+<li class="toclevel-2 tocsection-41"><a href="#utf8.next"><span class="tocnumber">1.40</span> <span class="toctext">utf8.next</span></a></li>
+<li class="toclevel-2 tocsection-42"><a href="#utf8.remove"><span class="tocnumber">1.41</span> <span class="toctext">utf8.remove</span></a></li>
+<li class="toclevel-2 tocsection-43"><a href="#utf8.title"><span class="tocnumber">1.42</span> <span class="toctext">utf8.title</span></a></li>
+<li class="toclevel-2 tocsection-44"><a href="#utf8.width"><span class="tocnumber">1.43</span> <span class="toctext">utf8.width</span></a></li>
+<li class="toclevel-2 tocsection-45"><a href="#utf8.widthindex"><span class="tocnumber">1.44</span> <span class="toctext">utf8.widthindex</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="String_Functions">String Functions</span></h1>
+<p>A collection of functions used to manipulate strings.
+</p>
+<h2><span class="mw-headline" id="addWordToDictionary">addWordToDictionary</span></h2>
+<dl><dt>addWordToDictionary(word)</dt>
+<dd>Adds the given word to the custom profile or shared dictionary (whichever is selected in preferences).</dd></dl>
+<dl><dd>Returns true on success (the word was actually <i>added</i> to the dictionary by this call) and nil+msg on error - including if the word was already there - this is so that if you have other scripts that you wish to run when a word was added you can make their execution conditional on success here.</dd></dl>
+<dl><dd>See also: <a href="#removeWordFromDictionary">removeWordFromDictionary()</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>word:</i> custom word to add to the dictionary.</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.18</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>addWordToDictionary("Darkwind")
+addWordToDictionary("黑暗的风")
+addWordToDictionary("норм")</pre></div>
+<dl><dt>Example - function making use of return value</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>function rememberPlayerName(name)
+  if addWordToDictionary(name) then
+    echo("Added '" .. name .. "' to dictionary...\n")
+  end
+end</pre></div>
+<h2><span class="mw-headline" id="cecho2string">cecho2string</span></h2>
+<dl><dt>plainText = cecho2string(formattedText)</dt></dl>
+<dl><dd>Strips the text formatting from the string passed in, leaving behind only the text.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#ansi2string" title="Manual:Lua Functions">ansi2string()</a>, <a href="/w/Manual:Lua_Functions#hecho2string" title="Manual:Lua Functions">hecho2string()</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.15</span><span class="version-label-plus">+</span></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>formattedText:</i></li></ul>
+<dl><dd>The string you want to strip the formatting codes from</dd></dl>
+<dl><dt>Returns</dt></dl>
+<ul><li>The string with the formatting codes stripped out.</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local exampleString = "&lt;red&gt;Formatted &lt;b&gt;string&lt;/b&gt;"
+local plainText = cecho2string(exampleString)
+-- "Formatted string"</pre></div>
+<h2><span class="mw-headline" id="decho2string">decho2string</span></h2>
+<dl><dt>plainText = decho2string(formattedText)</dt></dl>
+<dl><dd>Strips the text formatting from the string passed in, leaving behind only the text.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#ansi2string" title="Manual:Lua Functions">ansi2string()</a>, <a href="/w/Manual:Lua_Functions#cecho2string" title="Manual:Lua Functions">cecho2string()</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.15</span><span class="version-label-plus">+</span></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>formattedText:</i></li></ul>
+<dl><dd>The string you want to strip the formatting codes from</dd></dl>
+<dl><dt>Returns</dt></dl>
+<ul><li>The string with the formatting codes stripped out.</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local exampleString = "&lt;255,0,0&gt;Formatted &lt;b&gt;string&lt;/b&gt;"
+local plainText = decho2string(exampleString)
+-- "Formatted string"</pre></div>
+<h2><span class="mw-headline" id="f">f</span></h2>
+<dl><dt>formattedString = f(str)</dt>
+<dd>Allows you to combine variables and functions into text (string interpolation) using <code>{}</code>.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>str:</i></li></ul>
+<dl><dd>The string to perform interpolation against.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.11</span><span class="version-label-plus">+</span></div>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Using f is slower than using concatenation with the '..' operator by a fair bit, due to the way it has to gather scope for supporting local variables. For aliases or single calls this isn't so bad, but if you're looping a large table and building a string then f's slowness will really start to show and bring performance down.
+</p>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- old way:
+cecho("\nHello, "..matches[2]..", how is it going?")
+
+-- new way:
+cecho(f("\nHello {matches[2]}, how is it going?"))</pre></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>testResult = "successful"
+-- old way:
+echo("The test was "..testResult.."\n")
+-- with f:
+echo(f("The test was {testResult}\n"))
+-- echoes "The test was successful\n"
+
+local testResult = "a failure"
+echo(f("The test was {testResult}\n"))
+-- echoes "The test was a failure\n" as it sees the local scope over global.</pre></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- You can also execute simple expressions
+echo(f("2 + 2 = {2 + 2}\n"))
+-- echoes "2 + 2 = 4\n"
+
+-- Or more complicated ones
+local function testFunc(item)
+  return item:title()
+end
+
+echo(f("You should properly capitalize names, such as {testFunc('marilyn')}\n"))
+-- echoes "You should properly capitalize names, such as Marilyn\n"
+
+echo(f("You should properly capitalize names, such as {string.title('robert')}\n")
+-- same thing, but uses string.title directly and Robert instead of Marilyn</pre></div>
+<p><br />
+<b>Caution!</b>
+When using within closures, might not resolve variables correctly if they go out of a scope when closure is called.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>function formatter2000()
+  local upvalue = "2000"
+  local formatter = function() 
+    echo(f("Let's evaluate: {upvalue}\n"))
+  end
+  formatter() -- here evaulation inside f function will work
+  return formatter
+end
+
+formatter2000()() -- here evaluation inside f function will return nil
+-- result
+-- Let's evaluate: 2000
+-- Let's evaulate: nil</pre></div>
+<p>You can work around this by doing the following
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>function formatter2000()
+  local upvalue = "2000"
+  local formatter = function()
+    local upvalue = upvalue  -- this keeps upvalue in scope for the function later
+    echo(f("Let's evaluate: {upvalue}\n"))
+  end
+  formatter() -- here evaulation inside f function will work
+  return formatter
+end
+
+formatter2000()() -- here evaluation inside f function will return 2000 once again
+
+-- result
+-- Let's evaluate: 2000
+-- Let's evaulate: 2000</pre></div>
+<h2><span class="mw-headline" id="getDictionaryWordList">getDictionaryWordList</span></h2>
+<dl><dt>getDictionaryWordList()</dt>
+<dd>Returns the profile or shared custom dictionary word list (whichever is selected in preferences) - that is, words added via right-click "add word to dictionary" or <a href="#addWordToDictionary">addWordToDictionary()</a>.</dd></dl>
+<dl><dd>Returns an indexed table of words.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.18</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>display(getDictionaryWordList())</pre></div>
+<h2><span class="mw-headline" id="hecho2string">hecho2string</span></h2>
+<dl><dt>plainText = hecho2string(formattedText)</dt></dl>
+<dl><dd>Strips the text formatting from the string passed in, leaving behind only the text.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#ansi2string" title="Manual:Lua Functions">ansi2string()</a>, <a href="/w/Manual:Lua_Functions#decho2string" title="Manual:Lua Functions">decho2string()</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.15</span><span class="version-label-plus">+</span></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>formattedText:</i></li></ul>
+<dl><dd>The string you want to strip the formatting codes from</dd></dl>
+<dl><dt>Returns</dt></dl>
+<ul><li>The string with the formatting codes stripped out.</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local exampleString = "#ff0000Formatted #bstring#/b"
+local plainText = cecho2string(exampleString)
+-- "Formatted string"</pre></div>
+<h2><span class="mw-headline" id="removeWordFromDictionary">removeWordFromDictionary</span></h2>
+<dl><dt>removeWordFromDictionary(word)</dt>
+<dd>Removed the given word to the custom profile or shared dictionary (whichever is selected in preferences).</dd></dl>
+<dl><dd>Returns true on success (if the word was present and removed by this call) and nil+msg on error.</dd></dl>
+<dl><dd>See also: <a href="#addWordToDictionary">addWordToDictionary()</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>word:</i> custom word to remove from the dictionary.</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.18</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>removeWordFromDictionary("Darkwind")
+removeWordFromDictionary("黑暗的风")
+removeWordFromDictionary("норм")</pre></div>
+<h2><span class="mw-headline" id="spellCheckWord">spellCheckWord</span></h2>
+<dl><dt>spellCheckWord(word, [customDictionary])</dt>
+<dd>Spellchecks the given word against the custom or the system dictionary.</dd></dl>
+<dl><dd>Returns true if the word is spelled correctly or false if it's not, and nil+msg on error.</dd></dl>
+<dl><dd>See also: <a href="#addWordToDictionary">addWordToDictionary()</a>, <a href="#removeWordFromDictionary">removeWordFromDictionary()</a>, <a href="#spellSuggestWord">spellSuggestWord()</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>word</i>: word to spellcheck.</li>
+<li><i>customDictionary</i> (optional): dictionary to use. If true, the profile or shared dictionary will be used (depending on your settings). If omitted or false, the system dictionary (the language you have selected in settings) will be used.</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.18</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- spellcheck against the language dictionary
+if spellCheckWord("run") then
+  echo("'run' is spelled ok!\n")
+end
+
+-- spellcheck against the custom 'add word to dictionary'
+if spellCheckWord("Darkwind", true) then
+  echo("'Darkwind' is spelled OK!\n")
+end</pre></div>
+<h2><span class="mw-headline" id="spellSuggestWord">spellSuggestWord</span></h2>
+<dl><dt>spellSuggestWord(word, [customDictionary])</dt>
+<dd>Suggests similar words for the given word.</dd></dl>
+<dl><dd>Returns a table of suggestions or nil+msg on error.</dd></dl>
+<dl><dd>See also: <a href="#spellCheckWord">spellCheckWord()</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>word</i>: word to give suggestions on.</li>
+<li><i>customDictionary</i> (optional): dictionary to use. If true, the profile or shared dictionary will be used (depending on your settings). If omitted or false, the system dictionary (the language you have selected in settings) will be used.</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.18</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>display(spellSuggestWord("Darkwind"))</pre></div>
+<h2><span id="string.byte,_utf8.byte"></span><span class="mw-headline" id="string.byte.2C_utf8.byte">string.byte, utf8.byte</span></h2>
+<dl><dt>string.byte(string [, i [, j]]) or utf8.byte(string [, i [, j]])</dt>
+<dt>mystring:byte([, i [, j]])</dt>
+<dd>Returns the internal numerical codes of the characters <code>s[i], s[i+1], ···, s[j]</code>. The default value for <code>i</code> is <code>1</code>; the default value for <code>j</code> is <code>i</code>.</dd>
+<dd>Note that numerical codes are not necessarily portable across platforms.</dd>
+<dd>string.byte() works with English text only, use utf8.byte() for the international version.</dd>
+<dd>See also: <a href="#string.char.2C_utf8.char">string.char</a>, <a href="#string.char.2C_utf8.char">utf8.char</a></dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- the following call will return the ASCII values of "A", "B" and "C"
+a, b, c = string.byte("ABC", 1, 3)
+echo(a .. " - " .. b .. " - " .. c) -- shows "65 - 66 - 67"
+
+-- same for the international version but with the Unicode values
+a, b, c = utf8.byte("дом", 1, 3)
+echo(a .. " - " .. b .. " - " .. c) -- shows "1076 - 1086 - 1084"</pre></div>
+<h2><span id="string.char,_utf8.char"></span><span class="mw-headline" id="string.char.2C_utf8.char">string.char, utf8.char</span></h2>
+<dl><dt>string.char(···) or utf8.char(···)</dt>
+<dd>Receives zero or more integers. Returns a string with length equal to the number of arguments, in which each character has the internal numerical code equal to its corresponding argument.</dd>
+<dd>Note that numerical codes are not necessarily portable across platforms.</dd>
+<dd>string.char() works with English text only, use utf8.char() for the international version.</dd>
+<dd>See also: <a href="#string.byte.2C_utf8.byte">string.byte</a>, <a href="#string.byte.2C_utf8.byte">utf8.byte</a></dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- the following call will return the string "ABC" corresponding to the ASCII values 65, 66, 67
+mystring = string.char(65, 66, 67)
+
+-- same for the infernational version which will return text "дом" for the Unicode values 1076, 1086, 1084
+mystring = utf8.char(1076,1086,1084)
+print(mystring)</pre></div>
+<h2><span class="mw-headline" id="string.cut">string.cut</span></h2>
+<dl><dt>string.cut(string, maxLen)</dt>
+<dd>Cuts string to the specified maximum length.</dd>
+<dd>Returns the modified string.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The text you wish to cut. Passed as a string.</dd></dl>
+<ul><li><i>maxLen:</i></li></ul>
+<dl><dd>The maximum length you wish the string to be. Passed as an integer number.</dd></dl>
+<p>See also: <a href="#utf8.remove">utf8.remove()</a>
+</p>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--The following call will return 'abc' and store it in myString
+myString = string.cut("abcde", 3)
+--You can easily pad string to certain length. Example below will print 'abcde     ' e.g. pad/cut string to 10 characters.
+local s = "abcde"
+s = string.cut(s .. "          ", 10)   -- append 10 spaces
+echo("'" .. s .. "'")</pre></div>
+<h2><span class="mw-headline" id="string.dump">string.dump</span></h2>
+<dl><dt>string.dump()</dt></dl>
+<p>Converts a function into a binary string.  You can use the loadstring() function later to get the function back.
+</p>
+<dl><dd>string.dump() works with both English and non-English text fine.</dd>
+<dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>testString = string.dump(function() echo("this is a string") end)
+--The following should then echo "this is a string"
+loadstring(testString)()</pre></div>
+<h2><span class="mw-headline" id="string.enclose">string.enclose</span></h2>
+<dl><dt>string.enclose(string)</dt>
+<dd>Wraps a string with [[ ]]</dd>
+<dd>Returns the altered string.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>String:</i></li></ul>
+<dl><dd>The string to enclose. Passed as a string.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--This will echo '[[Oh noes!]]' to the main window
+echo("'" .. string.enclose("Oh noes!") .. "'")</pre></div>
+<h2><span class="mw-headline" id="string.ends">string.ends</span></h2>
+<dl><dt>string.ends(String, Suffix)</dt>
+<dd>Test if string is ending with specified suffix.</dd>
+<dd>Returns true or false.</dd>
+<dd>See also: <a href="#string.starts">string.starts</a></dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>String:</i></li></ul>
+<dl><dd>The string to test. Passed as a string.</dd></dl>
+<ul><li><i>Suffix:</i></li></ul>
+<dl><dd>The suffix to test for. Passed as a string.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--This will test if the incoming line ends with "in bed" and if not will add it to the end.
+if not string.ends(line, "in bed") then
+  echo("in bed\n")
+end</pre></div>
+<h2><span id="string.find,_utf8.find"></span><span class="mw-headline" id="string.find.2C_utf8.find">string.find, utf8.find</span></h2>
+<dl><dt>string.find(text, pattern [, init [, plain]]) or utf8.find</dt>
+<dd>Looks for the first match of pattern in the string text. If it finds a match, then find returns the indices of text where this occurrence starts and ends; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. A value of true as a fourth, optional argument plain turns off the pattern matching facilities, so the function does a plain "find substring" operation, with no characters in pattern being considered "magic". Note that if plain is given, then init must be given as well.</dd></dl>
+<p>If the pattern has captures, then in a successful match the captured values are also returned, after the two indices.
+</p>
+<dl><dd>string.find() works with English text only, use utf8.find() for the international version.</dd>
+<dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- check if the word appears in a variable
+if string.find(matches[2], "rabbit") then
+  echo("Found a rabbit!\n")
+end
+
+-- the following example will print: "3, 4"
+local start, stop = string.find("This is a test.", "is")
+if start then
+   print(start .. ", " .. stop)
+end
+-- note that here "is" is being found at the end of the word "This", rather than the expected second word
+
+-- to make it match the word on its own, prefix %f[%a] and suffix %f[%A]
+if string.find("This is a test", "%f[%a]is%f[%A]") then
+  echo("This 'is' is the actual stand-alone word\n")
+end</pre></div>
+<ul><li>Return value:</li></ul>
+<dl><dd>nil or start and stop position of the first matched text, followed by any captured text.</dd></dl>
+<h2><span class="mw-headline" id="string.findPattern">string.findPattern</span></h2>
+<dl><dt>string.findPattern(text, pattern)</dt>
+<dd>Return first matching substring or nil.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>text:</i></li></ul>
+<dl><dd>The text you are searching the pattern for.</dd></dl>
+<ul><li><i>pattern:</i></li></ul>
+<dl><dd>The pattern you are trying to find in the text.</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<p>Following example will print: "I did find: Troll" string.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local match = string.findPattern("Troll is here!", "Troll")
+if match then
+   echo("I did find: " .. match)
+end</pre></div>
+<dl><dd>This example will find substring regardless of case.</dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local match = string.findPattern("Troll is here!", string.genNocasePattern("troll"))
+if match then
+    echo("I did find: " .. match)
+end</pre></div>
+<ul><li>Return value:</li></ul>
+<dl><dd>nil or first matching substring</dd></dl>
+<p>See also: <a href="#string.genNocasePattern">string.genNocasePattern()</a>
+</p>
+<h2><span class="mw-headline" id="string.format">string.format</span></h2>
+<dl><dt>string.format(formatstring,...)</dt>
+<dd>Returns a formatted version of its variable number of arguments following the description given in its first argument (which must be a string). The format string follows the same rules as the printf family of standard C functions. The only differences are that the options/modifiers *, l, L, n, p, and h are not supported and that there is an extra option, q. The q option formats a string in a form suitable to be safely read back by the Lua interpreter: the string is written between double quotes, and all double quotes, newlines, embedded zeros, and backslashes in the string are correctly escaped when written. For instance, the call</dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>string.format('%q', 'a string with "quotes" and \n new line')</pre></div>
+<p>will produce the string:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>     "a string with \"quotes\" and \
+      new line"</pre></div>
+<p>The options c, d, E, e, f, g, G, i, o, u, X, and x all expect a number as argument, whereas q and s expect a string.
+</p><p>This function does not accept string values containing embedded zeros, except as arguments to the q option.
+</p><p>string.format() works fine with both English and non-English text.
+</p>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>some_data = "MudletUser1"
+
+-- pad data 20 characters wide to the left
+display(string.format("%20s", some_data))
+-- result: "         MudletUser1"
+
+-- pad same data but instead to the the right
+display(string.format("%-20s", some_data))
+-- result: "MudletUser1         "
+
+-- pad but first truncate data to 6 characters
+display(string.format("%20s", string.sub(some_data, 1, 6)))
+-- result: "              Mudlet"</pre></div>
+<h2><span class="mw-headline" id="string.genNocasePattern">string.genNocasePattern</span></h2>
+<dl><dt>string.genNocasePattern(template)</dt>
+<dd>Generate case insensitive search pattern from string.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li>template: The original string to be used as the base.</li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>echo(string.genNocasePattern("123abc"))
+-- result: "123[aA][bB][cC]"</pre></div>
+<h2><span class="mw-headline" id="string.gfind">string.gfind</span></h2>
+<dl><dt>string.gfind()</dt>
+<dd>This is an old version of what is now <a href="/w/Manual:Technical_Manual#string.gmatch.2C_utf8.gmatch" title="Manual:Technical Manual">string.gmatch</a>. Use <a href="/w/Manual:Technical_Manual#string.gmatch.2C_utf8.gmatch" title="Manual:Technical Manual">string.gmatch</a> instead.</dd></dl>
+<h2><span id="string.gmatch,_utf8.gmatch"></span><span class="mw-headline" id="string.gmatch.2C_utf8.gmatch">string.gmatch, utf8.gmatch</span></h2>
+<dl><dt>string.gmatch(text, pattern) or utf8.gmatch</dt>
+<dd>Returns an iterator function that, each time it is called, returns the next captures from pattern over string text. If pattern specifies no captures, then the whole match is produced in each call.</dd></dl>
+<dl><dt>Example</dt></dl>
+<p>As an example, the following loop
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>     s = "hello world from Lua"
+     for w in string.gmatch(s, "%a+") do
+       print(w)
+     end</pre></div>
+<p>will iterate over all the words from string s, printing one per line. The next example collects all pairs key=value from the given string into a table:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>     t = {}
+     s = "from=world, to=Lua"
+     for k, v in string.gmatch(s, "(%w+)=(%w+)") do
+       t[k] = v
+     end</pre></div>
+<p>For this function, a '^' at the start of a pattern does not work as an anchor, as this would prevent the iteration.
+</p><p>string.gmatch() works with English text only, use utf8.gmatch() for the international version.
+</p>
+<h2><span id="string.gsub,_utf8.gsub"></span><span class="mw-headline" id="string.gsub.2C_utf8.gsub">string.gsub, utf8.gsub</span></h2>
+<dl><dt>string.gsub(text, pattern, repl [, n]) or utf8.gsub</dt>
+<dd>Returns a copy of text in which all (or the first n, if given) occurrences of the pattern have been replaced by a replacement string specified by repl, which can be a string, a table, or a function. gsub also returns, as its second value, the total number of matches that occurred.</dd></dl>
+<dl><dd>If repl is a string, then its value is used for replacement. The character&#160;% works as an escape character: any sequence in repl of the form %n, with n between 1 and 9, stands for the value of the n-th captured substring (see below). The sequence %0 stands for the whole match. The sequence&#160;%% stands for a single&#160;%.</dd></dl>
+<dl><dd>If repl is a table, then the table is queried for every match, using the first capture as the key; if the pattern specifies no captures, then the whole match is used as the key.</dd></dl>
+<dl><dd>If repl is a function, then this function is called every time a match occurs, with all captured substrings passed as arguments, in order; if the pattern specifies no captures, then the whole match is passed as a sole argument.</dd></dl>
+<dl><dd>If the value returned by the table query or by the function call is a string or a number, then it is used as the replacement string; otherwise, if it is false or nil, then there is no replacement (that is, the original match is kept in the string).</dd></dl>
+<dl><dd>string.gsub() works with English text only, use utf8.gsub() for the international version.</dd>
+<dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>     x = string.gsub("hello world", "world", "friends")
+     --&gt; x="hello friends"
+
+     x = string.gsub("hello world", "(%w+)", "%1 %1")
+     --&gt; x="hello hello world world"
+     
+     x = string.gsub("hello world", "%w+", "%0 %0", 1)
+     --&gt; x="hello hello world"
+     
+     x = string.gsub("hello world from Lua", "(%w+)%s*(%w+)", "%2 %1")
+     --&gt; x="world hello Lua from"
+     
+     x = string.gsub("home = $HOME, user = $USER", "%$(%w+)", os.getenv)
+     --&gt; x="home = /home/roberto, user = roberto"
+     
+     x = string.gsub("4+5 = $return 4+5$", "%$(.-)%$", function (s)
+           return loadstring(s)()
+         end)
+     --&gt; x="4+5 = 9"
+     
+     local t = {name="lua", version="5.1"}
+     x = string.gsub("$name-$version.tar.gz", "%$(%w+)", t)
+     --&gt; x="lua-5.1.tar.gz"</pre></div>
+<h2><span id="string.len,_utf8.len"></span><span class="mw-headline" id="string.len.2C_utf8.len">string.len, utf8.len</span></h2>
+<dl><dt>string.len(string) or utf8.len(string)</dt>
+<dt>mystring:len()</dt>
+<dd>Receives a string and returns its length. The empty string "" has length 0. Embedded zeros are counted, so "a\000bc\000" has length 5.</dd>
+<dd>string.len() works with English text only, use utf8.len() for the international version.</dd></dl>
+<dl><dd>See also: <a href="#utf8.width">utf8.width</a></dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string (text) you want to find the length of.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- prints 5 for the 5 letters in our word
+print(string.len("hello"))
+
+-- international version
+print(utf8.len("слово"))</pre></div>
+<h2><span id="string.lower,_utf8.lower"></span><span class="mw-headline" id="string.lower.2C_utf8.lower">string.lower, utf8.lower</span></h2>
+<dl><dt>string.lower(string) or utf8.lower(string)</dt>
+<dt>mystring:lower()</dt>
+<dd>Receives a string and returns a copy of this string with all uppercase letters changed to lowercase. All other characters are left unchanged. The definition of what an uppercase letter is depends on the current locale.</dd>
+<dd>string.lower() works with English text only, use utf8.lower() for the international version.</dd>
+<dd>See also: <a href="#string.upper.2C_utf8.upper">string.upper</a>, <a href="#string.upper.2C_utf8.upper">utf8.upper</a></dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- prints an all-lowercase version
+print(string.lower("No way! This is AWESOME!"))
+
+-- international version
+print(utf8.lower("Класс! Ето ОТЛИЧНО!"))</pre></div>
+<h2><span id="string.match,_utf8.match"></span><span class="mw-headline" id="string.match.2C_utf8.match">string.match, utf8.match</span></h2>
+<dl><dt>string.match(text, pattern [, init]) or utf8.match()</dt>
+<dd>Looks for the first match of pattern in the string text. If it finds one, then match returns the captures from the pattern; otherwise it returns nil. If pattern specifies no captures, then the whole match is returned. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative.</dd>
+<dd>string.match() works with English text only, use utf8.match() for the international version.</dd>
+<dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- match some numbers
+local age = string.match("I am 100 years old.", "%d+"))
+echo("Wow, " .. age .. " years old.")</pre></div>
+<h2><span id="string.patternEscape,_utf8.patternEscape"></span><span class="mw-headline" id="string.patternEscape.2C_utf8.patternEscape">string.patternEscape, utf8.patternEscape</span></h2>
+<dl><dt>escapedString = string.patternEscape(str) or escapedString = utf8.patternEscape(str)</dt></dl>
+<dl><dd>Returns a version of str with all Lua pattern characters escaped to ensure string.match/find/etc look for the original str.</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#string.trim" title="Manual:Lua Functions">string.trim()</a>, <a href="/w/Manual:Lua_Functions#string.genNocasePattern" title="Manual:Lua Functions">string.genNocasePattern()</a></dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.15</span><span class="version-label-plus">+</span></div>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>str:</i></li></ul>
+<dl><dd>The string to escape lua pattern characters in.</dd></dl>
+<dl><dt>Returns</dt></dl>
+<ul><li>The string with all special Lua pattern characters escaped.</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- searching for a url inside of a string. 
+local helpString = [[
+This feature can be accessed by going to https://some-url.com/athing.html?param=value and
+retrieving the result!
+]]
+local url = "https://some-url.com/"
+display(helpString:find(url))
+-- nil
+display(helpString:find(string.patternEscape(url)))
+-- 42
+-- 62
+display(url:patternEscape())
+-- "https://some%-url%.com/"</pre></div>
+<h2><span class="mw-headline" id="string.rep">string.rep</span></h2>
+<dl><dt>string.rep(String, n)</dt>
+<dt>mystring:rep(n)</dt>
+<dd>Returns a string that is the concatenation of <code>n</code> copies of the string <code>String</code>.</dd>
+<dd>string.rep() works with both English and non-English text fine.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- repeat * 10 times
+display(string.rep("*", 10))
+-- results in:
+**********
+
+-- do the same thing, but this time calling from a variable
+s = "*"
+display(s:rep(10))
+-- results in:
+**********</pre></div>
+<h2><span id="string.reverse,_utf8.reverse"></span><span class="mw-headline" id="string.reverse.2C_utf8.reverse">string.reverse, utf8.reverse</span></h2>
+<dl><dt>string.reverse(string) or utf8.reverse(string)</dt>
+<dt>mystring:reverse()</dt></dl>
+<dl><dd>Returns a string that is the string <code>string</code> reversed.</dd>
+<dd>string.reverse() works with English text only, use utf8.reverse() for the international version.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to reverse. Passed as a string.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>mystring = "Hello from Lua"
+echo(mystring:reverse()) -- displays 'auL morf olleH'
+
+-- international version.
+mystring = "Привет от Луа!"
+echo(utf8.reverse(mystring)) -- displays '!ауЛ то тевирП', which probably looks the same to you</pre></div>
+<h2><span class="mw-headline" id="string.split">string.split</span></h2>
+<dl><dt>string.split(string, delimiter)</dt>
+<dt>myString:split(delimiter)</dt>
+<dd>Splits a string into a table by the given delimiter. Can be called against a string (or variable holding a string) using the second form above.</dd>
+<dd>Returns a table containing the split sections of the string.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to split. Parameter is not needed if using second form of the syntax above. Passed as a string.</dd></dl>
+<ul><li><i>delimiter:</i></li></ul>
+<dl><dd>The delimiter to use when splitting the string. Passed as a string, and allows for <a rel="nofollow" class="external text" href="http://www.lua.org/pil/20.2.html">Lua pattern types</a>. Use&#160;% to escape here (and&#160;%% to escape a stand-alone&#160;%).</dd></dl>
+<div class="toccolours mw-collapsible mw-collapsed" style="overflow:auto;">
+<div style="font-weight:bold;line-height:1.6;">Version Information</div>
+<div class="mw-collapsible-content">
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  as of Mudlet 4.7+, delimiter will default to " " if not provided.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  as of Mudlet 4.7+, using "" (empty string) for the delimiter will return the string as a table of characters. IE string.split("This","") will return as {"T", "h", "i", "s"}. Prior to 4.7 using empty string as the delimiter would error after hanging temporarily.
+</p>
+</div></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- This will split the string by ", " delimiter and print the resulting table to the main window.
+names = "Alice, Bob, Peter"
+name_table = string.split(names, ", ")
+display(name_table)
+
+--The alternate method
+names = "Alice, Bob, Peter"
+name_table = names:split(", ")
+display(name_table)</pre></div>
+<dl><dd>Either method above will print out:</dd>
+<dd>table {
+<dl><dd>1: 'Alice'</dd>
+<dd>2: 'Bob'</dd>
+<dd>3: 'Peter'</dd></dl></dd>
+<dd>}</dd></dl>
+<h2><span class="mw-headline" id="string.starts">string.starts</span></h2>
+<dl><dt>string.starts(string, prefix)</dt>
+<dd>Test if string is starting with specified prefix.</dd>
+<dd>Returns true or false</dd>
+<dd>See also: <a href="#string.ends">string.ends</a></dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to test. Passed as a string.</dd></dl>
+<ul><li><i>prefix:</i></li></ul>
+<dl><dd>The prefix to test for. Passed as a string.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--The following will see if the line begins with "You" and if so will print a statement at the end of the line
+if string.starts(line, "You") then
+  echo("====oh you====\n")
+end</pre></div>
+<h2><span id="string.sub,_utf8.sub"></span><span class="mw-headline" id="string.sub.2C_utf8.sub">string.sub, utf8.sub</span></h2>
+<dl><dt>string.sub(text, i [, j]) or utf8.sub()</dt>
+<dd>Returns the substring of text that starts at i and continues until j; i and j can be negative. If j is absent, then it is assumed to be equal to -1 (which is the same as the string length). In particular, the call string.sub(text,1,j) returns a prefix of text with length j, and string.sub(text, -i) returns a suffix of text with length i.</dd>
+<dd>string.sub() works with English text only, use utf8.sub() for the international version.</dd>
+<dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local sub = string.sub("Twinkle, twinkle, little star.", 19)  -- returns: little star.
+echo(sub)
+
+sub = string.sub("Twinkle, twinkle, little star.", 10, 16)  -- returns: twinkle
+echo(sub)</pre></div>
+<h2><span class="mw-headline" id="string.title">string.title</span></h2>
+<dl><dt>string.title(string)</dt>
+<dt>mystring:title()</dt>
+<dd>Capitalizes the first character in a string.</dd>
+<dd>Returns the altered string.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to modify. Not needed if you use the second form of the syntax above.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--Variable testname is now Anna.
+testname = string.title("anna")
+--Example will set test to "Bob".
+test = "bob"
+test = test:title()</pre></div>
+<h2><span class="mw-headline" id="string.trim">string.trim</span></h2>
+<dl><dt>string.trim(string)</dt>
+<dd>Trims string, removing all 'extra' white space at the beginning and end of the text.</dd>
+<dd>Returns the altered string.</dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to trim. Passed as a string.</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>--This will print 'Troll is here!', without the extra spaces.
+local str = string.trim("  Troll is here!  ")
+echo("'" .. str .. "'")</pre></div>
+<h2><span id="string.upper,_utf8.upper"></span><span class="mw-headline" id="string.upper.2C_utf8.upper">string.upper, utf8.upper</span></h2>
+<dl><dt>string.upper(string) or utf8.upper(string)</dt>
+<dt>mystring:upper()</dt>
+<dd>Receives a string and returns a copy of this string with all lowercase letters changed to uppercase. All other characters are left unchanged. The definition of what a lowercase letter is depends on the current locale.</dd>
+<dd>string.upper() works with English text only, use utf8.upper() for the international version.</dd></dl>
+<dl><dd>See also: <a href="#string.lower.2C_utf8.lower">string.lower</a>, <a href="#string.lower.2C_utf8.lower">utf8.lower</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string you want to change to uppercase</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- displays 'RUN BOB RUN'
+print(string.upper("run bob run"))
+
+-- displays 'ДАВАЙ ДАВАЙ!'
+print(utf8.upper("давай давай!"))</pre></div>
+<h2><span class="mw-headline" id="utf8.charpos">utf8.charpos</span></h2>
+<dl><dt>utf8.charpos(string[[, charpos], offset])</dt>
+<dd>Converts UTF-8 position to byte offset, returns the character position and code point. If only offset is given, returns byte offset of this UTF-8 char index. If charpos and offset is given, a new charpos will be calculated by adding/subtracting UTF-8 char offset to current charpos. In all cases, it return a new char position, and code point (a number) at this position.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>charpos:</i></li></ul>
+<dl><dd>(optional) character position to work on.</dd></dl>
+<ul><li><i>offset:</i></li></ul>
+<dl><dd>(optional) offset (as a number) to work on.</dd></dl>
+<h2><span class="mw-headline" id="utf8.escape">utf8.escape</span></h2>
+<dl><dt>utf8.escape(string)</dt>
+<dd>Escape a string to UTF-8 format string. It support several escape formats:</dd></dl>
+<p>%ddd - which ddd is a decimal number at any length:
+</p>
+<pre>      change Unicode code point to UTF-8 format.
+</pre>
+<p>%{ddd} - same as %nnn but has bracket around.
+%uddd - same as %ddd, u stands Unicode
+%u{ddd} - same as&#160;%{ddd}
+%xhhh - hexadigit version of %ddd
+%x{hhh} same as %xhhh.
+%? - '?' stands for any other character: escape this character.
+</p>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string you want to escape</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>local u = utf8.escape
+print(u"%123%u123%{123}%u{123}%xABC%x{ABC}")
+print(u"%%123%?%d%%u")</pre></div>
+<h2><span class="mw-headline" id="utf8.fold">utf8.fold</span></h2>
+<dl><dt>utf8.fold(string)</dt>
+<dd>Returns the lowercase version of the string for use in case-insensitive comparisons. If string is a number, it's treated as a code point and the converted code point is returned (as a number).</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to lowercase.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>print(utf8.fold("ПРИВЕТ")) -- 'привет'
+print(utf8.fold("Привет")) -- 'привет'</pre></div>
+<h2><span class="mw-headline" id="utf8.insert">utf8.insert</span></h2>
+<dl><dt>utf8.insert(string[, idx], substring)</dt>
+<dd>Inserts the substring into the given string. If idx is given, inserts substring before the character at this index, otherwise the substring will append onto the end of string. idx can be negative.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>idx:</i></li></ul>
+<dl><dd>(optional) character position to insert the string at.</dd></dl>
+<ul><li><i>substring:</i></li></ul>
+<dl><dd>text to insert into the substring.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- inserts letter я before the 2nd letter and prints 'мясо'
+print(utf8.insert("мсо", 2, "я"))</pre></div>
+<h2><span class="mw-headline" id="utf8.ncasecmp">utf8.ncasecmp</span></h2>
+<dl><dt>utf8.ncasecmp(a, b)</dt>
+<dd>Compares <i>a</i> and <i>b</i> without case. Return -1 means a &lt; b, 0 means a == b and 1 means a &gt; b.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>a:</i></li></ul>
+<dl><dd>String to compare.</dd></dl>
+<ul><li><i>b:</i></li></ul>
+<dl><dd>String to compare against.</dd></dl>
+<h2><span class="mw-headline" id="utf8.next">utf8.next</span></h2>
+<dl><dt>utf8.next(string[, charpos[, offset]])</dt>
+<dd>Iterates though the UTF-8 string.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>charpos:</i></li></ul>
+<dl><dd>(optional) character position to work on.</dd></dl>
+<ul><li><i>offset:</i></li></ul>
+<dl><dd>(optional) offset (as a number) to work on.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- prints location and code point of every letter
+for pos, code in utf8.next, "тут есть текст" do
+   print(pos, code)
+end</pre></div>
+<h2><span class="mw-headline" id="utf8.remove">utf8.remove</span></h2>
+<dl><dt>utf8.remove(string[, start[, stop]])</dt>
+<dd>Removes characters from the given string. Deletes characters from the given <i>start</i> to the end of the string. If <i>stop</i> is given, deletes characters from <i>start</i> to <i>stop</i> (including start and stop). <i>start</i> and <i>stop</i> can be negative.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>start:</i></li></ul>
+<dl><dd>position to start deleting characters from.</dd></dl>
+<ul><li><i>stop:</i></li></ul>
+<dl><dd>(optional) posititon to stop deleting characters at.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- delete everything from the 3rd character including the character itself
+print(utf8.remove("мясо", 3)) -- 'мя'
+
+-- delete the last character, use negative to count backwards
+print(utf8.remove("мясо", -1)) -- 'мяс'
+
+-- delete everything from the 2nd to the 4th character
+print(utf8.remove("вкусное", 2,4)) -- 'вное'</pre></div>
+<h2><span class="mw-headline" id="utf8.title">utf8.title</span></h2>
+<dl><dt>utf8.title(string)</dt>
+<dd>Returns the uppercase version of the string for use in case-insensitive comparisons. If string is a number, it's treated as a code point and the converted code point is returned (as a number).</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The string to uppercase.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>print(utf8.title("привет")) -- 'ПРИВЕТ'
+print(utf8.title("Привет")) -- 'ПРИВЕТ'</pre></div>
+<h2><span class="mw-headline" id="utf8.width">utf8.width</span></h2>
+<dl><dt>utf8.width(string[, ambi_is_double[, default_width]])</dt>
+<dd>Calculate the widths of the given string. If the string is a code point, return the width of this code point.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>ambi_is_double:</i></li></ul>
+<dl><dd>(optional) if provided, the ambiguous width character's width is 2, otherwise it's 1.</dd></dl>
+<ul><li><i>default_width:</i></li></ul>
+<dl><dd>(optional) if provided, this will be the width of unprintable character, used display a non-character mark for these characters.</dd></dl>
+<h2><span class="mw-headline" id="utf8.widthindex">utf8.widthindex</span></h2>
+<dl><dt>utf8.widthindex(string, location[, ambi_is_double[, default_width]])</dt>
+<dd>Returns the character index at the location in the given string as well as the offset and the width. This is a reverse operation of utf8.width().</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>string:</i></li></ul>
+<dl><dd>The input string to work on.</dd></dl>
+<ul><li><i>location:</i></li></ul>
+<dl><dd>location to get the width of.</dd></dl>
+<ul><li><i>ambi_is_double:</i></li></ul>
+<dl><dd>(optional) if provided, the ambiguous width character's width is 2, otherwise it's 1.</dd></dl>
+<ul><li><i>default_width:</i></li></ul>
+<dl><dd>(optional) if provided, this will be the width of unprintable character, used display a non-character mark for these characters.</dd></dl>
+<!-- 
+NewPP limit report
+Cached time: 20250407140309
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.238 seconds
+Real time usage: 0.866 seconds
+Preprocessor visited node count: 586/1000000
+Post‐expand include size: 2936/2097152 bytes
+Template argument size: 40/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 16419/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%  651.157      1 -total
+  0.58%    3.748      3 Template:Note
+  0.46%    2.996     10 Template:MudletVersion
+  0.46%    2.967      1 Template:TOC_right
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:160-0!canonical and timestamp 20250407140319 and revision id 22267
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:String_Functions&amp;oldid=22267">https://wiki.mudlet.org/index.php?title=Manual:String_Functions&amp;oldid=22267</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/w/Category:Pages_with_syntax_highlighting_errors" title="Category:Pages with syntax highlighting errors">Pages with syntax highlighting errors</a></li><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li><li><a href="/w/Category:Mudlet_API" title="Category:Mudlet API">Mudlet API</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3AString+Functions" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3AString+Functions" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:String_Functions">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:String_Functions&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:String_Functions">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:String_Functions&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:String_Functions&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:String_Functions" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:String_Functions" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:String_Functions&amp;oldid=22267" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:String_Functions&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 7 April 2025, at 14:03.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.238","walltime":"0.866","ppvisitednodes":{"value":586,"limit":1000000},"postexpandincludesize":{"value":2936,"limit":2097152},"templateargumentsize":{"value":40,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":16419,"limit":5000000},"timingprofile":["100.00%  651.157      1 -total","  0.58%    3.748      3 Template:Note","  0.46%    2.996     10 Template:MudletVersion","  0.46%    2.967      1 Template:TOC_right"]},"cachereport":{"timestamp":"20250407140309","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":54});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1c3bc6f4a23',t:'MTc5Mzk4NzQ2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1c3bc6f4a23',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20250407152050 -->
+</html>

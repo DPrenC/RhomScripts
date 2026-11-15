@@ -1,0 +1,1283 @@
+Mudlet: String_Functions
+
+Fuente oficial: https://wiki.mudlet.org/w/Manual:String_Functions
+Copia consultable; véase manifest.json para fecha, hash y atribución.
+
+# String Functions
+
+A collection of functions used to manipulate strings.
+
+## addWordToDictionary
+
+addWordToDictionary(word)
+
+Adds the given word to the custom profile or shared dictionary (whichever is selected in preferences).
+
+Returns true on success (the word was actually 
+added
+ to the dictionary by this call) and nil+msg on error - including if the word was already there - this is so that if you have other scripts that you wish to run when a word was added you can make their execution conditional on success here.
+
+See also: 
+removeWordFromDictionary()
+
+Parameters
+
+word:
+ custom word to add to the dictionary.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+addWordToDictionary("Darkwind")
+addWordToDictionary("黑暗的风")
+addWordToDictionary("норм")
+
+Example - function making use of return value
+
+function rememberPlayerName(name)
+  if addWordToDictionary(name) then
+    echo("Added '" .. name .. "' to dictionary...\n")
+  end
+end
+
+## cecho2string
+
+plainText = cecho2string(formattedText)
+
+Strips the text formatting from the string passed in, leaving behind only the text.
+
+See also
+
+ansi2string()
+, 
+hecho2string()
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Parameters
+
+formattedText:
+
+The string you want to strip the formatting codes from
+
+Returns
+
+The string with the formatting codes stripped out.
+
+Example
+
+local exampleString = "<red>Formatted <b>string</b>"
+local plainText = cecho2string(exampleString)
+-- "Formatted string"
+
+## decho2string
+
+plainText = decho2string(formattedText)
+
+Strips the text formatting from the string passed in, leaving behind only the text.
+
+See also
+
+ansi2string()
+, 
+cecho2string()
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Parameters
+
+formattedText:
+
+The string you want to strip the formatting codes from
+
+Returns
+
+The string with the formatting codes stripped out.
+
+Example
+
+local exampleString = "<255,0,0>Formatted <b>string</b>"
+local plainText = decho2string(exampleString)
+-- "Formatted string"
+
+## f
+
+formattedString = f(str)
+
+Allows you to combine variables and functions into text (string interpolation) using 
+{}
+.
+
+Parameters
+
+str:
+
+The string to perform interpolation against.
+
+Mudlet Version
+Available in Mudlet
+4.11
++
+
+Note
+ 
+Note:
+  Using f is slower than using concatenation with the '..' operator by a fair bit, due to the way it has to gather scope for supporting local variables. For aliases or single calls this isn't so bad, but if you're looping a large table and building a string then f's slowness will really start to show and bring performance down.
+
+Example
+
+-- old way:
+cecho("\nHello, "..matches[2]..", how is it going?")
+
+-- new way:
+cecho(f("\nHello {matches[2]}, how is it going?"))
+
+testResult = "successful"
+-- old way:
+echo("The test was "..testResult.."\n")
+-- with f:
+echo(f("The test was {testResult}\n"))
+-- echoes "The test was successful\n"
+
+local testResult = "a failure"
+echo(f("The test was {testResult}\n"))
+-- echoes "The test was a failure\n" as it sees the local scope over global.
+
+-- You can also execute simple expressions
+echo(f("2 + 2 = {2 + 2}\n"))
+-- echoes "2 + 2 = 4\n"
+
+-- Or more complicated ones
+local function testFunc(item)
+  return item:title()
+end
+
+echo(f("You should properly capitalize names, such as {testFunc('marilyn')}\n"))
+-- echoes "You should properly capitalize names, such as Marilyn\n"
+
+echo(f("You should properly capitalize names, such as {string.title('robert')}\n")
+-- same thing, but uses string.title directly and Robert instead of Marilyn
+
+Caution!
+
+When using within closures, might not resolve variables correctly if they go out of a scope when closure is called.
+
+function formatter2000()
+  local upvalue = "2000"
+  local formatter = function() 
+    echo(f("Let's evaluate: {upvalue}\n"))
+  end
+  formatter() -- here evaulation inside f function will work
+  return formatter
+end
+
+formatter2000()() -- here evaluation inside f function will return nil
+-- result
+-- Let's evaluate: 2000
+-- Let's evaulate: nil
+
+You can work around this by doing the following
+
+function formatter2000()
+  local upvalue = "2000"
+  local formatter = function()
+    local upvalue = upvalue  -- this keeps upvalue in scope for the function later
+    echo(f("Let's evaluate: {upvalue}\n"))
+  end
+  formatter() -- here evaulation inside f function will work
+  return formatter
+end
+
+formatter2000()() -- here evaluation inside f function will return 2000 once again
+
+-- result
+-- Let's evaluate: 2000
+-- Let's evaulate: 2000
+
+## getDictionaryWordList
+
+getDictionaryWordList()
+
+Returns the profile or shared custom dictionary word list (whichever is selected in preferences) - that is, words added via right-click "add word to dictionary" or 
+addWordToDictionary()
+.
+
+Returns an indexed table of words.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+display(getDictionaryWordList())
+
+## hecho2string
+
+plainText = hecho2string(formattedText)
+
+Strips the text formatting from the string passed in, leaving behind only the text.
+
+See also
+
+ansi2string()
+, 
+decho2string()
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Parameters
+
+formattedText:
+
+The string you want to strip the formatting codes from
+
+Returns
+
+The string with the formatting codes stripped out.
+
+Example
+
+local exampleString = "#ff0000Formatted #bstring#/b"
+local plainText = cecho2string(exampleString)
+-- "Formatted string"
+
+## removeWordFromDictionary
+
+removeWordFromDictionary(word)
+
+Removed the given word to the custom profile or shared dictionary (whichever is selected in preferences).
+
+Returns true on success (if the word was present and removed by this call) and nil+msg on error.
+
+See also: 
+addWordToDictionary()
+
+Parameters
+
+word:
+ custom word to remove from the dictionary.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+removeWordFromDictionary("Darkwind")
+removeWordFromDictionary("黑暗的风")
+removeWordFromDictionary("норм")
+
+## spellCheckWord
+
+spellCheckWord(word, [customDictionary])
+
+Spellchecks the given word against the custom or the system dictionary.
+
+Returns true if the word is spelled correctly or false if it's not, and nil+msg on error.
+
+See also: 
+addWordToDictionary()
+, 
+removeWordFromDictionary()
+, 
+spellSuggestWord()
+
+Parameters
+
+word
+: word to spellcheck.
+
+customDictionary
+ (optional): dictionary to use. If true, the profile or shared dictionary will be used (depending on your settings). If omitted or false, the system dictionary (the language you have selected in settings) will be used.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+-- spellcheck against the language dictionary
+if spellCheckWord("run") then
+  echo("'run' is spelled ok!\n")
+end
+
+-- spellcheck against the custom 'add word to dictionary'
+if spellCheckWord("Darkwind", true) then
+  echo("'Darkwind' is spelled OK!\n")
+end
+
+## spellSuggestWord
+
+spellSuggestWord(word, [customDictionary])
+
+Suggests similar words for the given word.
+
+Returns a table of suggestions or nil+msg on error.
+
+See also: 
+spellCheckWord()
+
+Parameters
+
+word
+: word to give suggestions on.
+
+customDictionary
+ (optional): dictionary to use. If true, the profile or shared dictionary will be used (depending on your settings). If omitted or false, the system dictionary (the language you have selected in settings) will be used.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+display(spellSuggestWord("Darkwind"))
+
+## string.byte, utf8.byte
+
+string.byte(string [, i [, j]]) or utf8.byte(string [, i [, j]])
+
+mystring:byte([, i [, j]])
+
+Returns the internal numerical codes of the characters 
+s[i], s[i+1], ···, s[j]
+. The default value for 
+i
+ is 
+1
+; the default value for 
+j
+ is 
+i
+.
+
+Note that numerical codes are not necessarily portable across platforms.
+
+string.byte() works with English text only, use utf8.byte() for the international version.
+
+See also: 
+string.char
+, 
+utf8.char
+
+Example
+
+-- the following call will return the ASCII values of "A", "B" and "C"
+a, b, c = string.byte("ABC", 1, 3)
+echo(a .. " - " .. b .. " - " .. c) -- shows "65 - 66 - 67"
+
+-- same for the international version but with the Unicode values
+a, b, c = utf8.byte("дом", 1, 3)
+echo(a .. " - " .. b .. " - " .. c) -- shows "1076 - 1086 - 1084"
+
+## string.char, utf8.char
+
+string.char(···) or utf8.char(···)
+
+Receives zero or more integers. Returns a string with length equal to the number of arguments, in which each character has the internal numerical code equal to its corresponding argument.
+
+Note that numerical codes are not necessarily portable across platforms.
+
+string.char() works with English text only, use utf8.char() for the international version.
+
+See also: 
+string.byte
+, 
+utf8.byte
+
+Example
+
+-- the following call will return the string "ABC" corresponding to the ASCII values 65, 66, 67
+mystring = string.char(65, 66, 67)
+
+-- same for the infernational version which will return text "дом" for the Unicode values 1076, 1086, 1084
+mystring = utf8.char(1076,1086,1084)
+print(mystring)
+
+## string.cut
+
+string.cut(string, maxLen)
+
+Cuts string to the specified maximum length.
+
+Returns the modified string.
+
+Parameters
+
+string:
+
+The text you wish to cut. Passed as a string.
+
+maxLen:
+
+The maximum length you wish the string to be. Passed as an integer number.
+
+See also: 
+utf8.remove()
+
+Example
+
+--The following call will return 'abc' and store it in myString
+myString = string.cut("abcde", 3)
+--You can easily pad string to certain length. Example below will print 'abcde     ' e.g. pad/cut string to 10 characters.
+local s = "abcde"
+s = string.cut(s .. "          ", 10)   -- append 10 spaces
+echo("'" .. s .. "'")
+
+## string.dump
+
+string.dump()
+
+Converts a function into a binary string.  You can use the loadstring() function later to get the function back.
+
+string.dump() works with both English and non-English text fine.
+
+Example
+
+testString = string.dump(function() echo("this is a string") end)
+--The following should then echo "this is a string"
+loadstring(testString)()
+
+## string.enclose
+
+string.enclose(string)
+
+Wraps a string with [[ ]]
+
+Returns the altered string.
+
+Parameters
+
+String:
+
+The string to enclose. Passed as a string.
+
+Example
+
+--This will echo '[[Oh noes!]]' to the main window
+echo("'" .. string.enclose("Oh noes!") .. "'")
+
+## string.ends
+
+string.ends(String, Suffix)
+
+Test if string is ending with specified suffix.
+
+Returns true or false.
+
+See also: 
+string.starts
+
+Parameters
+
+String:
+
+The string to test. Passed as a string.
+
+Suffix:
+
+The suffix to test for. Passed as a string.
+
+Example
+
+--This will test if the incoming line ends with "in bed" and if not will add it to the end.
+if not string.ends(line, "in bed") then
+  echo("in bed\n")
+end
+
+## string.find, utf8.find
+
+string.find(text, pattern [, init [, plain]]) or utf8.find
+
+Looks for the first match of pattern in the string text. If it finds a match, then find returns the indices of text where this occurrence starts and ends; otherwise, it returns nil. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative. A value of true as a fourth, optional argument plain turns off the pattern matching facilities, so the function does a plain "find substring" operation, with no characters in pattern being considered "magic". Note that if plain is given, then init must be given as well.
+
+If the pattern has captures, then in a successful match the captured values are also returned, after the two indices.
+
+string.find() works with English text only, use utf8.find() for the international version.
+
+Example
+
+-- check if the word appears in a variable
+if string.find(matches[2], "rabbit") then
+  echo("Found a rabbit!\n")
+end
+
+-- the following example will print: "3, 4"
+local start, stop = string.find("This is a test.", "is")
+if start then
+   print(start .. ", " .. stop)
+end
+-- note that here "is" is being found at the end of the word "This", rather than the expected second word
+
+-- to make it match the word on its own, prefix %f[%a] and suffix %f[%A]
+if string.find("This is a test", "%f[%a]is%f[%A]") then
+  echo("This 'is' is the actual stand-alone word\n")
+end
+
+Return value:
+
+nil or start and stop position of the first matched text, followed by any captured text.
+
+## string.findPattern
+
+string.findPattern(text, pattern)
+
+Return first matching substring or nil.
+
+Parameters
+
+text:
+
+The text you are searching the pattern for.
+
+pattern:
+
+The pattern you are trying to find in the text.
+
+Example
+
+Following example will print: "I did find: Troll" string.
+
+local match = string.findPattern("Troll is here!", "Troll")
+if match then
+   echo("I did find: " .. match)
+end
+
+This example will find substring regardless of case.
+
+local match = string.findPattern("Troll is here!", string.genNocasePattern("troll"))
+if match then
+    echo("I did find: " .. match)
+end
+
+Return value:
+
+nil or first matching substring
+
+See also: 
+string.genNocasePattern()
+
+## string.format
+
+string.format(formatstring,...)
+
+Returns a formatted version of its variable number of arguments following the description given in its first argument (which must be a string). The format string follows the same rules as the printf family of standard C functions. The only differences are that the options/modifiers *, l, L, n, p, and h are not supported and that there is an extra option, q. The q option formats a string in a form suitable to be safely read back by the Lua interpreter: the string is written between double quotes, and all double quotes, newlines, embedded zeros, and backslashes in the string are correctly escaped when written. For instance, the call
+
+string.format('%q', 'a string with "quotes" and \n new line')
+
+will produce the string:
+
+     "a string with \"quotes\" and \
+      new line"
+
+The options c, d, E, e, f, g, G, i, o, u, X, and x all expect a number as argument, whereas q and s expect a string.
+
+This function does not accept string values containing embedded zeros, except as arguments to the q option.
+
+string.format() works fine with both English and non-English text.
+
+Example
+
+some_data = "MudletUser1"
+
+-- pad data 20 characters wide to the left
+display(string.format("%20s", some_data))
+-- result: "         MudletUser1"
+
+-- pad same data but instead to the the right
+display(string.format("%-20s", some_data))
+-- result: "MudletUser1         "
+
+-- pad but first truncate data to 6 characters
+display(string.format("%20s", string.sub(some_data, 1, 6)))
+-- result: "              Mudlet"
+
+## string.genNocasePattern
+
+string.genNocasePattern(template)
+
+Generate case insensitive search pattern from string.
+
+Parameters
+
+template: The original string to be used as the base.
+
+Example
+
+echo(string.genNocasePattern("123abc"))
+-- result: "123[aA][bB][cC]"
+
+## string.gfind
+
+string.gfind()
+
+This is an old version of what is now 
+string.gmatch
+. Use 
+string.gmatch
+ instead.
+
+## string.gmatch, utf8.gmatch
+
+string.gmatch(text, pattern) or utf8.gmatch
+
+Returns an iterator function that, each time it is called, returns the next captures from pattern over string text. If pattern specifies no captures, then the whole match is produced in each call.
+
+Example
+
+As an example, the following loop
+
+     s = "hello world from Lua"
+     for w in string.gmatch(s, "%a+") do
+       print(w)
+     end
+
+will iterate over all the words from string s, printing one per line. The next example collects all pairs key=value from the given string into a table:
+
+     t = {}
+     s = "from=world, to=Lua"
+     for k, v in string.gmatch(s, "(%w+)=(%w+)") do
+       t[k] = v
+     end
+
+For this function, a '^' at the start of a pattern does not work as an anchor, as this would prevent the iteration.
+
+string.gmatch() works with English text only, use utf8.gmatch() for the international version.
+
+## string.gsub, utf8.gsub
+
+string.gsub(text, pattern, repl [, n]) or utf8.gsub
+
+Returns a copy of text in which all (or the first n, if given) occurrences of the pattern have been replaced by a replacement string specified by repl, which can be a string, a table, or a function. gsub also returns, as its second value, the total number of matches that occurred.
+
+If repl is a string, then its value is used for replacement. The character % works as an escape character: any sequence in repl of the form %n, with n between 1 and 9, stands for the value of the n-th captured substring (see below). The sequence %0 stands for the whole match. The sequence %% stands for a single %.
+
+If repl is a table, then the table is queried for every match, using the first capture as the key; if the pattern specifies no captures, then the whole match is used as the key.
+
+If repl is a function, then this function is called every time a match occurs, with all captured substrings passed as arguments, in order; if the pattern specifies no captures, then the whole match is passed as a sole argument.
+
+If the value returned by the table query or by the function call is a string or a number, then it is used as the replacement string; otherwise, if it is false or nil, then there is no replacement (that is, the original match is kept in the string).
+
+string.gsub() works with English text only, use utf8.gsub() for the international version.
+
+Example
+
+     x = string.gsub("hello world", "world", "friends")
+     --> x="hello friends"
+
+     x = string.gsub("hello world", "(%w+)", "%1 %1")
+     --> x="hello hello world world"
+     
+     x = string.gsub("hello world", "%w+", "%0 %0", 1)
+     --> x="hello hello world"
+     
+     x = string.gsub("hello world from Lua", "(%w+)%s*(%w+)", "%2 %1")
+     --> x="world hello Lua from"
+     
+     x = string.gsub("home = $HOME, user = $USER", "%$(%w+)", os.getenv)
+     --> x="home = /home/roberto, user = roberto"
+     
+     x = string.gsub("4+5 = $return 4+5$", "%$(.-)%$", function (s)
+           return loadstring(s)()
+         end)
+     --> x="4+5 = 9"
+     
+     local t = {name="lua", version="5.1"}
+     x = string.gsub("$name-$version.tar.gz", "%$(%w+)", t)
+     --> x="lua-5.1.tar.gz"
+
+## string.len, utf8.len
+
+string.len(string) or utf8.len(string)
+
+mystring:len()
+
+Receives a string and returns its length. The empty string "" has length 0. Embedded zeros are counted, so "a\000bc\000" has length 5.
+
+string.len() works with English text only, use utf8.len() for the international version.
+
+See also: 
+utf8.width
+
+Parameters
+
+string:
+
+The string (text) you want to find the length of.
+
+Example
+
+-- prints 5 for the 5 letters in our word
+print(string.len("hello"))
+
+-- international version
+print(utf8.len("слово"))
+
+## string.lower, utf8.lower
+
+string.lower(string) or utf8.lower(string)
+
+mystring:lower()
+
+Receives a string and returns a copy of this string with all uppercase letters changed to lowercase. All other characters are left unchanged. The definition of what an uppercase letter is depends on the current locale.
+
+string.lower() works with English text only, use utf8.lower() for the international version.
+
+See also: 
+string.upper
+, 
+utf8.upper
+
+Example
+
+-- prints an all-lowercase version
+print(string.lower("No way! This is AWESOME!"))
+
+-- international version
+print(utf8.lower("Класс! Ето ОТЛИЧНО!"))
+
+## string.match, utf8.match
+
+string.match(text, pattern [, init]) or utf8.match()
+
+Looks for the first match of pattern in the string text. If it finds one, then match returns the captures from the pattern; otherwise it returns nil. If pattern specifies no captures, then the whole match is returned. A third, optional numerical argument init specifies where to start the search; its default value is 1 and can be negative.
+
+string.match() works with English text only, use utf8.match() for the international version.
+
+Example
+
+-- match some numbers
+local age = string.match("I am 100 years old.", "%d+"))
+echo("Wow, " .. age .. " years old.")
+
+## string.patternEscape, utf8.patternEscape
+
+escapedString = string.patternEscape(str) or escapedString = utf8.patternEscape(str)
+
+Returns a version of str with all Lua pattern characters escaped to ensure string.match/find/etc look for the original str.
+
+See also
+
+string.trim()
+, 
+string.genNocasePattern()
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Parameters
+
+str:
+
+The string to escape lua pattern characters in.
+
+Returns
+
+The string with all special Lua pattern characters escaped.
+
+Example
+
+-- searching for a url inside of a string. 
+local helpString = [[
+This feature can be accessed by going to https://some-url.com/athing.html?param=value and
+retrieving the result!
+]]
+local url = "https://some-url.com/"
+display(helpString:find(url))
+-- nil
+display(helpString:find(string.patternEscape(url)))
+-- 42
+-- 62
+display(url:patternEscape())
+-- "https://some%-url%.com/"
+
+## string.rep
+
+string.rep(String, n)
+
+mystring:rep(n)
+
+Returns a string that is the concatenation of 
+n
+ copies of the string 
+String
+.
+
+string.rep() works with both English and non-English text fine.
+
+Example
+
+-- repeat * 10 times
+display(string.rep("*", 10))
+-- results in:
+**********
+
+-- do the same thing, but this time calling from a variable
+s = "*"
+display(s:rep(10))
+-- results in:
+**********
+
+## string.reverse, utf8.reverse
+
+string.reverse(string) or utf8.reverse(string)
+
+mystring:reverse()
+
+Returns a string that is the string 
+string
+ reversed.
+
+string.reverse() works with English text only, use utf8.reverse() for the international version.
+
+Parameters
+
+string:
+
+The string to reverse. Passed as a string.
+
+Example
+
+mystring = "Hello from Lua"
+echo(mystring:reverse()) -- displays 'auL morf olleH'
+
+-- international version.
+mystring = "Привет от Луа!"
+echo(utf8.reverse(mystring)) -- displays '!ауЛ то тевирП', which probably looks the same to you
+
+## string.split
+
+string.split(string, delimiter)
+
+myString:split(delimiter)
+
+Splits a string into a table by the given delimiter. Can be called against a string (or variable holding a string) using the second form above.
+
+Returns a table containing the split sections of the string.
+
+Parameters
+
+string:
+
+The string to split. Parameter is not needed if using second form of the syntax above. Passed as a string.
+
+delimiter:
+
+The delimiter to use when splitting the string. Passed as a string, and allows for 
+Lua pattern types
+. Use % to escape here (and %% to escape a stand-alone %).
+
+Version Information
+
+Note
+ 
+Note:
+  as of Mudlet 4.7+, delimiter will default to " " if not provided.
+
+Note
+ 
+Note:
+  as of Mudlet 4.7+, using "" (empty string) for the delimiter will return the string as a table of characters. IE string.split("This","") will return as {"T", "h", "i", "s"}. Prior to 4.7 using empty string as the delimiter would error after hanging temporarily.
+
+Example
+
+-- This will split the string by ", " delimiter and print the resulting table to the main window.
+names = "Alice, Bob, Peter"
+name_table = string.split(names, ", ")
+display(name_table)
+
+--The alternate method
+names = "Alice, Bob, Peter"
+name_table = names:split(", ")
+display(name_table)
+
+Either method above will print out:
+
+table {
+
+1: 'Alice'
+
+2: 'Bob'
+
+3: 'Peter'
+
+}
+
+## string.starts
+
+string.starts(string, prefix)
+
+Test if string is starting with specified prefix.
+
+Returns true or false
+
+See also: 
+string.ends
+
+Parameters
+
+string:
+
+The string to test. Passed as a string.
+
+prefix:
+
+The prefix to test for. Passed as a string.
+
+Example
+
+--The following will see if the line begins with "You" and if so will print a statement at the end of the line
+if string.starts(line, "You") then
+  echo("====oh you====\n")
+end
+
+## string.sub, utf8.sub
+
+string.sub(text, i [, j]) or utf8.sub()
+
+Returns the substring of text that starts at i and continues until j; i and j can be negative. If j is absent, then it is assumed to be equal to -1 (which is the same as the string length). In particular, the call string.sub(text,1,j) returns a prefix of text with length j, and string.sub(text, -i) returns a suffix of text with length i.
+
+string.sub() works with English text only, use utf8.sub() for the international version.
+
+Example
+
+local sub = string.sub("Twinkle, twinkle, little star.", 19)  -- returns: little star.
+echo(sub)
+
+sub = string.sub("Twinkle, twinkle, little star.", 10, 16)  -- returns: twinkle
+echo(sub)
+
+## string.title
+
+string.title(string)
+
+mystring:title()
+
+Capitalizes the first character in a string.
+
+Returns the altered string.
+
+Parameters
+
+string:
+
+The string to modify. Not needed if you use the second form of the syntax above.
+
+Example
+
+--Variable testname is now Anna.
+testname = string.title("anna")
+--Example will set test to "Bob".
+test = "bob"
+test = test:title()
+
+## string.trim
+
+string.trim(string)
+
+Trims string, removing all 'extra' white space at the beginning and end of the text.
+
+Returns the altered string.
+
+Parameters
+
+string:
+
+The string to trim. Passed as a string.
+
+Example
+
+--This will print 'Troll is here!', without the extra spaces.
+local str = string.trim("  Troll is here!  ")
+echo("'" .. str .. "'")
+
+## string.upper, utf8.upper
+
+string.upper(string) or utf8.upper(string)
+
+mystring:upper()
+
+Receives a string and returns a copy of this string with all lowercase letters changed to uppercase. All other characters are left unchanged. The definition of what a lowercase letter is depends on the current locale.
+
+string.upper() works with English text only, use utf8.upper() for the international version.
+
+See also: 
+string.lower
+, 
+utf8.lower
+
+Parameters
+
+string:
+
+The string you want to change to uppercase
+
+Example
+
+-- displays 'RUN BOB RUN'
+print(string.upper("run bob run"))
+
+-- displays 'ДАВАЙ ДАВАЙ!'
+print(utf8.upper("давай давай!"))
+
+## utf8.charpos
+
+utf8.charpos(string[[, charpos], offset])
+
+Converts UTF-8 position to byte offset, returns the character position and code point. If only offset is given, returns byte offset of this UTF-8 char index. If charpos and offset is given, a new charpos will be calculated by adding/subtracting UTF-8 char offset to current charpos. In all cases, it return a new char position, and code point (a number) at this position.
+
+Parameters
+
+string:
+
+The input string to work on.
+
+charpos:
+
+(optional) character position to work on.
+
+offset:
+
+(optional) offset (as a number) to work on.
+
+## utf8.escape
+
+utf8.escape(string)
+
+Escape a string to UTF-8 format string. It support several escape formats:
+
+%ddd - which ddd is a decimal number at any length:
+
+      change Unicode code point to UTF-8 format.
+
+%{ddd} - same as %nnn but has bracket around.
+%uddd - same as %ddd, u stands Unicode
+%u{ddd} - same as %{ddd}
+%xhhh - hexadigit version of %ddd
+%x{hhh} same as %xhhh.
+%? - '?' stands for any other character: escape this character.
+
+Parameters
+
+string:
+
+The string you want to escape
+
+Example
+
+local u = utf8.escape
+print(u"%123%u123%{123}%u{123}%xABC%x{ABC}")
+print(u"%%123%?%d%%u")
+
+## utf8.fold
+
+utf8.fold(string)
+
+Returns the lowercase version of the string for use in case-insensitive comparisons. If string is a number, it's treated as a code point and the converted code point is returned (as a number).
+
+Parameters
+
+string:
+
+The string to lowercase.
+
+Example
+
+print(utf8.fold("ПРИВЕТ")) -- 'привет'
+print(utf8.fold("Привет")) -- 'привет'
+
+## utf8.insert
+
+utf8.insert(string[, idx], substring)
+
+Inserts the substring into the given string. If idx is given, inserts substring before the character at this index, otherwise the substring will append onto the end of string. idx can be negative.
+
+Parameters
+
+string:
+
+The input string to work on.
+
+idx:
+
+(optional) character position to insert the string at.
+
+substring:
+
+text to insert into the substring.
+
+Example
+
+-- inserts letter я before the 2nd letter and prints 'мясо'
+print(utf8.insert("мсо", 2, "я"))
+
+## utf8.ncasecmp
+
+utf8.ncasecmp(a, b)
+
+Compares 
+a
+ and 
+b
+ without case. Return -1 means a < b, 0 means a == b and 1 means a > b.
+
+Parameters
+
+a:
+
+String to compare.
+
+b:
+
+String to compare against.
+
+## utf8.next
+
+utf8.next(string[, charpos[, offset]])
+
+Iterates though the UTF-8 string.
+
+Parameters
+
+string:
+
+The input string to work on.
+
+charpos:
+
+(optional) character position to work on.
+
+offset:
+
+(optional) offset (as a number) to work on.
+
+Example
+
+-- prints location and code point of every letter
+for pos, code in utf8.next, "тут есть текст" do
+   print(pos, code)
+end
+
+## utf8.remove
+
+utf8.remove(string[, start[, stop]])
+
+Removes characters from the given string. Deletes characters from the given 
+start
+ to the end of the string. If 
+stop
+ is given, deletes characters from 
+start
+ to 
+stop
+ (including start and stop). 
+start
+ and 
+stop
+ can be negative.
+
+Parameters
+
+string:
+
+The input string to work on.
+
+start:
+
+position to start deleting characters from.
+
+stop:
+
+(optional) posititon to stop deleting characters at.
+
+Example
+
+-- delete everything from the 3rd character including the character itself
+print(utf8.remove("мясо", 3)) -- 'мя'
+
+-- delete the last character, use negative to count backwards
+print(utf8.remove("мясо", -1)) -- 'мяс'
+
+-- delete everything from the 2nd to the 4th character
+print(utf8.remove("вкусное", 2,4)) -- 'вное'
+
+## utf8.title
+
+utf8.title(string)
+
+Returns the uppercase version of the string for use in case-insensitive comparisons. If string is a number, it's treated as a code point and the converted code point is returned (as a number).
+
+Parameters
+
+string:
+
+The string to uppercase.
+
+Example
+
+print(utf8.title("привет")) -- 'ПРИВЕТ'
+print(utf8.title("Привет")) -- 'ПРИВЕТ'
+
+## utf8.width
+
+utf8.width(string[, ambi_is_double[, default_width]])
+
+Calculate the widths of the given string. If the string is a code point, return the width of this code point.
+
+Parameters
+
+string:
+
+The input string to work on.
+
+ambi_is_double:
+
+(optional) if provided, the ambiguous width character's width is 2, otherwise it's 1.
+
+default_width:
+
+(optional) if provided, this will be the width of unprintable character, used display a non-character mark for these characters.
+
+## utf8.widthindex
+
+utf8.widthindex(string, location[, ambi_is_double[, default_width]])
+
+Returns the character index at the location in the given string as well as the offset and the width. This is a reverse operation of utf8.width().
+
+Parameters
+
+string:
+
+The input string to work on.
+
+location:
+
+location to get the width of.
+
+ambi_is_double:
+
+(optional) if provided, the ambiguous width character's width is 2, otherwise it's 1.
+
+default_width:
+
+(optional) if provided, this will be the width of unprintable character, used display a non-character mark for these characters.

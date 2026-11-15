@@ -1,0 +1,9512 @@
+Mudlet: Miscellaneous_Functions
+
+Fuente oficial: https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions
+Copia consultable; véase manifest.json para fecha, hash y atribución.
+
+# Miscellaneous Functions
+
+## addFileWatch
+
+addFileWatch(path)
+
+Adds file watch on directory or file. Every change in that file (or directory) will raise 
+sysPathChanged
+ event.
+
+See also: 
+removeFileWatch()
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+Example
+
+herbs
+ 
+=
+ 
+{}
+
+local
+ 
+herbsPath
+ 
+=
+ 
+getMudletHomeDir
+()
+ 
+..
+ 
+"/herbs.lua"
+
+function
+ 
+herbsChangedHandler
+(
+_
+,
+ 
+path
+)
+
+if
+ 
+path
+ 
+==
+ 
+herbsPath
+ 
+then
+
+table
+.
+load
+(
+herbsPath
+,
+ 
+herbs
+)
+
+removeFileWatch
+(
+herbsPath
+)
+
+end
+
+end
+
+addFileWatch
+(
+herbsPath
+)
+
+registerAnonymousEventHandler
+(
+"sysPathChanged"
+,
+ 
+"herbsChangedHandler"
+)
+
+## addSupportedTelnetOption
+
+addSupportedTelnetOption(option)
+
+Adds a telnet option, which when queried by a game server, Mudlet will return DO (253) on. Use this to register the telnet option that you will be adding support for with Mudlet - see 
+additional protocols
+ section for more.
+
+Example
+
+<
+event
+ 
+handlers
+ 
+that
+ 
+add
+ 
+support
+ 
+for
+ 
+MSDP
+...
+ 
+see
+ 
+http
+:
+//
+www
+.
+mudbytes
+.
+net
+/
+forum
+/
+comment
+/
+63920
+/#
+c63920
+ 
+for
+ 
+an
+ 
+example
+>
+
+-- register with Mudlet that it should not decline the request of MSDP support
+
+local
+ 
+TN_MSDP
+ 
+=
+ 
+69
+
+addSupportedTelnetOption
+(
+TN_MSDP
+)
+
+## alert
+
+alert([seconds])
+
+alerts the user to something happening - makes Mudlet flash in the Windows window bar, bounce in the macOS dock, or flash on Linux.
+
+Mudlet Version
+Available in Mudlet
+3.2
++
+
+Parameters
+
+seconds:
+
+(optional) number of seconds to have the alert for. If not provided, Mudlet will flash until the user opens Mudlet again.
+
+Example
+
+-- flash indefinitely until Mudlet is open
+
+alert
+()
+
+-- flash for just 3 seconds
+
+alert
+(
+3
+)
+
+## announce
+
+announce(text[, processing])
+
+Announces text using Text-to-Speech - this assists visually impaired players.
+
+Mudlet Version
+Available in Mudlet
+4.17
++
+
+Parameters
+
+text:
+
+Text to announce using text-to-speech
+
+processing:
+
+(optional) How to process the announcement. This is only relevant on Windows (
+see more
+), and not macOS or Linux. Can be one of:
+
+importantall
+ - process all announcements as important
+
+importantmostrecent
+ - process only most recent as important
+
+all
+ - process all announcements
+
+mostrecent
+ - process only most recent announcement
+
+currentthenmostrecent
+ - process current then most recent announcement
+
+Example
+
+-- basic announcement
+
+announce
+(
+"Combat started!"
+)
+
+-- announcement with specific processing
+
+announce
+(
+"Important message"
+,
+ 
+"importantall"
+)
+
+## cfeedTriggers
+
+cfeedTriggers(text)
+
+Like feedTriggers, but you can add color information using color names, similar to cecho.
+
+Parameters
+
+text
+: The string to feed to the trigger engine. Include colors by name as black,red,green,yellow,blue,magenta,cyan,white and light_* versions of same. You can also use a number to get the ansi color corresponding to that number.
+
+See also: 
+feedTriggers
+
+Mudlet Version
+Available in Mudlet
+4.10
++
+
+Example
+
+cfeedTriggers
+(
+"<green:red>green on red<r> reset <124:100> foreground of ANSI124 and background of ANSI100<r>
+\n
+"
+)
+
+## closeMudlet
+
+closeMudlet()
+
+Closes Mudlet and all profiles immediately.
+
+See also: 
+saveProfile()
+
+Note
+ 
+Note:
+  Use with care. This potentially lead to data loss, if "save on close" is not activated and the user didn't save the profile manually as this will NOT ask for confirmation nor will the profile be saved. Also it does not consider if there are 
+other
+ profiles open if multi-playing: they 
+all
+ will be closed!
+
+Mudlet Version
+Available in Mudlet
+3.1
++
+
+Example
+
+closeMudlet
+()
+
+## appendLog
+
+appendLog(text)
+
+Adds some text to the open log file, only if the current state of logging is true. Does nothing if logging is not turned on.  Supports whatever format the open log file is in (html, txt).
+
+Parameters
+
+text
+: The string to add to the log.
+
+See also: 
+startLogging
+
+Mudlet Version
+Available in Mudlet
+4.19
++
+
+Example
+
+appendLog
+(
+"Add this string to the log."
+)
+
+## clearVisitedLinks
+
+clearVisitedLinks(labelName)
+
+Clears the visited link history for a label, causing all links to display in the unvisited link color again.
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+See also: 
+setLinkStyle
+, 
+resetLinkStyle
+
+Parameters
+
+labelName:
+
+The name of the label to clear the visited link history for.
+
+Note
+ 
+Note:
+  This does not change the link colors - it only resets which links are considered "visited". Links will revert to the unvisited color until clicked again.
+
+Example
+
+-- Clear the visited links history
+
+clearVisitedLinks
+(
+"navigationLabel"
+)
+
+-- All links in the label will now show in the unvisited color again,
+
+-- even if they were previously clicked
+
+## compare
+
+sameValue = compare(a, b)
+
+This function takes two items, and compares their values. It will compare numbers, strings, but most importantly it will compare two tables by value, not reference. For instance, 
+{} == {}
+ is 
+false
+, but 
+compare({}, {})
+ is 
+true
+
+See also
+
+table.complement()
+, 
+table.n_union()
+
+Mudlet Version
+Available in Mudlet
+4.18
++
+
+Parameters
+
+a:
+
+The first item to compare
+
+b:
+
+The second item to compare
+
+Returns
+
+Boolean true if the items have the same value, otherwise boolean false
+
+Example
+
+local
+ 
+tblA
+ 
+=
+ 
+{
+ 
+255
+,
+ 
+0
+,
+ 
+0
+ 
+}
+
+local
+ 
+tblB
+ 
+=
+ 
+color_table
+.
+red
+
+local
+ 
+same
+ 
+=
+ 
+compare
+(
+tblA
+,
+ 
+tblB
+)
+
+display
+(
+same
+)
+
+-- this will return true
+
+display
+(
+tblA
+ 
+==
+ 
+tblB
+)
+
+-- this will display false, as they are different tables
+
+-- even though they have the same value
+
+## deleteAllNamedEventHandlers
+
+deleteAllNamedEventHandlers(userName)
+
+Deletes all named event handlers for userName and prevents them from firing any more. Information is deleted and cannot be retrieved.
+
+See also
+
+registerNamedEventHandler()
+, 
+stopNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+Example
+
+deleteAllNamedEventHandlers
+(
+"Demonnic"
+)
+ 
+-- emergency stop or debugging situation, most likely.
+
+## deleteNamedEventHandler
+
+success = deleteNamedEventHandler(userName, handlerName)
+
+Deletes a named event handler with name handlerName and prevents it from firing any more. Information is deleted and cannot be retrieved.
+
+See also
+
+registerNamedEventHandler()
+, 
+stopNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+handlerName:
+
+The name of the handler to stop. Same as used when you called 
+registerNamedEventHandler()
+
+Returns
+
+true if successful, false if it didn't exist
+
+Example
+
+local
+ 
+deleted
+ 
+=
+ 
+deleteNamedEventHandler
+(
+"Demonnic"
+,
+ 
+"Vitals"
+)
+
+if
+ 
+deleted
+ 
+then
+
+cecho
+(
+"Vitals deleted forever!!"
+)
+
+else
+
+cecho
+(
+"Vitals doesn't exist and so could not be deleted."
+)
+
+end
+
+## denyCurrentSend
+
+denyCurrentSend()
+
+Cancels a 
+send()
+ or user-entered command, but only if used within a 
+sysDataSendRequest
+ event.
+
+Example
+
+-- cancels all "eat hambuger" commands
+
+function
+ 
+cancelEatHamburger
+(
+event
+,
+ 
+command
+)
+
+if
+ 
+command
+ 
+==
+ 
+"eat hamburger"
+ 
+then
+
+denyCurrentSend
+()
+
+cecho
+(
+"<red>Denied! Didn't let the command through.
+\n
+"
+)
+
+end
+
+end
+
+registerAnonymousEventHandler
+(
+"sysDataSendRequest"
+,
+ 
+"cancelEatHamburger"
+)
+
+## dfeedTriggers
+
+dfeedTriggers(str)
+
+Like feedTriggers, but you can add color information using <r,g,b>, similar to decho.
+
+Parameters
+
+str
+: The string to feed to the trigger engine. Include color information inside tags like decho.
+
+See also
+
+cfeedTriggers
+, 
+decho
+
+Mudlet Version
+Available in Mudlet
+4.11
++
+
+Example
+
+dfeedTriggers
+(
+"<0,128,0:128,0,0>green on red<r> reset
+\n
+"
+)
+
+## disableModuleSync
+
+disableModuleSync(name)
+
+Stops syncing the given module.
+
+Parameter
+
+name
+: name of the module.
+
+See also: 
+enableModuleSync()
+, 
+getModuleSync()
+
+Mudlet Version
+Available in Mudlet
+4.8
++
+
+## enableModuleSync
+
+enableModuleSync(name)
+
+Enables the sync for the given module name - any changes done to it will be saved to disk and if the module is installed in any other profile(s), it'll be updated in them as well on profile save.
+
+Parameter
+
+name
+: name of the module to enable sync on.
+
+See also: 
+disableModuleSync()
+, 
+getModuleSync()
+
+Mudlet Version
+Available in Mudlet
+4.8
++
+
+## expandAlias
+
+expandAlias(command, [echoBackToBuffer])
+
+Runs the command as if it was from the command line - so aliases are checked and if none match, it's sent to the game unchanged.
+
+Parameters
+
+command
+
+Text of the command you want to send to the game. Will be checked for aliases.
+
+echoBackToBuffer
+
+(optional) If 
+false
+, the command will not be echoed back in your buffer. Defaults to 
+true
+ if omitted.
+
+Note
+ 
+Note:
+  Using expandAlias is not recommended anymore as it is not very robust and may lead to problems down the road. The recommendation is to use lua functions instead. See 
+Manual:Functions_vs_expandAlias
+ for details and examples.
+
+Note
+ 
+Note:
+  If you want to be using the 
+matches
+ table after calling 
+expandAlias
+, you should save it first, as, e.g. 
+local oldmatches = matches
+ before calling 
+expandAlias
+, since 
+expandAlias
+ will overwrite it after using it again.
+
+Note
+ 
+Note:
+  Since 
+Mudlet 3.17.1
+ the optional second argument to echo the command on screen will be ineffective whilst the game server has negotiated the telnet ECHO option to provide the echoing of text we 
+send
+ to him.
+
+Example
+
+expandAlias
+(
+"t rat"
+)
+
+-- don't echo the command
+
+expandAlias
+(
+"t rat"
+,
+ 
+false
+)
+
+## feedTriggers
+
+feedTriggers(text[, dataIsUtf8Encoded = true])
+
+This function will have Mudlet parse the given text as if it came from the game - one great application is trigger testing. The built-in 
+`echo
+ alias provides this functionality as well.
+
+Parameters
+
+text:
+
+string which is sent to the trigger processing system almost as if it came from the game server. This string must be byte encoded in a manner to match the currently selected 
+Server Encoding
+.
+
+dataIsUtf8Encoded
+ (available in Mudlet 4.2+):
+
+Set this to false, if you need pre-Mudlet 4.0 behavior. Most players won't need this.
+
+(Before Mudlet 4.0 the text had to be encoded directly in whatever encoding the setting in the preferences was set to.
+
+(Encoding could involve using the Lua string character escaping mechanism of \ and a base 10 number for character codes from \1 up to \255 at maximum)
+
+Since Mudlet 4.0 it is assumed that the text is UTF-8 encoded. It will then be automatically converted to the currently selected game server encoding.
+
+Preventing the automatic conversion can be useful to Mudlet developers testing things, or possibly to those who are creating handlers for Telnet protocols within the Lua subsystem, who need to avoid the transcoding of individual protocol bytes, when they might otherwise be seen as extended ASCII characters.)
+
+Returns (available in Mudlet 4.2+)
+
+true
+ on success, 
+nil
+ and an error message if the text contains characters that cannot be conveyed by the current Game Server encoding.
+
+Note
+ 
+Note:
+  It is important to ensure that in Mudlet 4.0.0 and beyond the text data only contains characters that can be encoded in the current Game Server encoding, from 4.2.0 the content is checked that it can successfully be converted from the UTF-8 that the Mudlet Lua subsystem uses internally into that particular encoding and if it cannot the function call will fail and not pass any of the data, this will be significant if the text component contains any characters that are not plain ASCII.
+
+Example
+
+-- try using this on the command line
+
+--> `echo This is a sample line from the game
+
+-- You can use \n to represent a new line - you also want to use it before and after the text you’re testing, like so:
+
+feedTriggers
+(
+"
+\n
+You sit yourself down.
+\n
+"
+)
+
+-- The function also accept ANSI color codes that are used in games. A sample table can be found http://codeworld.wikidot.com/ansicolorcodes
+
+feedTriggers
+(
+"
+\n
+This is 
+\27
+[1;32mgreen
+\27
+[0;37m, 
+\27
+[1;31mred
+\27
+[0;37m, 
+\27
+[46mcyan background
+\27
+[0;37m,"
+ 
+..
+
+"
+\27
+[32;47mwhite background and green foreground
+\27
+[0;37m.
+\n
+"
+)
+
+## getCharacterName
+
+getCharacterName()
+
+Returns the name entered into the "Character name" field on the Connection Preferences form. Can be used to find out the name that might need to be handled specially in scripts or anything that needs to be personalized to the player. If there is nothing set in that entry will return an empty string.
+
+See also: 
+getProfileName()
+
+Mudlet Version
+Available in Mudlet
+4.16
++
+
+Example
+
+-- cast glamor on yourself
+
+send
+(
+"cast 'glamor' "
+ 
+..
+ 
+getCharacterName
+())
+
+## getConfig
+
+getConfig([option])
+
+Returns configuration options similar to those that can be set with setConfig. One could use this to decide if a script should notify the user of suggested changes.
+
+Parameters:
+
+option
+ 
+(optional)
+: Particular option to retrieve - see 
+Configuration Options
+ for available ones. This may be a string or an array of strings.
+
+See also: 
+setConfig()
+, 
+Configuration Options
+
+Mudlet Version
+Available in Mudlet
+4.17
++
+
+## getMediaListener
+
+getMediaListener()
+
+Returns which way the player faces for sounds given a compass direction, as a table with a 
+facing
+ key. The facing is a word such as "north" or "southwest", or a number of degrees from 0 to 359 when it was given in degrees.
+
+The facing is "north" until a script sets it with 
+setMediaListener()
+ or the game sends 
+Client.Media.Listener
+.
+
+Returns
+
+a table such as 
+{facing = "north"}
+ or 
+{facing = 225}
+
+See also: 
+setMediaListener()
+, 
+playSoundFile()
+, 
+updateSounds()
+, 
+Client.Media.Listener
+
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+Example
+
+display
+(
+getMediaListener
+())
+
+-- {
+
+--   facing = "north"
+
+-- }
+
+-- Turn a quarter to the right of wherever the player faces
+
+local
+ 
+facing
+ 
+=
+ 
+getMediaListener
+().
+facing
+
+local
+ 
+degrees
+ 
+=
+ 
+{
+north
+ 
+=
+ 
+0
+,
+ 
+northeast
+ 
+=
+ 
+45
+,
+ 
+east
+ 
+=
+ 
+90
+,
+ 
+southeast
+ 
+=
+ 
+135
+,
+ 
+south
+ 
+=
+ 
+180
+,
+ 
+southwest
+ 
+=
+ 
+225
+,
+ 
+west
+ 
+=
+ 
+270
+,
+ 
+northwest
+ 
+=
+ 
+315
+}
+
+local
+ 
+current
+ 
+=
+ 
+type
+(
+facing
+)
+ 
+==
+ 
+"number"
+ 
+and
+ 
+facing
+ 
+or
+ 
+degrees
+[
+facing
+]
+
+setMediaListener
+({
+facing
+ 
+=
+ 
+(
+current
+ 
++
+ 
+90
+)
+ 
+%
+ 
+360
+})
+
+## getModulePath
+
+path = getModulePath(module name)
+
+Returns the location of a module on the disk. If the given name does not correspond to an installed module, it'll return 
+nil
+
+See also: 
+installModule()
+
+Mudlet Version
+Available in Mudlet
+3.0
++
+
+Example
+
+getModulePath
+(
+"mudlet-mapper"
+)
+
+## getModulePriority
+
+priority = getModulePriority(module name)
+
+Returns the priority of a module as an integer. This determines the order modules will be loaded in - default is 0. Useful if you have a module that depends on another module being loaded first, for example.
+
+Modules with priority 
+-1
+ will be loaded before scripts (Mudlet 4.11+).
+
+See also: 
+setModulePriority()
+
+Example
+
+getModulePriority
+(
+"mudlet-mapper"
+)
+
+## getModules
+
+getModules()
+
+Returns installed modules as table.
+
+See also: 
+getPackages
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+Example
+
+--Check if the module myTabChat is installed and if it isn't install it and enable sync on it
+
+if
+ 
+not
+ 
+table
+.
+contains
+(
+getModules
+(),
+"myTabChat"
+)
+ 
+then
+
+installModule
+(
+getMudletHomeDir
+()
+..
+"/modules/myTabChat.xml"
+)
+
+enableModuleSync
+(
+"myTabChat"
+)
+
+end
+
+## getModuleInfo
+
+getModuleInfo(moduleName, [info])
+
+Returns table with meta information for a package
+
+Parameters
+
+moduleName:
+
+Name of the package
+
+info:
+
+(optional) specific info wanted to get, if not given all available meta-info is returned
+
+See also: 
+getPackageInfo
+, 
+setModuleInfo
+
+Example
+
+getModuleInfo
+(
+"myModule"
+,
+"author"
+)
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+## getModuleSync
+
+getModuleSync(name)
+
+returns false if module sync is not active, true if it is active and nil if module is not found.
+
+Parameter
+
+name
+: name of the module
+
+See also: 
+enableModuleSync()
+, 
+disableModuleSync()
+
+Mudlet Version
+Available in Mudlet
+4.8
++
+
+## getMudletHomeDir
+
+getMudletHomeDir()
+
+Returns the current home directory of the current profile. This can be used to store data, save statistical information, or load resource files from packages.
+
+Note
+ 
+Note:
+  intentionally uses forward slashes 
+/
+ as separators on Windows since 
+stylesheets
+ require them.
+
+Example
+
+-- save a table
+
+table
+.
+save
+(
+getMudletHomeDir
+()
+..
+"/myinfo.dat"
+,
+ 
+myinfo
+)
+
+-- or access package data. The forward slash works even on Windows fine
+
+local
+ 
+path
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+"/mypackagename"
+
+## getMudletInfo
+
+getMudletInfo()
+
+Prints debugging information about the Mudlet that you're running - this can come in handy for diagnostics.
+
+Don't use this command in your scripts to find out if certain features are supported in Mudlet - there are better functions available for this.
+
+Mudlet Version
+Available in Mudlet
+4.8
++
+
+Example
+
+getMudletInfo
+()
+
+## getMudletVersion
+
+getMudletVersion(style)
+
+Returns the current Mudlet version. Note that you shouldn't hardcode against a specific Mudlet version if you'd like to see if a function is present - instead, check for the existence of the function itself. Otherwise, checking for the version can come in handy if you'd like to test for a broken function or so on.
+
+See also: 
+mudletOlderThan()
+
+Mudlet Version
+Available in Mudlet
+3.0
++
+
+Parameters
+
+style:
+
+(optional) allows you to choose what you'd like returned. By default, if you don't specify it, a key-value table with all the values will be returned: major version, minor version, revision number and the optional build name.
+
+Values you can choose
+
+"string"
+:
+
+Returns the full Mudlet version as text.
+
+"table"
+:
+
+Returns the full Mudlet version as four values (multi-return)
+
+"major"
+:
+
+Returns the major version number (the first one).
+
+"minor"
+:
+
+Returns the minor version number (the second one).
+
+"revision"
+:
+
+Returns the revision version number (the third one).
+
+"build"
+:
+
+Returns the build of Mudlet (the ending suffix, if any).
+
+Example
+
+-- see the full Mudlet version as text:
+
+getMudletVersion
+(
+"string"
+)
+
+-- returns for example "3.0.0-alpha"
+
+-- check that the major Mudlet version is at least 3:
+
+if
+ 
+getMudletVersion
+(
+"major"
+)
+ 
+>=
+ 
+3
+ 
+then
+ 
+echo
+(
+"You're running on Mudlet 3+!"
+)
+ 
+end
+
+-- but mudletOlderThan() is much better for this:
+
+if
+ 
+mudletOlderThan
+(
+3
+)
+ 
+then
+ 
+echo
+(
+"You're running on Mudlet 3+!"
+)
+ 
+end
+
+-- if you'd like to see if a function is available however, test for it explicitly instead:
+
+if
+ 
+setAppStyleSheet
+ 
+then
+
+-- example credit to http://qt-project.org/doc/qt-4.8/stylesheet-examples.html#customizing-qscrollbar
+
+setAppStyleSheet
+[[
+
+  QScrollBar:vertical {
+
+      border: 2px solid grey;
+
+      background: #32CC99;
+
+      width: 15px;
+
+      margin: 22px 0 22px 0;
+
+  }
+
+  QScrollBar::handle:vertical {
+
+      background: white;
+
+      min-height: 20px;
+
+  }
+
+  QScrollBar::add-line:vertical {
+
+      border: 2px solid grey;
+
+      background: #32CC99;
+
+      height: 20px;
+
+      subcontrol-position: bottom;
+
+      subcontrol-origin: margin;
+
+  }
+
+  QScrollBar::sub-line:vertical {
+
+      border: 2px solid grey;
+
+      background: #32CC99;
+
+      height: 20px;
+
+      subcontrol-position: top;
+
+      subcontrol-origin: margin;
+
+  }
+
+  QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+
+      border: 2px solid grey;
+
+      width: 3px;
+
+      height: 3px;
+
+      background: white;
+
+  }
+
+  QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+
+      background: none;
+
+  }
+
+  ]]
+
+end
+
+## getNewIDManager
+
+getNewIDManager()
+
+Returns an IDManager object, for manager your own set of named events and timers isolated from the rest of the profile.
+
+See also
+
+registerNamedEventHandler()
+, 
+registerNamedTimer()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Note
+ 
+Note:
+  Full IDManager usage can be found at 
+IDManager
+
+Returns
+
+an IDManager for managing your own named events and timers
+
+Example
+
+demonnic
+ 
+=
+ 
+demonnic
+ 
+or
+ 
+{}
+
+demonnic
+.
+IDManager
+ 
+=
+ 
+getNewIDManager
+()
+
+local
+ 
+idm
+ 
+=
+ 
+demonnic
+.
+IDManager
+
+-- assumes you have defined demonnic.vitalsUpdate and demonnic.balanceChecker as functions
+
+idm
+:
+registerEvent
+(
+"DemonVitals"
+,
+ 
+"gmcp.Char.Vitals"
+,
+ 
+demonnic
+.
+vitalsUpdate
+)
+
+idm
+:
+registerTimer
+(
+"Balance Check"
+,
+ 
+1
+,
+ 
+demonnic
+.
+balanceChecker
+)
+
+idm
+:
+stopEvent
+(
+"DemonVitals"
+)
+
+## getNamedEventHandlers
+
+handlers = getNamedEventHandlers(userName)
+
+Returns a list of all userName's named event handlers' names as a table.
+
+See also
+
+registerNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+Returns
+
+a table of handler names. { "DemonVitals", "DemonInv" } for example. {} if none are registered
+
+Example
+
+local
+ 
+handlers
+ 
+=
+ 
+getNamedEventHandlers
+()
+
+display
+(
+handlers
+)
+
+-- {}
+
+registerNamedEventHandler
+(
+"Test1"
+,
+ 
+"testEvent"
+,
+ 
+"testFunction"
+)
+
+registerNamedEventHandler
+(
+"Test2"
+,
+ 
+"someOtherEvent"
+,
+ 
+myHandlerFunction
+)
+
+handlers
+ 
+=
+ 
+getNamedEventHandlers
+()
+
+display
+(
+handlers
+)
+
+-- { "Test1", "Test2" }
+
+## getOS
+
+getOS()
+
+Returns the name of the Operating System (OS). Useful for applying particular scripts only under particular operating systems, such as applying a stylesheet only when the OS is Windows.
+
+Returned text will be one of these: "windows", "mac", "linux", as well as "cygwin", "hurd", "freebsd", "kfreebsd", "openbsd", "netbsd", "bsd4", "unix" or "unknown" otherwise.
+
+Additionally returns the version of the OS, and if using Linux, the distribution in use (as of Mudlet 4.12+).
+
+Example
+
+display
+(
+getOS
+())
+
+if
+ 
+getOS
+()
+ 
+==
+ 
+"windows"
+ 
+then
+
+echo
+(
+"
+\n
+Windows OS detected.
+\n
+"
+)
+
+else
+
+echo
+(
+"
+\n
+Detected Operating system is NOT windows.
+\n
+"
+)
+
+end
+
+if
+ 
+mudlet
+.
+supports
+.
+osVersion
+ 
+then
+
+local
+ 
+os
+,
+ 
+osversion
+ 
+=
+ 
+getOS
+()
+
+print
+(
+f
+"Running {os} {osversion}"
+)
+
+end
+
+## getPackages
+
+getPackages()
+
+Returns installed packages as table.
+
+See also: 
+getModules
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+Example
+
+--Check if the generic_mapper package is installed and if so uninstall it
+
+if
+ 
+table
+.
+contains
+(
+getPackages
+(),
+"generic_mapper"
+)
+ 
+then
+
+uninstallPackage
+(
+"generic_mapper"
+)
+
+end
+
+## getPackageInfo
+
+getPackageInfo(packageName, [info])
+
+Returns table with meta information for a package
+
+Parameters
+
+packageName:
+
+Name of the package
+
+info:
+
+(optional) specific information to retrieve which can be one of; 
+author
+, 
+created
+, 
+description
+, 
+icon
+, 
+mpackage
+ (package name), 
+title
+ or 
+version
+. If not given all available meta-info is returned.
+
+See also: 
+getModuleInfo
+, 
+setPackageInfo
+
+Example
+
+getPackageInfo
+(
+"myPackage"
+,
+ 
+"version"
+)
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+## getPausedMusic
+
+getPausedMusic([settings table])
+
+Lists all paused music when given no filters, or those that match the filters given, as played with 
+playMusicFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPausedMusic({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+Returns
+
+A list of the matching music, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+See also: 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all paused music files for this profile associated with the API
+
+getPausedMusic
+()
+
+-- List all paused music matching the rugby mp3 name
+
+getPausedMusic
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- List all paused music matching the unique key of "rugby"
+
+getPausedMusic
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## getPausedSounds
+
+getPausedSounds([settings table])
+
+Lists all paused sounds when given no filters, or those that match the filters given, as played with 
+playSoundFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPausedSounds({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+A paused sound can still be moved with 
+updateSounds()
+.
+
+Returns
+
+A list of the matching sounds, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+A sound given a place also has 
+pan
+, from -100 to 100, and 
+direction
+, a word such as 
+"north"
+ or a number of degrees. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+See also: 
+getPausedMusic()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all paused sounds for this profile associated with the API
+
+getPausedSounds
+()
+
+-- List all paused sounds matching the rugby mp3 name
+
+getPausedSounds
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- List the paused sound matching the unique key of "rugby"
+
+getPausedSounds
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## getPausedVideos
+
+getPausedVideos([settings table])
+
+Lists all paused videos when given no filters, or those that match the filters given, as played with 
+playVideoFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPausedVideos({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+Returns
+
+A list of the matching videos, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all paused videos files for this profile associated with the API
+
+getPausedVideos
+()
+
+-- List all paused videos matching the unique key of "textinmotion"
+
+getPausedVideos
+({
+key
+ 
+=
+ 
+"textinmotion"
+})
+
+-- List all paused videos matching the textinmotion mp4 name
+
+getPausedVideos
+({
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+})
+
+-- List all paused videos matching the unique key of "textinmotion"
+
+getPausedVideos
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## getPlayingMusic
+
+getPlayingMusic([settings table]) or getPlayingMusic([name][, key][, tag])
+
+Lists all playing music when given no filters, or those that match the filters given, as played with 
+playMusicFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPlayingMusic({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+Returns
+
+A list of the matching music, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.18
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all playing music files for this profile associated with the API
+
+getPlayingMusic
+()
+
+-- List all playing music matching the rugby mp3 name
+
+getPlayingMusic
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- List all playing music matching the unique key of "rugby"
+
+getPlayingMusic
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+---- Ordered Parameter Syntax of getPlayingMusic([name][,key][,tag]) ----
+
+-- List all playing music files for this profile associated with the API
+
+getPlayingMusic
+()
+
+-- List all playing music matching the rugby mp3 name
+
+getPlayingMusic
+(
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+)
+
+-- List all playing music matching the unique key of "rugby"
+
+getPlayingMusic
+(
+
+nil
+ 
+-- name
+
+,
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+nil
+ 
+-- tag
+
+)
+
+## getPlayingSounds
+
+getPlayingSounds([settings table]) or getPlayingSounds([name][, key][, tag][, priority])
+
+Lists all playing sounds when given no filters, or those that match the filters given, as played with 
+playSoundFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+Required: No
+Key: priority
+Value: 1 to 100
+Default: 
+Purpose: Selects media with a priority less than or equal to this. Media played with no priority matches too.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPlayingSounds({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+Returns
+
+A list of the matching sounds, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+A sound given a place also has 
+pan
+, from -100 to 100, and 
+direction
+, a word such as 
+"north"
+ or a number of degrees. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.18
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all playing sounds for this profile associated with the API
+
+getPlayingSounds
+()
+
+-- List all playing sounds matching the rugby mp3 name
+
+getPlayingSounds
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- List the playing sound matching the unique key of "rugby"
+
+getPlayingSounds
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+-- Where a placed sound is coming from (Mudlet 5.1+)
+
+playSoundFile
+({
+name
+ 
+=
+ 
+"door-creak.wav"
+,
+ 
+key
+ 
+=
+ 
+"door"
+,
+ 
+direction
+ 
+=
+ 
+"north"
+})
+
+local
+ 
+door
+ 
+=
+ 
+getPlayingSounds
+({
+key
+ 
+=
+ 
+"door"
+})[
+1
+]
+
+if
+ 
+door
+ 
+then
+
+echo
+(
+f
+"The door creaks from the {door.direction}
+\n
+"
+)
+
+end
+
+---- Ordered Parameter Syntax of getPlayingSounds([name][,key][,tag][,priority]) ----
+
+-- List all playing sounds for this profile associated with the API
+
+getPlayingSounds
+()
+
+-- List all playing sounds matching the rugby mp3 name
+
+getPlayingSounds
+(
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+)
+
+-- List the playing sound matching the unique key of "rugby"
+
+getPlayingSounds
+(
+
+nil
+ 
+-- name
+
+,
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+nil
+ 
+-- tag
+
+,
+ 
+nil
+ 
+-- priority
+
+)
+
+## getPlayingVideos
+
+getPlayingVideos([settings table])
+
+Lists all playing videos when given no filters, or those that match the filters given, as played with 
+playVideoFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is listed, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path is reported by its name inside the "media" folder, for example 
+_profile/sounds/steps/sand/3.ogg
+, rather than by its bare file name. 
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+The full path the file was played from can still be used to filter, for example 
+getPlayingVideos({name = getMudletHomeDir() .. "/sounds/steps/sand/3.ogg"})
+.
+
+Returns
+
+A list of the matching videos, each a table with whichever of 
+name
+, 
+volume
+, 
+key
+, 
+tag
+ and 
+priority
+ it was played with. An empty table when none match.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- List all playing videos files for this profile associated with the API
+
+getPlayingVideos
+()
+
+-- List all playing videos matching the unique key of "textinmotion"
+
+getPlayingVideos
+({
+key
+ 
+=
+ 
+"textinmotion"
+})
+
+-- List all playing videos matching the textinmotion mp4 name
+
+getPlayingVideos
+({
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+})
+
+-- List all playing videos matching the unique key of "textinmotion"
+
+getPlayingVideos
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## getProfileName
+
+getProfileName()
+
+Returns the name of the profile. Useful when combined with 
+raiseGlobalEvent()
+ to know which profile a global event came from.
+
+Mudlet Version
+Available in Mudlet
+3.1
++
+
+Example
+
+-- if connected to the Achaea profile, will print Achaea to the main console
+
+echo
+(
+getProfileName
+())
+
+## getCommandSeparator
+
+getCommandSeparator()
+
+Returns the command separator in use by the profile.
+
+Mudlet Version
+Available in Mudlet
+3.18
++
+
+Example
+
+-- if your command separator is ;;, the following would send("do thing 1;;do thing 2"). 
+
+-- This way you can determine what it is set to and use that and share this script with 
+
+-- someone who has changed their command separator.
+
+-- Note: This is not really the preferred way to send this, using sendAll("do thing 1", "do thing 2") is,
+
+--       but this illustates the use case.
+
+local
+ 
+s
+ 
+=
+ 
+getCommandSeparator
+()
+
+expandAlias
+(
+"do thing 1"
+ 
+..
+ 
+s
+ 
+..
+ 
+"do thing 2"
+)
+
+## getServerEncoding
+
+getServerEncoding()
+
+Returns the current server 
+data encoding
+ in use.
+
+See also: 
+setServerEncoding()
+, 
+getServerEncodingsList()
+
+Example
+
+getServerEncoding
+()
+
+## getServerEncodingsList
+
+getServerEncodingsList()
+
+Returns an indexed list of the server 
+data encodings
+ that Mudlet knows. This is not the list of encodings the servers knows - there's unfortunately no agreed standard for checking that. See 
+encodings in Mudlet
+ for the list of which encodings are available in which Mudlet version.
+
+See also: 
+setServerEncoding()
+, 
+getServerEncoding()
+
+Example
+
+-- check if UTF-8 is available:
+
+if
+ 
+table
+.
+contains
+(
+getServerEncodingsList
+(),
+ 
+"UTF-8"
+)
+ 
+then
+
+print
+(
+"UTF-8 is available!"
+)
+
+end
+
+## getWindowsCodepage
+
+getWindowsCodepage()
+
+Returns the current 
+codepage
+ of your Windows system.
+
+Mudlet Version
+Available in Mudlet
+3.22
++
+
+Note
+ 
+Note:
+  This function only works on Windows - It is only needed internally in Mudlet to enable Lua to work with non-ASCII usernames (e.g. Iksiński, Jäger) for the purposes of IO. Linux and macOS work fine with with these out of the box.
+
+Example
+
+print
+(
+getWindowsCodepage
+())
+
+## hfeedTriggers
+
+hfeedTriggers(str)
+
+Like feedTriggers, but you can add color information using #RRGGBB in hex, similar to hecho.
+
+Parameters
+
+str
+: The string to feed to the trigger engine. Include color information in the same manner as hecho.
+
+See also: 
+dfeedTriggers
+
+See also: 
+hecho
+
+Mudlet Version
+Available in Mudlet
+4.11
++
+
+Example
+
+hfeedTriggers
+(
+"#008000,800000green on red#r reset
+\n
+"
+)
+
+## holdingModifiers
+
+holdingModifiers(number)
+
+Returns true or false depending on whether a particular modifier key is being held at the time this function is run. Can be paired with a number of actions, including clicking on a label.
+
+Parameters
+
+number
+: A number corresponding to a specific modifier key.
+
+Modifiers
+
+Modifier values can be found by accessing the global `mudlet.keymodifier` table, which, as of 4.18, provides for the following:
+
+{
+
+Alt
+ 
+=
+ 
+134217728
+,
+
+Control
+ 
+=
+ 
+67108864
+,
+
+GroupSwitch
+ 
+=
+ 
+1073741824
+,
+
+Keypad
+ 
+=
+ 
+536870912
+,
+
+Meta
+ 
+=
+ 
+268435456
+,
+
+None
+ 
+=
+ 
+0
+,
+
+Shift
+ 
+=
+ 
+33554432
+
+}
+
+Example
+
+local
+ 
+MyLabel
+ 
+=
+ 
+MyLabel
+ 
+or
+ 
+Geyser
+.
+Label
+:
+new
+({
+
+name
+ 
+=
+ 
+"MyLabel"
+,
+
+x
+ 
+=
+ 
+0
+,
+y
+ 
+=
+ 
+0
+,
+
+height
+ 
+=
+ 
+200
+,
+ 
+width
+ 
+=
+ 
+100
+,
+
+message
+ 
+=
+ 
+"This is my label"
+
+})
+
+function
+ 
+clickity
+(...)
+
+display
+(...)
+
+for
+ 
+k
+,
+ 
+v
+ 
+in
+ 
+spairs
+(
+mudlet
+.
+keymodifier
+)
+ 
+do
+
+print
+(
+f
+[[Holding down {k} : {holdingModifiers(v)}]]
+)
+
+end
+
+end
+
+setLabelClickCallback
+(
+"MyLabel"
+,
+ 
+"clickity"
+)
+
+-- Result:
+
+--
+
+-- Holding down Alt : true
+
+-- Holding down Control : false
+
+-- Holding down GroupSwitch : false
+
+-- Holding down Keypad : false
+
+-- Holding down Meta : false
+
+-- Holding down None : false
+
+-- Holding down Shift : false
+
+Notes
+
+You may only test for one modifier key being held. If more than one modifier key is held down, then all results will be false.
+
+## installModule
+
+installModule(location)
+
+Installs a Mudlet XML, zip, or mpackage as a module.
+
+Parameters
+
+location:
+
+Exact location of the file install.
+
+See also: 
+ uninstallModule()
+, 
+ Event: sysLuaInstallModule
+, 
+ setModulePriority()
+
+Example
+
+installModule
+(
+[[C:\Documents and Settings\bub\Desktop\myalias.xml]]
+)
+
+## installPackage
+
+installPackage(location or url)
+
+Installs a Mudlet XML or package.
+
+Parameters
+
+location
+: Exact location of the xml or package to install. Since Mudlet 4.11+ it is possible to pass download link to a package (must start with 
+http
+ or 
+https
+ and end with 
+.xml
+, 
+.zip
+, 
+.mpackage
+ or 
+.trigger
+)
+
+Returns
+
+result
+: Between Mudlet 
+4.11
+ and 
+4.14.1
+ returns 
+true
+ or 
+false
+ on success or failure respectively; between 
+4.15.0
+ and 
+4.19.1
+ returns 
+nil
+ and an error message for a failure, but due to a coding error it did not return anything on success - this is fixed in 
+4.20.0
+ to return 
+true
+ on success.
+
+See also: 
+ uninstallPackage()
+
+Example
+
+installPackage
+(
+[[C:\Documents and Settings\bub\Desktop\myalias.xml]]
+)
+
+installPackage
+(
+[[https://github.com/Mudlet/Mudlet/blob/development/src/run-lua-code-v4.xml]]
+)
+
+## killAnonymousEventHandler
+
+killAnonymousEventHandler(handler id)
+
+Disables and removes the given event handler.
+
+Parameters
+
+handler id
+
+ID of the event handler to remove as returned by the 
+ registerAnonymousEventHandler 
+ function.
+
+See also: 
+ registerAnonymousEventHandler 
+
+Mudlet Version
+Available in Mudlet
+3.5
++
+
+Example
+
+-- registers an event handler that prints the first 5 GMCP events and then terminates itself
+
+local
+ 
+counter
+ 
+=
+ 
+0
+
+local
+ 
+handlerId
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"gmcp"
+,
+ 
+function
+(
+_
+,
+ 
+origEvent
+)
+
+print
+(
+origEvent
+)
+
+counter
+ 
+=
+ 
+counter
+ 
++
+ 
+1
+
+if
+ 
+counter
+ 
+==
+ 
+5
+ 
+then
+
+killAnonymousEventHandler
+(
+handlerId
+)
+
+end
+
+end
+)
+
+## loadMusicFile
+
+loadMusicFile(settings table) or loadMusicFile(name[, url])
+
+Loads music files from the Internet or the local file system to the "media" folder of the profile for later use with 
+playMusicFile()
+ and 
+stopMusic()
+. Although files could be loaded directly at playing time from 
+playMusicFile()
+, loadMusicFile() provides the advantage of loading files in advance.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/cow.mp3") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3")
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file to load is not part of the profile or on the local file system.
+
+Keys in the settings table may be given in any letter case.
+
+Returns
+
+true
+ once the request is understood.
+
+In the ordered form, 
+nil
+ and an error message when no file name is given.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Download from the Internet
+
+loadMusicFile
+({
+
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+,
+ 
+url
+ 
+=
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+
+})
+
+-- OR download from the profile
+
+loadMusicFile
+({
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- OR download from the local file system
+
+loadMusicFile
+({
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Documents/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+---- Ordered Parameter Syntax of loadMusicFile(name[, url]) ----
+
+-- Download from the Internet
+
+loadMusicFile
+(
+
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+,
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+
+)
+
+-- OR download from the profile
+
+loadMusicFile
+(
+getMudletHomeDir
+()
+..
+ 
+"/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+)
+
+-- OR download from the local file system
+
+loadMusicFile
+(
+"C:/Users/Tamarindo/Documents/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+)
+
+## loadSoundFile
+
+loadSoundFile(settings table) or loadSoundFile(name[, url])
+
+Loads sound files from the Internet or the local file system to the "media" folder of the profile for later use with 
+playSoundFile()
+ and 
+stopSounds()
+. Although files could be loaded directly at playing time from 
+playSoundFile()
+, loadSoundFile() provides the advantage of loading files in advance.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/cow.mp3") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3")
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file to load is not part of the profile or on the local file system.
+
+Keys in the settings table may be given in any letter case.
+
+Returns
+
+true
+ once the request is understood.
+
+In the ordered form, 
+nil
+ and an error message when no file name is given.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Download from the Internet
+
+loadSoundFile
+({
+
+name
+ 
+=
+ 
+"cow.wav"
+
+,
+ 
+url
+ 
+=
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+
+})
+
+-- OR download from the profile
+
+loadSoundFile
+({
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/cow.wav"
+})
+
+-- OR download from the local file system
+
+loadSoundFile
+({
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Documents/cow.wav"
+})
+
+---- Ordered Parameter Syntax of loadSoundFile(name[,url]) ----
+
+-- Download from the Internet
+
+loadSoundFile
+(
+"cow.wav"
+,
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+)
+
+-- OR download from the profile
+
+loadSoundFile
+(
+getMudletHomeDir
+()
+..
+ 
+"/cow.wav"
+)
+
+-- OR download from the local file system
+
+loadSoundFile
+(
+"C:/Users/Tamarindo/Documents/cow.wav"
+)
+
+## loadVideoFile
+
+loadVideoFile(settings table) or loadVideoFile(name[, url])
+
+Loads video files from the Internet or the local file system to the "media" folder of the profile for later use with 
+playVideoFile()
+ and 
+stopVideos()
+. Although files could be loaded directly at playing time from 
+playVideoFile()
+, loadVideoFile() provides the advantage of loading files in advance.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/congratulations.mp4") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3")
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file to load is not part of the profile or on the local file system.
+
+Video files consume drive space on your device. Consider using the streaming feature of 
+playVideoFile()
+ for large files.
+
+Keys in the settings table may be given in any letter case.
+
+Returns
+
+true
+ once the request is understood.
+
+In the ordered form, 
+nil
+ and an error message when no file name is given.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Download from the Internet
+
+loadVideoFile
+({
+
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+url
+ 
+=
+ 
+"https://d2qguwbxlx1sbt.cloudfront.net/"
+
+})
+
+-- OR download from the profile
+
+loadVideoFile
+({
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/TextInMotion-VideoSample-1080p.mp4"
+})
+
+-- OR download from the local file system
+
+loadVideoFile
+({
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Movies/TextInMotion-VideoSample-1080p.mp4"
+})
+
+---- Ordered Parameter Syntax of loadVideoFile(name[, url]) ----
+
+-- Download from the Internet
+
+loadVideoFile
+(
+"TextInMotion-VideoSample-1080p.mp4"
+,
+ 
+"https://d2qguwbxlx1sbt.cloudfront.net/"
+)
+
+## mudletOlderThan
+
+mudletOlderThan(major, [minor], [patch])
+
+Returns true if Mudlet is older than the given version to check. This is useful if you'd like to use a feature that you can't check for easily, such as coroutines support. However, if you'd like to check if a certain function exists, do not use this and use 
+if mudletfunction then
+ - it'll be much more readable and reliable.
+
+See also: 
+getMudletVersion()
+
+Parameters
+
+major:
+
+Mudlet major version to check. Given a Mudlet version 3.0.1, 3 is the major version, second 0 is the minor version, and third 1 is the patch version.
+
+minor:
+
+(optional) minor version to check.
+
+patch:
+
+(optional) patch version to check.
+
+Example
+
+-- stop doing the script of Mudlet is older than 3.2
+
+if
+ 
+mudletOlderThan
+(
+3
+,
+2
+)
+ 
+then
+ 
+return
+ 
+end
+
+-- or older than 2.1.3
+
+if
+ 
+mudletOlderThan
+(
+2
+,
+ 
+1
+,
+ 
+3
+)
+ 
+then
+ 
+return
+ 
+end
+
+-- however, if you'd like to check that a certain function is available, like getMousePosition(), do this instead:
+
+if
+ 
+not
+ 
+getMousePosition
+ 
+then
+ 
+return
+ 
+end
+
+-- if you'd like to check that coroutines are supported, do this instead:
+
+if
+ 
+not
+ 
+mudlet
+.
+supports
+.
+coroutines
+ 
+then
+ 
+return
+ 
+end
+
+## openWebPage
+
+openWebPage(URL)
+
+Opens the browser to the given webpage.
+
+Parameters
+
+URL:
+
+Exact URL to open.
+
+Example
+
+openWebPage
+(
+"http://google.com"
+)
+
+Note: This function can be used to open a local file or file folder as well by using "file:///" and the file path instead of "http://".
+
+Example
+
+openWebPage
+(
+"file:///"
+..
+getMudletHomeDir
+()
+..
+"file.txt"
+)
+
+## playMusicFile
+
+playMusicFile(settings table) or playMusicFile(name[, volume][, fadein][, fadeout][, start][, loops][, key][, tag][, continue][, url][, finish])
+
+Plays music files from the profile's "media" folder, the local file system or the Internet. Playing music can be listed with 
+getPlayingMusic()
+ and stopped with 
+stopMusic()
+.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/cow.mp3") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3") Wildcards * and ? may be used within the name to randomize media files selection. A wildcard is looked for in the sub-folder given first, then in the "media" folder itself. If "name" is a full path to a file, Mudlet reads that file once and keeps a copy in the profile's "media" folder, which it plays from then on. Available in Mudlet 5.1 + A file inside the profile folder is copied under media/_profile/ , keeping its folders: getMudletHomeDir() .. "/sounds/steps/sand/3.ogg" is copied to media/_profile/sounds/steps/sand/3.ogg . Any other file is copied under media/_absolute/ , keeping its full path: /home/me/packs/3.ogg is copied to media/_absolute/home/me/packs/3.ogg , and on Windows D:/packs/3.ogg to media/_absolute/D/packs/3.ogg . A file already inside the "media" folder is played where it is. Files with the same name in different folders get separate copies. Before Mudlet 5.1, copies were kept under the file name alone, so a second file with the same name played the first one's copy. A change to the original file is not picked up. After replacing or editing a sound, use purgeMediaCache() , or "Clear stored media files" in Preferences, so the next play makes a fresh copy. If the original file has been moved or deleted, the copy made of it still plays. Failing that, a copy an older Mudlet kept under the bare file name plays, though that may be another file of the same name, such as a game's own download. Available in Mudlet 5.1 +
+
+Required: No
+Key: volume
+Value: 0 to 100
+Default: 50
+Purpose: Relative to the volume set on the player's client. Above 100 plays at 100, and below 1 at 1. 0 fetches the file without playing it, as a load function does.
+
+Required: No
+Key: fadein
+Value: <msec>
+Default: 
+Purpose: Volume increases, or fades in, ranged across a linear pattern from one to the volume set with the "volume" key. Start position: Start of media. End position: Start of media plus the number of milliseconds (msec) specified. 1000 milliseconds = 1 second.
+
+Required: No
+Key: fadeout
+Value: <msec>
+Default: 
+Purpose: Volume decreases, or fades out, ranged across a linear pattern from the volume set with the "volume" key to one. Start position: End of the media minus the number of milliseconds (msec) specified. End position: End of the media. 1000 milliseconds = 1 second.
+
+Required: No
+Key: start
+Value: <msec>
+Default: 0
+Purpose: Begin play at the specified position in milliseconds.
+
+Required: No
+Key: finish
+Value: <msec>
+Default: 
+Purpose: Finish play at the specified position in milliseconds.
+
+Required: No
+Key: loops
+Value: -1, or >= 1
+Default: 1
+Purpose: Number of iterations that the media plays. A value of -1 allows the media to loop indefinitely. 0, or anything below -1, plays the media once.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Uniquely identifies media files with a "key" that is bound to their "name" or "url". Halts the play of current media files with the same "key" that have a different "name" or "url" while this media plays.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Helps categorize media.
+
+Required: No
+Key: continue
+Value: true or false
+Default: true
+Purpose: Continues playing matching new music files when true. Restarts matching new music files when false.
+
+Required: No
+Key: caption
+Value: <text>
+Default: 
+Purpose: Text shown for this media when closed captions are turned on, for example "a cow moos" , which shows as "[a cow moos plays]". It replaces the caption Mudlet would otherwise show, which names the media type, its key if it has one, and the file.
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file is to be downloaded remotely.
+
+Keys in the settings table may be given in any letter case.
+
+"caption" is taken only in the settings table, not as an ordered parameter.
+
+Music is never placed left or right: it plays as recorded.
+
+On Windows and certain files are not playing? Try installing the 3rd party 
+K-lite codec pack
+.
+
+Returns
+
+true
+ once the request is understood. It does not mean the file was found or plays: with no such file and no url to fetch it from, nothing plays.
+
+In the ordered form, 
+nil
+ and an error message when no file name is given.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Play a music file stored in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media)
+
+playMusicFile
+({
+
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+})
+
+-- OR copy once from the game's profile, and play a music file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playMusicFile
+({
+
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR copy once from the local file system, and play a music file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playMusicFile
+({
+
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Documents/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR download once from the Internet, and play music stored in the profile's media directory
+
+---- [fadein] and increase the volume from 1 at the start position to default volume up until the position of 20 seconds
+
+---- [fadeout] and decrease the volume from default volume to one, 53 seconds from the end of the music
+
+---- [start] 10 seconds after position 0 (fadein scales its volume increase over a shorter duration, too)
+
+---- [finish] 110 seconds from the track start (fadeout scales its volume decrease over a shorter duration, too)
+
+---- [key] reference of "rugby" for stopping this unique music later
+
+---- [tag] reference of "ambience" to stop and music later with the same tag
+
+---- [continue] playing this music if another request for the same music comes in (false restarts it)
+
+---- [caption] shown when closed captions are turned on
+
+---- [url] to download once from the Internet if the music does not exist in the profile's media directory
+
+playMusicFile
+({
+
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+
+,
+ 
+volume
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+fadein
+ 
+=
+ 
+20000
+
+,
+ 
+fadeout
+ 
+=
+ 
+53000
+
+,
+ 
+start
+ 
+=
+ 
+10000
+
+,
+ 
+finish
+ 
+=
+ 
+110000
+
+,
+ 
+loops
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+
+,
+ 
+tag
+ 
+=
+ 
+"ambience"
+
+,
+ 
+continue
+ 
+=
+ 
+true
+
+,
+ 
+caption
+ 
+=
+ 
+"a rugby club singing"
+
+,
+ 
+url
+ 
+=
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+
+})
+
+---- Ordered Parameter Syntax of playMusicFile(name[,volume][,fadein][,fadeout][,start][,loops][,key][,tag][,continue][,url][,finish]) ----
+
+-- Play a music file stored in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media)
+
+playMusicFile
+(
+
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+  
+-- name
+
+)
+
+-- OR copy once from the game's profile, and play a music file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playMusicFile
+(
+
+getMudletHomeDir
+()
+..
+ 
+"/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+ 
+-- name
+
+,
+ 
+75
+ 
+-- volume
+
+)
+
+-- OR copy once from the local file system, and play a music file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playMusicFile
+(
+
+"C:/Users/Tamarindo/Documents/167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+ 
+-- name
+
+,
+ 
+75
+ 
+-- volume
+
+)
+
+-- OR download once from the Internet, and play music stored in the profile's media directory
+
+---- [fadein] and increase the volume from 1 at the start position to default volume up until the position of 20 seconds
+
+---- [fadeout] and decrease the volume from default volume to one, 53 seconds from the end of the music
+
+---- [start] 10 seconds after position 0 (fadein scales its volume increase over a shorter duration, too)
+
+---- [finish] 110 seconds from the track start (fadeout scales its volume decrease over a shorter duration, too)
+
+---- [key] reference of "rugby" for stopping this unique music later
+
+---- [tag] reference of "ambience" to stop and music later with the same tag
+
+---- [continue] playing this music if another request for the same music comes in (false restarts it)
+
+---- [url] to download once from the Internet if the music does not exist in the profile's media directory
+
+playMusicFile
+(
+
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+ 
+-- name
+
+,
+ 
+nil
+ 
+-- volume
+
+,
+ 
+20000
+ 
+-- fadein
+
+,
+ 
+53000
+ 
+-- fadeout
+
+,
+ 
+10000
+ 
+-- start
+
+,
+ 
+nil
+ 
+-- loops
+
+,
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+"ambience"
+ 
+-- tag
+
+,
+ 
+true
+ 
+-- continue
+
+,
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+ 
+-- url
+
+,
+ 
+110000
+ 
+-- finish
+
+)
+
+## playSoundFile
+
+playSoundFile(settings table) or playSoundFile(name[, volume][, fadein][, fadeout][, start][, loops][, key][, tag][, priority][, url][, finish])
+
+Plays sound files from the profile's "media" folder, the local file system or the Internet. Playing sounds can be listed with 
+getPlayingSounds()
+, moved with 
+updateSounds()
+ and stopped with 
+stopSounds()
+.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/cow.mp3") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3") Wildcards * and ? may be used within the name to randomize media files selection. A wildcard is looked for in the sub-folder given first, then in the "media" folder itself. If "name" is a full path to a file, Mudlet reads that file once and keeps a copy in the profile's "media" folder, which it plays from then on. Available in Mudlet 5.1 + A file inside the profile folder is copied under media/_profile/ , keeping its folders: getMudletHomeDir() .. "/sounds/steps/sand/3.ogg" is copied to media/_profile/sounds/steps/sand/3.ogg . Any other file is copied under media/_absolute/ , keeping its full path: /home/me/packs/3.ogg is copied to media/_absolute/home/me/packs/3.ogg , and on Windows D:/packs/3.ogg to media/_absolute/D/packs/3.ogg . A file already inside the "media" folder is played where it is. Files with the same name in different folders get separate copies. Before Mudlet 5.1, copies were kept under the file name alone, so a second file with the same name played the first one's copy. A change to the original file is not picked up. After replacing or editing a sound, use purgeMediaCache() , or "Clear stored media files" in Preferences, so the next play makes a fresh copy. If the original file has been moved or deleted, the copy made of it still plays. Failing that, a copy an older Mudlet kept under the bare file name plays, though that may be another file of the same name, such as a game's own download. Available in Mudlet 5.1 +
+
+Required: No
+Key: volume
+Value: 0 to 100
+Default: 50
+Purpose: Relative to the volume set on the player's client. Above 100 plays at 100, and below 1 at 1. 0 fetches the file without playing it, as a load function does.
+
+Required: No
+Key: fadein
+Value: <msec>
+Default: 
+Purpose: Volume increases, or fades in, ranged across a linear pattern from one to the volume set with the "volume" key. Start position: Start of media. End position: Start of media plus the number of milliseconds (msec) specified. 1000 milliseconds = 1 second.
+
+Required: No
+Key: fadeout
+Value: <msec>
+Default: 
+Purpose: Volume decreases, or fades out, ranged across a linear pattern from the volume set with the "volume" key to one. Start position: End of the media minus the number of milliseconds (msec) specified. End position: End of the media. 1000 milliseconds = 1 second.
+
+Required: No
+Key: start
+Value: <msec>
+Default: 0
+Purpose: Begin play at the specified position in milliseconds.
+
+Required: No
+Key: finish
+Value: <msec>
+Default: 
+Purpose: Finish play at the specified position in milliseconds.
+
+Required: No
+Key: loops
+Value: -1, or >= 1
+Default: 1
+Purpose: Number of iterations that the media plays. A value of -1 allows the media to loop indefinitely. 0, or anything below -1, plays the media once.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Uniquely identifies media files with a "key" that is bound to their "name" or "url". Halts the play of current media files with the same "key" that have a different "name" or "url" while this media plays.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Helps categorize media.
+
+Required: No
+Key: priority
+Value: 1 to 100
+Default: 
+Purpose: Halts the play of current or future played media files with a lower priority while this media plays. Values outside 1 to 100 are held to that range.
+
+Required: No
+Key: caption
+Value: <text>
+Default: 
+Purpose: Text shown for this media when closed captions are turned on, for example "a cow moos" , which shows as "[a cow moos plays]". It replaces the caption Mudlet would otherwise show, which names the media type, its key if it has one, and the file.
+
+Required: No
+Key: direction
+Value: a direction word, or degrees from 0 to 359
+Default: 
+Purpose: Where the sound comes from. Available in Mudlet 5.1 + A compass word ("north", "ne", "southwest" and so on, "up" or "down"), a word relative to the player ("ahead", "behind", "left" or "right"), or degrees clockwise from north. Any other word raises an error. On stereo output, east is fully right, west fully left, and north and south are centred. A placed sound is heard from one point, so a stereo recording is mixed to one point first. "up" and "down" name no side, so those sounds play as with no direction. With captions turned on, the caption names the direction, e.g. "[a door creaks (north) plays]". Compass directions turn with the player: see setMediaListener() .
+
+Required: No
+Key: pan
+Value: -100 to 100
+Default: 
+Purpose: Places the sound from left (-100) to right (100), and does not turn with the player. Available in Mudlet 5.1 + 0 places it in the centre, which is not the same as giving no pan. When both are given, the sound plays at "pan" and the caption still names the direction.
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file is to be downloaded remotely.
+
+Keys in the settings table may be given in any letter case.
+
+"caption", "direction" and "pan" are taken only in the settings table, not as ordered parameters.
+
+On Windows and certain files are not playing? Try installing the 3rd party 
+K-lite codec pack
+.
+
+Returns
+
+true
+ once the request is understood. It does not mean the file was found or plays: with no such file and no url to fetch it from, nothing plays.
+
+In the ordered form, 
+nil
+ and an error message when no file name is given.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Play a sound file stored in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media)
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+"cow.wav"
+
+})
+
+-- OR copy once from the game's profile, and play a sound file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/cow.wav"
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR copy once from the local file system, and play a sound file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Documents/cow.wav"
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR download once from the Internet, and play a sound stored in the profile's media directory
+
+---- [volume] of 75
+
+---- [loops] of 2 (-1 for indefinite repeats, 1+ for finite repeats)
+
+---- [key] reference of "cow" for stopping this unique sound later
+
+---- [tag] reference of "animals" to stop a group of sounds later with the same tag
+
+---- [priority] of 25 (1 to 100, a sound with a higher priority would stop this one)
+
+---- [caption] shown when closed captions are turned on
+
+---- [url] to download once from the Internet if the sound does not exist in the profile's media directory
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+"cow.wav"
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+,
+ 
+fadein
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+fadeout
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+start
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+finish
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+loops
+ 
+=
+ 
+2
+
+,
+ 
+key
+ 
+=
+ 
+"cow"
+
+,
+ 
+tag
+ 
+=
+ 
+"animals"
+
+,
+ 
+priority
+ 
+=
+ 
+25
+
+,
+ 
+caption
+ 
+=
+ 
+"a cow moos"
+
+,
+ 
+url
+ 
+=
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+
+})
+
+-- Play the cow mooing from the field to the east (Mudlet 5.1+)
+
+---- [direction] a compass word, a word relative to the player, or degrees clockwise from north
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+"cow.wav"
+
+,
+ 
+key
+ 
+=
+ 
+"cow"
+
+,
+ 
+direction
+ 
+=
+ 
+"east"
+
+})
+
+-- OR place the cow mooing a little to the left, wherever the player faces (Mudlet 5.1+)
+
+---- [pan] from -100 (left) to 100 (right)
+
+playSoundFile
+({
+
+name
+ 
+=
+ 
+"cow.wav"
+
+,
+ 
+key
+ 
+=
+ 
+"cow"
+
+,
+ 
+pan
+ 
+=
+ 
+-
+40
+
+})
+
+---- Ordered Parameter Syntax of playSoundFile(name[,volume][,fadein][,fadeout][,start][,loops][,key][,tag][,priority][,url][,finish]) ----
+
+-- Play a sound file stored in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media)
+
+playSoundFile
+(
+
+"cow.wav"
+ 
+-- name
+
+)
+
+-- OR copy once from the game's profile, and play a sound file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playSoundFile
+(
+
+getMudletHomeDir
+()
+..
+ 
+"/cow.wav"
+ 
+-- name
+
+,
+ 
+75
+ 
+-- volume
+
+)
+
+-- OR copy once from the local file system, and play a sound file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playSoundFile
+(
+
+"C:/Users/Tamarindo/Documents/cow.wav"
+ 
+-- name
+
+,
+ 
+75
+ 
+-- volume
+
+)
+
+-- OR download once from the Internet, and play a sound stored in the profile's media directory
+
+---- [volume] of 75
+
+---- [loops] of 2 (-1 for indefinite repeats, 1+ for finite repeats)
+
+---- [key] reference of "cow" for stopping this unique sound later
+
+---- [tag] reference of "animals" to stop a group of sounds later with the same tag
+
+---- [priority] of 25 (1 to 100, a sound with a higher priority would stop this one)
+
+---- [url] to download once from the Internet if the sound does not exist in the profile's media directory
+
+playSoundFile
+(
+
+"cow.wav"
+ 
+-- name
+
+,
+ 
+75
+ 
+-- volume
+
+,
+ 
+nil
+ 
+-- fadein
+
+,
+ 
+nil
+ 
+-- fadeout
+
+,
+ 
+nil
+ 
+-- start
+
+,
+ 
+2
+ 
+-- loops
+
+,
+ 
+"cow"
+ 
+-- key
+
+,
+ 
+"animals"
+ 
+-- tag
+
+,
+ 
+25
+ 
+-- priority
+
+,
+ 
+"https://raw.githubusercontent.com/StickMUD/StickMUDSounds/master/sounds/"
+ 
+-- url
+
+,
+ 
+nil
+ 
+-- finish
+
+)
+
+## playVideoFile
+
+playVideoFile(settings table)
+
+Plays video files on a label or window. Video files may be downloaded to the device and played, or streamed from the Internet when the value of the 
+stream
+ parameter is 
+true
+. Playing videos can be listed with 
+getPlayingVideos()
+ and stopped with 
+stopVideos()
+.
+
+Required: Yes
+Key: name
+Value: <file name>
+Default: 
+Purpose: Name of the media file. May contain directory information (i.e. weather/lightning.wav). May be part of the profile (i.e. getMudletHomeDir().. "/cow.mp4") May be on the local device (i.e. "C:/Users/YourNameHere/Documents/nevergoingtogiveyouup.mp3") Wildcards * and ? may be used within the name to randomize media files selection. A wildcard is looked for in the sub-folder given first, then in the "media" folder itself. If "name" is a full path to a file, Mudlet reads that file once and keeps a copy in the profile's "media" folder, which it plays from then on. Available in Mudlet 5.1 + A file inside the profile folder is copied under media/_profile/ , keeping its folders: getMudletHomeDir() .. "/sounds/steps/sand/3.ogg" is copied to media/_profile/sounds/steps/sand/3.ogg . Any other file is copied under media/_absolute/ , keeping its full path: /home/me/packs/3.ogg is copied to media/_absolute/home/me/packs/3.ogg , and on Windows D:/packs/3.ogg to media/_absolute/D/packs/3.ogg . A file already inside the "media" folder is played where it is. Files with the same name in different folders get separate copies. Before Mudlet 5.1, copies were kept under the file name alone, so a second file with the same name played the first one's copy. A change to the original file is not picked up. After replacing or editing a sound, use purgeMediaCache() , or "Clear stored media files" in Preferences, so the next play makes a fresh copy. If the original file has been moved or deleted, the copy made of it still plays. Failing that, a copy an older Mudlet kept under the bare file name plays, though that may be another file of the same name, such as a game's own download. Available in Mudlet 5.1 +
+
+Required: No
+Key: volume
+Value: 0 to 100
+Default: 50
+Purpose: Relative to the volume set on the player's client. Above 100 plays at 100, and below 1 at 1. 0 fetches the file without playing it, as a load function does.
+
+Required: No
+Key: start
+Value: <msec>
+Default: 0
+Purpose: Begin play at the specified position in milliseconds.
+
+Required: No
+Key: finish
+Value: <msec>
+Default: 
+Purpose: Finish play at the specified position in milliseconds.
+
+Required: No
+Key: loops
+Value: -1, or >= 1
+Default: 1
+Purpose: Number of iterations that the media plays. A value of -1 allows the media to loop indefinitely. 0, or anything below -1, plays the media once.
+
+Required: Yes
+Key: key
+Value: <key>
+Default: 
+Purpose: Identifies the label or window the video will appear on. Uniquely identifies media files with a "key" that is bound to their "name" or "url". Halts the play of current media files with the same "key" that have a different "name" or "url" while this media plays.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Helps categorize media.
+
+Required: No
+Key: continue
+Value: true or false
+Default: true
+Purpose: Continues playing matching new video files when true. Restarts matching new video files when false.
+
+Required: No
+Key: close
+Value: true or false
+Default: false
+Purpose: Closes the label or window when playback is complete.
+
+Required: Maybe
+Key: url
+Value: <url>
+Default: 
+Purpose: Resource location where the media file may be downloaded. Only required if the file is to be downloaded remotely.
+
+Required: Maybe
+Key: stream
+Value: true or false
+Default: false
+Purpose: Streams files from the Internet when true. Downloads files when false. Used together with "url".
+
+Keys in the settings table may be given in any letter case.
+
+Videos take no fades, priority or caption.
+
+If "key" names no label or window, nothing plays.
+
+Returns
+
+true
+ once the request is understood. It does not mean the file was found or plays: with no such file and no url to fetch it from, nothing plays.
+
+An argument of the wrong type, or a table form with no name, raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Stream a video file from the Internet and play it.
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window to target playback
+
+,
+ 
+url
+ 
+=
+ 
+"https://d2qguwbxlx1sbt.cloudfront.net/"
+
+,
+ 
+stream
+ 
+=
+ 
+true
+
+})
+
+-- Play a video file from the Internet, storing it in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media) so you don't need to download it over and over.  You could add ", stream = false" below, but that is the default and is not needed.
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window to target playback
+
+,
+ 
+url
+ 
+=
+ 
+"https://d2qguwbxlx1sbt.cloudfront.net/"
+
+})
+
+-- Play a video file stored in the profile's media directory (i.e. /Users/Tamarindo/mudlet-data/profiles/StickMUD/media)
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window to target playback
+
+})
+
+-- OR copy once from the game's profile, and play a video file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+ 
+"/TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window to target playback
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR copy once from the local file system, and play a video file stored in the profile's media directory
+
+---- [volume] of 75 (1 to 100)
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+"C:/Users/Tamarindo/Movies/TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window to target playback
+
+,
+ 
+volume
+ 
+=
+ 
+75
+
+})
+
+-- OR download once from the Internet, and play a video stored in the profile's media directory
+
+---- [start] 10 seconds after position 0
+
+---- [finish] 20 seconds from the start of the video
+
+---- [key] reference of "textinmotion" for targeting label or window playback
+
+---- [tag] reference of "ambience" to stop any video later with the same tag
+
+---- [continue] playing this video if another request for the same video comes in (false restarts it)
+
+---- [close] the label or window when playback completes
+
+---- [url] resource location where the file may be accessed on the Internet
+
+---- [stream] download once from the Internet if the video does not exist in the profile's media directory when false (true streams from the Internet and will not download to the device)
+
+playVideoFile
+({
+
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+
+,
+ 
+volume
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+start
+ 
+=
+ 
+10000
+
+,
+ 
+finish
+ 
+=
+ 
+20000
+
+,
+ 
+loops
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"textinmotion"
+ 
+-- label or window where this will play
+
+,
+ 
+tag
+ 
+=
+ 
+"ambience"
+
+,
+ 
+continue
+ 
+=
+ 
+true
+
+,
+ 
+close
+ 
+=
+ 
+true
+ 
+-- close the label or window when playback completes
+
+,
+ 
+url
+ 
+=
+ 
+"https://d2qguwbxlx1sbt.cloudfront.net/"
+
+,
+ 
+stream
+ 
+=
+ 
+false
+
+})
+
+## pauseMusic
+
+pauseMusic([settings table])
+
+Pauses all playing music when given no filters, or those that match the filters given, as played with 
+playMusicFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is paused, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be paused by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+A paused music plays on from where it was when played again with 
+playMusicFile()
+.
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Pause all playing music files for this profile associated with the API
+
+pauseMusic
+()
+
+-- Pause playing the music matching the rugby mp3 name
+
+pauseMusic
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- Pause playing the unique music identified as "rugby"
+
+pauseMusic
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## pauseSounds
+
+pauseSounds([settings table])
+
+Pauses all playing sounds when given no filters, or those that match the filters given, as played with 
+playSoundFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is paused, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be paused by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+A paused sound plays on from where it was when played again with 
+playSoundFile()
+.
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Pause all playing sound files for this profile associated with the API
+
+pauseSounds
+()
+
+-- Pause all playing sounds matching the rugby mp3 name
+
+pauseSounds
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- Pause all playing sound matching the unique key of "rugby"
+
+pauseSounds
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## pauseVideos
+
+pauseVideos([settings table])
+
+Pauses all playing videos when given no filters, or those that match the filters given, as played with 
+playVideoFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is paused, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be paused by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+A paused video plays on from where it was when played again with 
+playVideoFile()
+.
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Pause all playing video files for this profile associated with the API
+
+pauseVideos
+()
+
+-- Pause playing the text mp4 by name
+
+pauseVideos
+({
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+})
+
+-- Pause playing the unique video identified as "text"
+
+pauseVideos
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"text"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+## purgeMediaCache
+
+purgeMediaCache()
+
+Purge all media file stored in the media cache within a given Mudlet profile (media used with MCMP and MSP protocols). As game developers update the media files on their games, this enables the media folder inside the profile to be cleared so that the media files could be refreshed to the latest update(s). Also removes the copies Mudlet keeps of files played by their full path (the 
+_profile
+ and 
+_absolute
+ folders), so the next play copies the current version of each file. Copies made by versions before 5.0, kept directly in the "media" folder under their file name, are no longer used and are removed too.
+
+Media playing when it is called stops.
+
+Returns
+
+true
+, or 
+nil
+ and an error message when the "media" folder cannot be emptied.
+
+Guidance
+
+Instruct a player to type 
+lua purgeMediaCache()
+ on the command line, or
+
+Distribute a trigger, button or other scriptable feature for the given profile to call 
+purgeMediaCache()
+
+See also: 
+Supported Protocols MSP
+, 
+Scripting MCMP
+
+## receiveMSP
+
+receiveMSP(command)
+
+Receives a well-formed Mud Sound Protocol (MSP) message to be processed by the Mudlet client.  Reference the 
+Supported Protocols MSP
+ manual for more information on about what can be sent and example triggers.
+
+See also: 
+Supported Protocols MSP
+
+Example
+
+--Play a cow.wav media file stored in the media folder of the current profile. The sound would play twice at a normal volume.
+
+receiveMSP
+(
+"!!SOUND(cow.wav L=2 V=50)"
+)
+
+--Stop any SOUND media files playing stored in the media folder of the current profile.
+
+receiveMSP
+(
+"!!SOUND(Off)"
+)
+
+--Play a city.mp3 media file stored in the media folder of the current profile. The music would play once at a low volume.
+
+--The music would continue playing if it was triggered earlier by another room, perhaps in the same area.
+
+receiveMSP
+(
+[[!!MUSIC(city.mp3 L=1 V=25 C=1)]]
+)
+
+--Stop any MUSIC media files playing stored in the media folder of the current profile.
+
+receiveMSP
+(
+"!!MUSIC(Off)"
+)
+
+## registerAnonymousEventHandler
+
+registerAnonymousEventHandler(event name, functionReference, [one shot])
+
+Registers a function to an event handler, not requiring you to set one up via script. 
+See here
+ for a list of Mudlet-raised events. The function may be refered to either by name as a string containing a global function name, or with the lua function object itself.
+
+The optional 
+one shot
+ parameter allows you to automatically kill an event handler after it is done by giving a true value. If the event you waited for did not occur yet, return 
+true
+ from the function to keep it registered.
+
+The function returns an ID that can be used in 
+killAnonymousEventHandler()
+ to unregister the handler again.
+
+If you use an asterisk 
+("*")
+ as the event name, your code will capture all events. Useful for debugging, or integration with external programs.
+
+Note
+ 
+Note:
+  The ability to refer lua functions directly, the 
+one shot
+ parameter and the returned ID are features of Mudlet 3.5 and above.
+
+Note
+ 
+Note:
+  The 
+"*"
+ all-events capture was added in Mudlet 4.10.
+
+See also
+
+killAnonymousEventHandler()
+, 
+raiseEvent()
+, 
+list of Mudlet-raised events
+
+Example
+
+-- example taken from the God Wars 2 (http://godwars2.org) Mudlet UI - forces the window to keep to a certain size
+
+function
+ 
+keepStaticSize
+()
+
+setMainWindowSize
+(
+1280
+,
+720
+)
+
+end
+ 
+-- keepStaticSize
+
+if
+ 
+keepStaticSizeEventHandlerID
+ 
+then
+ 
+killAnonymousEventHandler
+(
+keepStaticSizeEventHandlerID
+)
+ 
+end
+ 
+-- clean up any already registered handlers for this function
+
+keepStatisSizeEventHandlerID
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"sysWindowResizeEvent"
+,
+ 
+"keepStaticSize"
+)
+ 
+-- register the event handler and save the ID for later killing
+
+-- simple inventory tracker for GMCP enabled games. This version does not leak any of the methods
+
+-- or tables into the global namespace. If you want to access it, you should export the inventory
+
+-- table via an own namespace.
+
+local
+ 
+inventory
+ 
+=
+ 
+{}
+
+local
+ 
+function
+ 
+inventoryAdd
+()
+
+if
+ 
+gmcp
+.
+Char
+.
+Items
+.
+Add
+.
+location
+ 
+==
+ 
+"inv"
+ 
+then
+
+inventory
+[
+#
+inventory
+ 
++
+ 
+1
+]
+ 
+=
+ 
+table
+.
+deepcopy
+(
+gmcp
+.
+Char
+.
+Items
+.
+Add
+.
+item
+)
+
+end
+
+end
+
+if
+ 
+inventoryAddHandlerID
+ 
+then
+ 
+killAnonymousEventHandler
+(
+inventoryAddHandlerID
+)
+ 
+end
+ 
+-- clean up any already registered handlers for this function
+
+inventoryAddHandlerID
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"gmcp.Char.Items.Add"
+,
+ 
+inventoryAdd
+)
+ 
+-- register the event handler and save the ID for later killing
+
+local
+ 
+function
+ 
+inventoryList
+()
+
+if
+ 
+gmcp
+.
+Char
+.
+Items
+.
+List
+.
+location
+ 
+==
+ 
+"inv"
+ 
+then
+
+inventory
+ 
+=
+ 
+table
+.
+deepcopy
+(
+gmcp
+.
+Char
+.
+Items
+.
+List
+.
+items
+)
+
+end
+
+end
+
+if
+ 
+inventoryListHandlerID
+ 
+then
+ 
+killAnonymousEventHandler
+(
+inventoryListHandlerID
+)
+ 
+end
+ 
+-- clean up any already registered handlers for this function
+
+inventoryListHandlerID
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"gmcp.Char.Items.List"
+,
+ 
+inventoryList
+)
+ 
+-- register the event handler and save the ID for later killing
+
+local
+ 
+function
+ 
+inventoryUpdate
+()
+
+if
+ 
+gmcp
+.
+Char
+.
+Items
+.
+Remove
+.
+location
+ 
+==
+ 
+"inv"
+ 
+then
+
+local
+ 
+found
+
+local
+ 
+updatedItem
+ 
+=
+ 
+gmcp
+.
+Char
+.
+Items
+.
+Update
+.
+item
+
+for
+ 
+index
+,
+ 
+item
+ 
+in
+ 
+ipairs
+(
+inventory
+)
+ 
+do
+
+if
+ 
+item
+.
+id
+ 
+==
+ 
+updatedItem
+.
+id
+ 
+then
+
+found
+ 
+=
+ 
+index
+
+break
+
+end
+
+end
+
+if
+ 
+found
+ 
+then
+
+inventory
+[
+found
+]
+ 
+=
+ 
+table
+.
+deepcopy
+(
+updatedItem
+)
+
+end
+
+end
+
+end
+
+if
+ 
+inventoryUpdateHandlerID
+ 
+then
+ 
+killAnonymousEventHandler
+(
+inventoryUpdateHandlerID
+)
+ 
+end
+ 
+-- clean up any already registered handlers for this function
+
+inventoryUpdateHandlerID
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"gmcp.Char.Items.Update"
+,
+ 
+inventoryUpdate
+)
+
+local
+ 
+function
+ 
+inventoryRemove
+()
+
+if
+ 
+gmcp
+.
+Char
+.
+Items
+.
+Remove
+.
+location
+ 
+==
+ 
+"inv"
+ 
+then
+
+local
+ 
+found
+
+local
+ 
+removedItem
+ 
+=
+ 
+gmcp
+.
+Char
+.
+Items
+.
+Remove
+.
+item
+
+for
+ 
+index
+,
+ 
+item
+ 
+in
+ 
+ipairs
+(
+inventory
+)
+ 
+do
+
+if
+ 
+item
+.
+id
+ 
+==
+ 
+removedItem
+.
+id
+ 
+then
+
+found
+ 
+=
+ 
+index
+
+break
+
+end
+
+end
+
+if
+ 
+found
+ 
+then
+
+table.remove
+(
+inventory
+,
+ 
+found
+)
+
+end
+
+end
+
+end
+
+if
+ 
+inventoryRemoveHandlerID
+ 
+then
+ 
+killAnonymousEventHandler
+(
+inventoryRemoveHandlerID
+)
+ 
+end
+ 
+-- clean up any already registered handlers for this function
+
+inventoryRemoveHandlerID
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"gmcp.Char.Items.Remove"
+,
+ 
+inventoryRemove
+)
+
+-- downloads a package from the internet and kills itself after it is installed.
+
+local
+ 
+saveto
+ 
+=
+ 
+getMudletHomeDir
+()
+..
+"/dark-theme-mudlet.zip"
+
+local
+ 
+url
+ 
+=
+ 
+"http://www.mudlet.org/wp-content/files/dark-theme-mudlet.zip"
+
+if
+ 
+myPackageInstallHandler
+ 
+then
+ 
+killAnonymousEventHandler
+(
+myPackageInstallHandler
+)
+ 
+end
+
+myPackageInstallHandler
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+
+"sysDownloadDone"
+,
+
+function
+(
+_
+,
+ 
+filename
+)
+
+if
+ 
+filename
+ 
+~=
+ 
+saveto
+ 
+then
+
+return
+ 
+true
+ 
+-- keep the event handler since this was not our file
+
+end
+
+installPackage
+(
+saveto
+)
+
+os.remove
+(
+b
+)
+
+end
+,
+
+true
+
+)
+
+downloadFile
+(
+saveto
+,
+ 
+url
+)
+
+cecho
+(
+"<white>Downloading <green>"
+..
+url
+..
+"<white> to <green>"
+..
+saveto
+..
+"
+\n
+"
+)
+
+## registerNamedEventHandler
+
+success = registerNamedEventHandler(userName, handlerName, eventName, functionReference, [oneShot])
+
+Registers a named event handler with name handlerName. Named event handlers are protected from duplication and can be stopped and resumed, unlike anonymous event handlers. A separate list is kept per userName
+
+See also
+
+registerAnonymousEventHandler()
+, 
+stopNamedEventHandler()
+, 
+resumeNamedEventHandler()
+, 
+deleteNamedEventHandler()
+, 
+registerNamedTimer()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+handlerName:
+
+The name of the handler. Used to reference the handler in other functions and prevent duplicates. Recommended you use descriptive names, "hp" is likely to collide with something else, "DemonVitals" less so.
+
+eventName:
+
+The name of the event the handler responds to. 
+See here
+ for a list of Mudlet-raised events.
+
+functionReference:
+
+The function reference to run when the event comes in. Can be the name of a function, "handlerFuncion", or the lua function itself.
+
+oneShot:
+
+(optional) if true, the event handler will only fire once when the event is raised. If you need to extend a one shot event handler for "one more check" you can have the handler return true, and it will keep firing until the function does not return true.
+
+Returns
+
+true if successful, otherwise errors.
+
+Example
+
+-- register a named event handler. Will call demonVitalsHandler(eventName, ...) when gmcp.Char.Vitals is raised.
+
+local
+ 
+ok
+ 
+=
+ 
+registerNamedEventHandler
+(
+"Demonnic"
+,
+ 
+"DemonVitals"
+,
+ 
+"gmcp.Char.Vitals"
+,
+ 
+"demonVitalsHandler"
+)
+
+if
+ 
+ok
+ 
+then
+
+cecho
+(
+"Vitals handler switched to demonVitalsHandler"
+)
+
+end
+
+-- something changes later, and we want to handle vitals with another function, demonBlackoutHandler()
+
+-- note we do not use "" around demonBlackoutHandler but instead pass the function itself. Both work.
+
+-- using the same handlerName ("DemonVitals") means it will automatically unregister the old handler
+
+-- and reregister it using the new information.
+
+local
+ 
+ok
+ 
+=
+ 
+registerNamedEventHandler
+(
+"Demonnic"
+,
+ 
+"DemonVitals"
+,
+ 
+"gmcp.Char.Vitals"
+,
+ 
+demonBlackoutHandler
+)
+
+if
+ 
+ok
+ 
+then
+
+cecho
+(
+"Vitals handler switched to demonBlackoutHandler"
+)
+
+end
+
+-- Now you want to check your inventory, but you only want to do it once, so you pass the optional oneShot as true
+
+local
+ 
+function
+ 
+handleInv
+()
+
+local
+ 
+list
+ 
+=
+ 
+gmcp
+.
+Char
+.
+Items
+.
+List
+
+if
+ 
+list
+.
+location
+ 
+~=
+ 
+"inventory"
+ 
+then
+
+return
+ 
+true
+ 
+-- if list.location is, say "room" then we need to keep responding until it's "inventory"
+
+end
+
+display
+(
+list
+.
+items
+)
+ 
+-- you would probably store values and update displays or something, but here I'll just show the data as it comes in
+
+end
+
+-- you can ignore the response from registerNamedEventHandler if you want, it's always going to be true
+
+-- unless there is an error, in which case it throws the error and halts execution anyway. The return is
+
+-- in part for feedback when using the lua alias or other REPL window.
+
+registerNamedEventHandler
+(
+"Demonnic"
+,
+ 
+"DemonInvCheck"
+,
+ 
+"gmcp.Char.Items.List"
+,
+ 
+handleInv
+,
+ 
+true
+)
+
+## reloadModule
+
+reloadModule(module name)
+
+Reload a module (by uninstalling and reinstalling).
+
+See also: 
+installModule()
+, 
+uninstallModule()
+
+Example
+
+reloadModule
+(
+"3k-mapper"
+)
+
+## removeFileWatch
+
+removeFileWatch(path)
+
+Remove file watch on directory or file. Every change in that file will no longer raise 
+sysPathChanged
+ event.
+
+See also: 
+addFileWatch()
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+Example
+
+herbs
+ 
+=
+ 
+{}
+
+local
+ 
+herbsPath
+ 
+=
+ 
+getMudletHomeDir
+()
+ 
+..
+ 
+"/herbs.lua"
+
+function
+ 
+herbsChangedHandler
+(
+_
+,
+ 
+path
+)
+
+if
+ 
+path
+ 
+==
+ 
+herbsPath
+ 
+then
+
+table
+.
+load
+(
+herbsPath
+,
+ 
+herbs
+)
+
+removeFileWatch
+(
+herbsPath
+)
+
+end
+
+end
+
+addFileWatch
+(
+herbsPath
+)
+
+registerAnonymousEventHandler
+(
+"sysPathChanged"
+,
+ 
+"herbsChangedHandler"
+)
+
+## resetLinkStyle
+
+resetLinkStyle(labelName)
+
+Resets the hyperlink styling on a label to the default Qt colors (typically blue links).
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+See also: 
+setLinkStyle
+, 
+clearVisitedLinks
+
+Parameters
+
+labelName:
+
+The name of the label to reset link styling for.
+
+Example
+
+-- Set custom link colors
+
+setLinkStyle
+(
+"myLabel"
+,
+ 
+"red"
+,
+ 
+"darkred"
+)
+
+-- Later, reset to defaults
+
+resetLinkStyle
+(
+"myLabel"
+)
+
+## resetProfile
+
+resetProfile()
+
+Reloads your entire Mudlet profile - as if you've just opened it. All UI elements will be cleared, so this useful when you're coding your UI.
+
+Example
+
+resetProfile
+()
+
+The function used to require input from the game to work, but as of Mudlet 3.20 that is no longer the case.
+
+Note
+ 
+Note:
+  Don't put resetProfile() in a script-item in the script editor as the script will be reloaded by resetProfile(), better to use the command line or alias.
+
+Note
+ 
+Note:
+  Developer tip:  Make a keybinding for resetting your profile while you develop your GUI so you don't have to type 
+lua resetProfile()
+ command every time you want to see the changes (e.g. CTRL+SHIFT+R)
+
+## resumeNamedEventHandler
+
+success = resumeNamedEventHandler(userName, handlerName)
+
+Resumes a named event handler with name handlerName and causes it to start firing once more.
+
+See also
+
+registerNamedEventHandler()
+, 
+stopNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+handlerName:
+
+The name of the handler to resume. Same as used when you called 
+registerNamedEventHandler()
+
+Returns
+
+true if successful, false if it didn't exist.
+
+Example
+
+local
+ 
+resumed
+ 
+=
+ 
+resumeNamedEventHandler
+(
+"Demonnic"
+,
+ 
+"DemonVitals"
+)
+
+if
+ 
+resumed
+ 
+then
+
+cecho
+(
+"DemonVitals resumed!"
+)
+
+else
+
+cecho
+(
+"DemonVitals doesn't exist, cannot resume it"
+)
+
+end
+
+## saveProfile
+
+saveProfile([location, [filename]])
+
+Saves the current Mudlet profile to disk, which is equivalent to pressing the "Save Profile" button.
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Parameters
+
+location:
+
+(optional) folder to save the profile to. If not given, the profile will go into the 
+default location
+.
+
+filename:
+
+(optional) save the profile as the filename. If the filename doesn't end with 
+.xml
+ this function will automatically save it as 
+filename.xml
+. If not given, the profile will be saved with the default 
+DATE#TIME.xml
+ filename format.
+
+Example
+
+-- save profile to the .../mudlet/profiles/profileName/current folder
+
+saveProfile
+()
+
+-- save to the desktop on Windows:
+
+saveProfile
+(
+[[C:\Users\yourusername\Desktop]]
+)
+
+-- alternately, save to the desktop with the name system.xml:
+
+saveProfile
+(
+[[C:\Users\yourusername\Desktop]]
+,
+"system"
+)
+
+## setConfig
+
+setConfig(option, value)
+
+Sets a Mudlet option to a certain value. This comes in handy for scripts that want to customise Mudlet settings to their preferences - for example, setting up mapper room and exit size to one that works for a certain map, or enabling MSDP for a certain game. For transparency reasons, the Debug window (when open) will show which options were modified by scripts.
+
+To set many options at once, pass in a table of options.
+
+Parameters:
+
+option
+: Particular option to retrieve - see 
+Configuration Options
+ for available ones.
+
+value
+: Value to set - can be a boolean, number, or text depending on the option.
+
+See also
+
+getConfig()
+, 
+Configuration Options
+
+Mudlet Version
+Available in Mudlet
+4.16
++
+
+## setMediaListener
+
+setMediaListener(settings table)
+
+Turns which way the player faces, so that sounds given a compass direction are heard relative to it. Facing "east", a sound from the east is ahead and one from the north is on the left. Sounds already playing turn with the player.
+
+Required: Yes
+Key: facing
+Value: a compass direction, or degrees from 0 to 359
+Default: "north"
+Purpose: The way the player faces: "north", "ne", "southwest" and so on, or degrees clockwise from north. "up", "down" and the relative words ("ahead", "behind", "left" and "right") are not ways to face and raise an error.
+
+Keys in the settings table may be given in any letter case.
+
+Relative directions ("ahead", "behind", "left" and "right") and pans are unaffected by the facing.
+
+A game can set the facing too, with 
+Client.Media.Listener
+. When the game disconnects, the player turns back to the facing last set with setMediaListener(), or to north.
+
+Returns
+
+true
+. An argument of the wrong type, or a facing that is not a compass direction or degrees, raises an error.
+
+See also: 
+getMediaListener()
+, 
+playSoundFile()
+, 
+updateSounds()
+, 
+Client.Media.Listener
+
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+Example
+
+-- The player boards a ship sailing east
+
+setMediaListener
+({
+facing
+ 
+=
+ 
+"east"
+})
+
+-- Degrees work too: 225 is southwest
+
+setMediaListener
+({
+facing
+ 
+=
+ 
+225
+})
+
+-- Face north again, as a map with north at the top
+
+setMediaListener
+({
+facing
+ 
+=
+ 
+"north"
+})
+
+## setMergeTables
+
+setMergeTables(module)
+
+Makes Mudlet merge the table of the given GMCP or MSDP module instead of overwriting the data. This is useful if the game sends only partial updates which need combining for the full data. By default "Char.Status" is the only merged module.
+
+Parameters
+
+module:
+
+Name(s) of the GMCP or MSDP module(s) that should be merged as a string - this will add it to the existing list.
+
+Example
+
+setMergeTables
+(
+"Char.Skills"
+,
+ 
+"Char.Vitals"
+)
+
+## setLinkStyle
+
+setLinkStyle(labelName, linkColor, linkVisitedColor, [underline])
+
+Sets the color styling for clickable HTML hyperlinks within a label. This allows customization of how links appear before and after being clicked.
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+See also: 
+resetLinkStyle
+, 
+clearVisitedLinks
+, 
+createLabel
+, 
+echo
+
+Parameters
+
+labelName:
+
+The name of the label to apply link styling to.
+
+linkColor:
+
+The color for unvisited links. Can be a color name (e.g., "cyan"), hex code (e.g., "#00ffff"), or RGB string (e.g., "rgb(0,255,255)"). Pass an empty string "" to not change the unvisited link color.
+
+linkVisitedColor:
+
+The color for visited links (links that have been clicked). Can be a color name, hex code, or RGB string. Pass an empty string "" to not change the visited link color.
+
+underline:
+
+(optional) Whether links should be underlined. Defaults to true if omitted.
+
+Note
+ 
+Note:
+  Links must be in HTML format using 
+<a href="...">text</a>
+. The label will track which links have been clicked and automatically change their color to the visited color.
+
+Example
+
+-- Create a label with clickable links
+
+createLabel
+(
+"navigationLabel"
+,
+ 
+10
+,
+ 
+10
+,
+ 
+400
+,
+ 
+100
+,
+ 
+1
+)
+
+setLinkStyle
+(
+"navigationLabel"
+,
+ 
+"cyan"
+,
+ 
+"purple"
+)
+
+-- Echo some HTML links to the label
+
+echo
+(
+"navigationLabel"
+,
+ 
+[[
+
+  <a href="send:north">Go North</a> | 
+
+  <a href="send:south">Go South</a> | 
+
+  <a href="https://mudlet.org">Mudlet Website</a>
+
+]]
+)
+
+-- Links will appear cyan, and turn purple after being clicked
+
+-- You can disable underlining
+
+setLinkStyle
+(
+"navigationLabel"
+,
+ 
+"#00ff00"
+,
+ 
+"#ff00ff"
+,
+ 
+false
+)
+
+Note
+ 
+Note:
+  Link URL schemes supported:
+
+send:command
+ - Sends the command to the game immediately
+
+prompt:text
+ - Puts text in the command line for editing
+
+http:// or https://
+ - Opens URL in external browser
+
+No scheme
+ - Executes as Lua code
+
+## setModuleInfo
+
+setModuleInfo(moduleName, info, value)
+
+Sets a specific meta info value for a module
+
+Parameters
+
+moduleName:
+
+Name of the module
+
+info:
+
+specific info to set (for example "version")
+
+value:
+
+specific value to set (for example "1.0")
+
+See also: 
+getModuleInfo
+, 
+getPackageInfo
+
+Example
+
+setModuleInfo
+(
+"myModule"
+,
+ 
+"version"
+,
+ 
+"1.0"
+)
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+## setModulePriority
+
+setModulePriority(moduleName, priority)
+
+Sets the module priority on a given module as a number - the module priority determines the order modules are loaded in, which can be helpful if you have ones dependent on each other. This can also be set from the module manager window.
+
+Modules with priority 
+-1
+ will be loaded before scripts (Mudlet 4.11+).
+
+See also: 
+getModulePriority()
+
+setModulePriority
+(
+"mudlet-mapper"
+,
+ 
+1
+)
+
+## setPackageInfo
+
+setPackageInfo(packageName, info, value)
+
+Sets a specific meta info value for a package
+
+Parameters
+
+packageName:
+
+Name of the module
+
+info:
+
+specific info to set (for example "version")
+
+value:
+
+specific value to set (for example "1.0")
+
+See also: 
+getPackageInfo
+, 
+setModuleInfo
+
+Example
+
+setPackageInfo
+(
+"myPackage"
+,
+ 
+"title"
+,
+ 
+"This is my test package"
+)
+
+Mudlet Version
+Available in Mudlet
+4.12
++
+
+## setServerEncoding
+
+setServerEncoding(encoding)
+
+Makes Mudlet use the specified 
+encoding
+ for communicating with the game.
+
+Parameters
+
+encoding:
+
+Encoding to use.
+
+See also: 
+getServerEncodingsList()
+, 
+getServerEncoding()
+
+Example
+
+-- use UTF-8 if Mudlet knows it. Unfortunately there's no way to check if the game's server knows it too.
+
+if
+ 
+table
+.
+contains
+(
+getServerEncodingsList
+(),
+ 
+"UTF-8"
+)
+ 
+then
+
+setServerEncoding
+(
+"UTF-8"
+)
+
+end
+
+## showNotification
+
+showNotification(title, [content], [expiryTimeInSeconds])
+
+Shows a native (system) notification.
+
+Mudlet Version
+Available in Mudlet
+4.11
++
+
+Note
+ 
+Note:
+  This might not work on all systems, this depends on the system.
+
+Parameters
+
+title
+ - plain text notification title
+
+content
+ - optional argument, plain text notification content, if omitted title argument will be used as content as well
+
+expiryTimeInSeconds
+ - optional argument, sets expiration time in seconds for notification, very often ignored by OS
+
+showNotification
+(
+"Notification title"
+,
+ 
+"Notification content"
+,
+ 
+5
+)
+
+## spawn
+
+spawn(readFunction, processToSpawn[, ...arguments])
+
+Spawns a process and opens a communicatable link with it - 
+read function
+ is the function you'd like to use for reading output from the process, and 
+t
+ is a table containing functions specific to this connection - 
+send(data)
+, 
+true/false = isRunning()
+, and 
+close()
+.
+
+This allows you to setup RPC communication with another process.
+
+Examples
+
+-- simple example on a program that quits right away, but prints whatever it gets using the 'display' function
+
+local
+ 
+f
+ 
+=
+ 
+spawn
+(
+display
+,
+ 
+"ls"
+)
+
+display
+(
+f
+.
+isRunning
+())
+
+f
+.
+close
+()
+
+local
+ 
+f
+ 
+=
+ 
+spawn
+(
+display
+,
+ 
+"ls"
+,
+ 
+"-la"
+)
+
+display
+(
+f
+.
+isRunning
+())
+
+f
+.
+close
+()
+
+## startLogging
+
+startLogging(state)
+
+Control logging of the main console text as text or HTML (as specified by the "Save log files in HTML format instead of plain text" setting on the "General" tab of the "Profile preferences" or "Settings" dialog).  Despite being called startLogging it can also stop the process and correctly close the file being created. The file will have an extension of type ".txt" or ".html" as appropriate and the name will be in the form of a date/time "yyyy-MM-dd#hh-mm-ss" using the time/date of when logging started.  Note that this control parallels the corresponding icon in the "bottom buttons" for the profile and that button can also start and stop the same logging process and will reflect the state as well.
+
+Parameters
+
+state:
+
+Required: logging state. Passed as a boolean
+
+Returns (4 values)
+
+successful (bool)
+
+true
+ if the logging state actually changed; if, for instance, logging was already active and 
+true
+ was supplied then no change in logging state actually occurred and 
+nil
+ will be returned (and logging will continue).
+
+message (string)
+
+A displayable message given one of four messages depending on the current and previous logging states, this will include the file name except for the case when logging was not taking place and the supplied argument was also 
+false
+.
+
+fileName (string)
+
+The log will be/is being written to the path/file name returned.
+
+code (number)
+
+A value indicating the response to the system to this instruction:
+
+ *  0 = logging has just stopped
+ *  1 = logging has just started
+ * -1 = logging was already in progress so no change in logging state
+ * -2 = logging was already not in progress so no change in logging state
+
+Example
+
+-- start logging
+
+local
+ 
+success
+,
+ 
+message
+,
+ 
+filename
+,
+ 
+code
+ 
+=
+ 
+startLogging
+(
+true
+)
+
+if
+ 
+code
+ 
+==
+ 
+1
+ 
+or
+ 
+code
+ 
+==
+ 
+-
+1
+ 
+then
+ 
+print
+(
+f
+"Started logging to {filename}"
+)
+ 
+end
+
+-- stop logging
+
+startLogging
+(
+false
+)
+
+## stopAllNamedEventHandlers
+
+stopAllNamedEventHandlers(userName)
+
+Stops all named event handlers and prevents them from firing any more. Information is retained and handlers can be resumed.
+
+See also
+
+registerNamedEventHandler()
+, 
+stopNamedEventHandler()
+, 
+resumeNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameter
+
+userName:
+
+The user name the event handler was registered under.
+
+Example
+
+stopAllNamedEventHandlers
+()
+ 
+-- emergency stop situation, most likely.
+
+## stopMusic
+
+stopMusic([settings table]) or stopMusic([name][, key][, tag][, fadeaway][, fadeout])
+
+Stops all music when given no filters, or those that match the filters given, as played with 
+playMusicFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+Required: No
+Key: fadeaway
+Value: true or false
+Default: false
+Purpose: Lowers the volume from the current position over a given duration, then stops the track. The duration is the lesser of the time left in the track and the fadeout given to playMusicFile(). If playMusicFile() was given no fadeout, the fadeout given here is used, or 5000 milliseconds.
+
+Required: No
+Key: fadeout
+Value: <msec>
+Default: 5000
+Purpose: How long, in milliseconds, the volume is lowered for before the track stops. Only used if playMusicFile() was given no fadeout.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is stopped, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be stopped by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopSounds()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Stop all playing music files for this profile associated with the API
+
+stopMusic
+()
+
+-- Stop playing the rugby mp3 by name
+
+stopMusic
+({
+name
+ 
+=
+ 
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+})
+
+-- Stop playing the unique music identified as "rugby"
+
+stopMusic
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+-- Decrease volume for 5 seconds and then stop all playing music files for this profile associated with the API
+
+stopMusic
+({
+
+fadeaway
+ 
+=
+ 
+true
+
+})
+
+-- Decrease volume for 10 seconds (or apply the duration of fadeout set in playMusicFile()) and then stop all playing music files for this profile associated with the API
+
+stopMusic
+({
+
+fadeaway
+ 
+=
+ 
+true
+
+,
+ 
+fadeout
+ 
+=
+ 
+10000
+
+})
+
+-- Decrease volume for 5 seconds and then stop all the unique "rugby" music for this profile associated with the API
+
+stopMusic
+({
+
+key
+ 
+=
+ 
+"rugby"
+
+,
+ 
+fadeaway
+ 
+=
+ 
+true
+
+})
+
+---- Ordered Parameter Syntax of stopMusic([name][,key][,tag][,fadeaway][,fadeout]) ----
+
+-- Stop all playing music files for this profile associated with the API
+
+stopMusic
+()
+
+-- Stop playing the rugby mp3 by name
+
+stopMusic
+(
+"167124__patricia-mcmillen__rugby-club-in-spain.mp3"
+)
+
+-- Stop playing the unique music identified as "rugby"
+
+stopMusic
+(
+
+nil
+ 
+-- name
+
+,
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+nil
+ 
+-- tag
+
+)
+
+-- Decrease the volume for 10 seconds then stop playing the unique music identified as "rugby"
+
+stopMusic
+(
+
+nil
+ 
+-- name
+
+,
+ 
+"rugby"
+ 
+-- key
+
+,
+ 
+nil
+ 
+-- tag
+
+,
+ 
+true
+ 
+-- fadeaway
+
+,
+ 
+10000
+ 
+-- fadeout
+
+)
+
+## stopNamedEventHandler
+
+success = stopNamedEventHandler(userName, handlerName)
+
+Stops a named event handler with name handlerName and prevents it from firing any more. Information is stored so it can be resumed later if desired.
+
+See also
+
+registerNamedEventHandler()
+, 
+resumeNamedEventHandler()
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Parameters
+
+userName:
+
+The user name the event handler was registered under.
+
+handlerName:
+
+The name of the handler to stop. Same as used when you called 
+registerNamedEventHandler()
+
+Returns
+
+true if successful, false if it didn't exist or was already stopped
+
+Example
+
+local
+ 
+stopped
+ 
+=
+ 
+stopNamedEventHandler
+(
+"demonnic"
+,
+ 
+"DemonVitals"
+)
+
+if
+ 
+stopped
+ 
+then
+
+cecho
+(
+"DemonVitals stopped!"
+)
+
+else
+
+cecho
+(
+"DemonVitals doesn't exist or already stopped; either way it won't fire any more."
+)
+
+end
+
+## stopSounds
+
+stopSounds([settings table]) or stopSounds([name][, key][, tag][, priority][, fadeaway][, fadeout])
+
+Stops all sounds when given no filters, or those that match the filters given, as played with 
+playSoundFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+Required: No
+Key: priority
+Value: 1 to 100
+Default: 
+Purpose: Selects media with a priority less than or equal to this. Media played with no priority matches too. Before Mudlet 5.1, media at exactly this priority was left playing.
+
+Required: No
+Key: fadeaway
+Value: true or false
+Default: false
+Purpose: Lowers the volume from the current position over a given duration, then stops the track. The duration is the lesser of the time left in the track and the fadeout given to playSoundFile(). If playSoundFile() was given no fadeout, the fadeout given here is used, or 5000 milliseconds.
+
+Required: No
+Key: fadeout
+Value: <msec>
+Default: 5000
+Purpose: How long, in milliseconds, the volume is lowered for before the track stops. Only used if playSoundFile() was given no fadeout.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is stopped, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be stopped by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopVideos()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.15
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Stop all playing sound files for this profile associated with the API
+
+stopSounds
+()
+
+-- Stop playing the cow sound
+
+stopSounds
+({
+name
+ 
+=
+ 
+"cow.wav"
+})
+
+-- Stop playing any sounds tagged as "animals" with a priority less than or equal to 50
+
+---- This would not stop sounds tagged as "animals" greater than priority 50.  This is an "AND" and not an "OR".
+
+stopSounds
+({
+
+name
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+nil
+ 
+-- nil lines are optional, no need to use
+
+,
+ 
+tag
+ 
+=
+ 
+"animals"
+
+,
+ 
+priority
+ 
+=
+ 
+50
+
+})
+
+-- Decrease volume for 5 seconds and then stop all playing sound files for this profile associated with the API
+
+stopSounds
+({
+
+fadeaway
+ 
+=
+ 
+true
+
+})
+
+-- Decrease volume for 10 seconds (or apply the duration of fadeout set in playSoundFile()) and then stop all playing sound files for this profile associated with the API
+
+stopSounds
+({
+
+fadeaway
+ 
+=
+ 
+true
+
+,
+ 
+fadeout
+ 
+=
+ 
+10000
+
+})
+
+-- Decrease volume for 3 seconds and then stop all the sounds tagged "animals" for this profile associated with the API
+
+stopSounds
+({
+
+tag
+ 
+=
+ 
+"animals"
+
+,
+ 
+fadeaway
+ 
+=
+ 
+true
+
+,
+ 
+fadeout
+ 
+=
+ 
+3000
+
+})
+
+---- Ordered Parameter Syntax of stopSounds([name][,key][,tag][,priority][,fadeaway][,fadeout]) ----
+
+-- Stop all playing sound files for this profile associated with the API
+
+stopSounds
+()
+
+-- Stop playing the cow sound
+
+stopSounds
+(
+"cow.wav"
+)
+
+-- Stop playing any sounds tagged as "animals" with a priority less than or equal to 50
+
+---- This would not stop sounds tagged as "animals" greater than priority 50.  This is an "AND" and not an "OR".
+
+stopSounds
+(
+
+nil
+ 
+-- name
+
+,
+ 
+nil
+ 
+-- key
+
+,
+ 
+"animals"
+ 
+-- tag
+
+,
+ 
+50
+ 
+-- priority
+
+)
+
+-- Decrease the volume for 7 seconds and then stop playing sounds
+
+stopSounds
+(
+
+nil
+ 
+-- name
+
+,
+ 
+nil
+ 
+-- key
+
+,
+ 
+nil
+ 
+-- tag
+
+,
+ 
+nil
+ 
+-- priority
+
+,
+ 
+true
+ 
+-- fadeaway
+
+,
+ 
+7000
+ 
+-- fadeout
+
+)
+
+## stopVideos
+
+stopVideos([settings table])
+
+Stops all videos when given no filters, or those that match the filters given, as played with 
+playVideoFile()
+.
+
+Required: No
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects media by file name.
+
+Required: No
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the media with this key.
+
+Required: No
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects media with this tag.
+
+Required: No
+Key: fadeaway
+Value: true or false
+Default: false
+Purpose: Lowers the volume from the current position over a given duration, then stops the track. The duration is the lesser of the time left in the track and the fadeout given to playVideoFile(). If playVideoFile() was given no fadeout, the fadeout given here is used, or 5000 milliseconds.
+
+Required: No
+Key: fadeout
+Value: <msec>
+Default: 5000
+Purpose: How long, in milliseconds, the volume is lowered for before the track stops. Only used if playVideoFile() was given no fadeout.
+
+When more than one filter is given, media must match all of them.
+
+Only media played by scripts is stopped, not media the game plays through Client.Media or MSP.
+
+Keys in the settings table may be given in any letter case.
+
+A file played by its full path can be stopped by that same full path, or by its name inside the "media" folder (see 
+getPlayingSounds()
+).
+
+Returns
+
+true
+. An argument of the wrong type raises an error.
+
+See also: 
+getPausedMusic()
+, 
+getPausedSounds()
+, 
+getPausedVideos()
+, 
+getPlayingMusic()
+, 
+getPlayingSounds()
+, 
+getPlayingVideos()
+, 
+loadMusicFile()
+, 
+loadSoundFile()
+, 
+loadVideoFile()
+, 
+pauseMusic()
+, 
+pauseSounds()
+, 
+pauseVideos()
+, 
+playMusicFile()
+, 
+playSoundFile()
+, 
+playVideoFile()
+, 
+purgeMediaCache()
+, 
+receiveMSP()
+, 
+stopMusic()
+, 
+stopSounds()
+, 
+updateSounds()
+, 
+Mud Client Media Protocol
+
+Mudlet Version
+Available in Mudlet
+4.20
++
+
+Example
+
+---- Table Parameter Syntax ----
+
+-- Stop all playing video files for this profile associated with the API
+
+stopVideos
+()
+
+-- Stop playing the text mp4 by name
+
+stopVideos
+({
+name
+ 
+=
+ 
+"TextInMotion-VideoSample-1080p.mp4"
+})
+
+-- Stop playing the unique video identified as "text"
+
+stopVideos
+({
+
+name
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+,
+ 
+key
+ 
+=
+ 
+"text"
+ 
+-- key
+
+,
+ 
+tag
+ 
+=
+ 
+nil
+  
+-- nil lines are optional, no need to use
+
+})
+
+-- Decrease volume for 5 seconds and then stop all playing videos for this profile associated with the API
+
+stopVideos
+({
+
+fadeaway
+ 
+=
+ 
+true
+
+})
+
+## timeframe
+
+timeframe(vname, true_time, nil_time, ...)
+
+A utility function that helps you change and track variable states without using a lot of tempTimers.
+
+Mudlet Version
+Available in Mudlet
+3.6
++
+
+Parameters
+
+vname:
+
+A string or function to use as the variable placeholder.
+
+true_time:
+
+Time before setting the variable to true. Can be a number or a table in the format: 
+{time, value}
+
+nil_time:
+
+(optional) Number of seconds until 
+vname
+ is set back to nil. Leaving it undefined will leave it at whatever it was set to last. Can be a number of a table in the format: 
+{time, value}
+
+...:
+
+(optional) Further list of times and values to set the variable to, in the following format: 
+{time, value}
+
+Example
+
+-- sets the global 'limiter' variable to true immediately (see the 0) and back to nil in one second (that's the 1).
+
+timeframe
+(
+"limiter"
+,
+ 
+0
+,
+ 
+1
+)
+
+-- An angry variable 'giant' immediately set to "fee", followed every second after by "fi", "fo", and "fum" before being reset to nil at four seconds.
+
+timeframe
+(
+"giant"
+,
+ 
+{
+0
+,
+ 
+"fee"
+},
+ 
+4
+,
+ 
+{
+1
+,
+ 
+"fi"
+},
+ 
+{
+2
+,
+ 
+"fo"
+},
+ 
+{
+3
+,
+ 
+"fum"
+})
+
+-- sets the local 'width' variable to true immediately and back to nil in one second.
+
+local
+ 
+width
+
+timeframe
+(
+function
+(
+value
+)
+ 
+width
+ 
+=
+ 
+value
+ 
+end
+,
+ 
+0
+,
+ 
+1
+)
+
+## translateTable
+
+translateTable(directions, [languagecode])
+
+Given a table of directions (such as 
+speedWalkDir
+), translates directions to another language for you. Right now, it can only translate it into the language of Mudlet's user interface - but 
+let us know if you need more
+.
+
+Mudlet Version
+Available in Mudlet
+3.22
++
+
+Parameters
+
+directions:
+
+An indexed table of directions (eg. 
+{"sw", "w", "nw", "s"}
+).
+
+languagecode:
+
+(optional) Language code (eg 
+ru_RU
+ or 
+it_IT
+) - by default, 
+mudlet.translations.interfacelanguage
+ is used.
+
+Example
+
+-- get the path from room 2 to room 5 and translate directions
+
+if
+ 
+getPath
+(
+2
+,
+ 
+5
+)
+ 
+then
+
+speedWalkDir
+ 
+=
+ 
+translateTable
+(
+speedWalkDir
+)
+
+print
+(
+"Translated directions:"
+)
+
+display
+(
+speedWalkDir
+)
+
+## uninstallModule
+
+uninstallModule(name)
+
+Uninstalls a Mudlet module with the given name.
+
+See also: 
+ installModule()
+, 
+ Event: sysLuaUninstallModule
+
+Example
+
+uninstallModule
+(
+"myalias"
+)
+
+## uninstallPackage
+
+uninstallPackage(name)
+
+Uninstalls a Mudlet package with the given name.
+
+Parameters
+
+name - a string containing the name of the package to remove.
+
+Returns
+
+result - 
+true
+/
+nil
+ on success/failure; available from Mudlet version 
+4.20.0
+.
+
+See also: 
+ installPackage()
+
+Example
+
+uninstallPackage
+(
+"myalias"
+)
+
+## unzipAsync
+
+unzipAsync(path, location)
+
+Unzips the zip file at path, extracting the contents to the location provided. Returns true if it is able to start unzipping, or nil+message if it cannot.
+
+Raises the 
+sysUnzipDone
+ event with the zip file location and location unzipped to as arguments if unzipping is successful, and 
+sysUnzipError
+ with the same arguments if it is not.
+
+Do not use the 
+unzip()
+ function as it is synchronous and will impact Mudlet's performance (ie, freeze Mudlet while unzipping).
+
+Mudlet Version
+Available in Mudlet
+4.6
++
+
+Example
+
+function
+ 
+handleUnzipEvents
+(
+event
+,
+ 
+...)
+
+local
+ 
+args
+ 
+=
+ 
+{...}
+
+local
+ 
+zipName
+ 
+=
+ 
+args
+[
+1
+]
+
+local
+ 
+unzipLocation
+ 
+=
+ 
+args
+[
+2
+]
+
+if
+ 
+event
+ 
+==
+ 
+"sysUnzipDone"
+ 
+then
+
+cecho
+(
+string.format
+(
+"<green>Unzip successful! Unzipped %s to %s
+\n
+"
+,
+ 
+zipName
+,
+ 
+unzipLocation
+))
+
+elseif
+ 
+event
+ 
+==
+ 
+"sysUnzipError"
+ 
+then
+
+cecho
+(
+string.format
+(
+"<firebrick>Unzip failed! Tried to unzip %s to %s
+\n
+"
+,
+ 
+zipName
+,
+ 
+unzipLocation
+))
+
+end
+
+end
+
+if
+ 
+unzipSuccessHandler
+ 
+then
+ 
+killAnonymousEventHandler
+(
+unzipSuccessHandler
+)
+ 
+end
+
+if
+ 
+unzipFailureHandler
+ 
+then
+ 
+killAnonymousEventHandler
+(
+unzipFailureHandler
+)
+ 
+end
+
+unzipSuccessHandler
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"sysUnzipDone"
+,
+ 
+"handleUnzipEvents"
+)
+
+unzipFailureHandler
+ 
+=
+ 
+registerAnonymousEventHandler
+(
+"sysUnzipError"
+,
+ 
+"handleUnzipEvents"
+)
+
+--use the path to your zip file for this, not mine
+
+local
+ 
+zipFileLocation
+ 
+=
+ 
+"/home/demonnic/Downloads/Junkyard_Orc.zip"
+
+--directory to unzip to, it does not need to exist but you do need to be able to create it
+
+local
+ 
+unzipLocation
+ 
+=
+ 
+"/home/demonnic/Downloads/Junkyard_Orcs"
+
+unzipAsync
+(
+zipFileLocation
+,
+ 
+unzipLocation
+)
+ 
+-- this will work
+
+unzipAsync
+(
+zipFileLocation
+ 
+..
+ 
+"s"
+,
+ 
+unzipLocation
+)
+ 
+--demonstrate error, will happen first because unzipping takes time
+
+## updateSounds
+
+updateSounds(settings table)
+
+Moves sounds that are already playing, or changes their volume, without restarting them. The sounds glide to the new values over "duration" milliseconds, so a sound can travel: footsteps coming up from behind, or an arrow flying past.
+
+Only sounds played by scripts with 
+playSoundFile()
+ are changed, not those the game plays.
+
+Required: Maybe
+Key: name
+Value: <file name>
+Default: 
+Purpose: Selects sounds by name, the same way stopSounds() does. Every playing copy of that file changes. At least one of name, key or tag is required.
+
+Required: Maybe
+Key: key
+Value: <key>
+Default: 
+Purpose: Selects the sound with this key. To move several copies of one sound separately, give each its own key when it is played, e.g. "arrow-1" and "arrow-2".
+
+Required: Maybe
+Key: tag
+Value: <tag>
+Default: 
+Purpose: Selects sounds with this tag.
+
+Required: No
+Key: volume
+Value: 1 to 100
+Default: unchanged
+Purpose: The new volume.
+
+Required: No
+Key: direction
+Value: a direction word, or degrees from 0 to 359
+Default: unchanged
+Purpose: Where the sound now comes from, as with playSoundFile() . A new direction takes over from a pan given earlier.
+
+Required: No
+Key: pan
+Value: -100 to 100
+Default: unchanged
+Purpose: The new placement from left (-100) to right (100).
+
+Required: No
+Key: duration
+Value: <msec>
+Default: 0
+Purpose: How long the change takes, in milliseconds. 0 makes the change at once; Mudlet still takes 20 milliseconds over it, so that the jump does not click.
+
+Keys in the settings table may be given in any letter case.
+
+An update can follow its playSoundFile() straight away, even before the file has downloaded. It applies once the sound plays.
+
+A sound with no direction or pan, moved with one, glides from its own stereo image to the new place.
+
+Returns
+
+true
+, or 
+nil
+ and an error message when no name, key or tag was given. Naming a sound that is not playing is not an error.
+
+See also: 
+getPausedSounds()
+, 
+getPlayingSounds()
+, 
+getMediaListener()
+, 
+playSoundFile()
+, 
+setMediaListener()
+, 
+stopSounds()
+, 
+Client.Media.Update
+
+Mudlet Version
+Available in Mudlet
+5.1
++
+
+Example
+
+-- An arrow flies from the west, past the player, to the east
+
+playSoundFile
+({
+name
+ 
+=
+ 
+"arrow-whoosh.wav"
+,
+ 
+key
+ 
+=
+ 
+"arrow-1"
+,
+ 
+direction
+ 
+=
+ 
+"west"
+})
+
+updateSounds
+({
+key
+ 
+=
+ 
+"arrow-1"
+,
+ 
+direction
+ 
+=
+ 
+"east"
+,
+ 
+duration
+ 
+=
+ 
+800
+})
+
+-- The rain moves to the left and grows louder over three seconds
+
+updateSounds
+({
+key
+ 
+=
+ 
+"rain"
+,
+ 
+pan
+ 
+=
+ 
+-
+80
+,
+ 
+volume
+ 
+=
+ 
+70
+,
+ 
+duration
+ 
+=
+ 
+3000
+})
+
+-- Every sound tagged "combat" quietens at once
+
+updateSounds
+({
+tag
+ 
+=
+ 
+"combat"
+,
+ 
+volume
+ 
+=
+ 
+20
+})
+
+## yajl.to_string
+
+yajl.to_string(data)
+
+Encodes a Lua table into JSON data and returns it as a string. This function is very efficient - if you need to encode into JSON, use this.
+
+Example
+
+-- on IRE MUD games, you can send a GMCP request to request the skills in a particular skillset. Here's an example:
+
+sendGMCP
+(
+"Char.Skills.Get "
+..
+yajl
+.
+to_string
+{
+group
+ 
+=
+ 
+"combat"
+})
+
+-- you can also use it to convert a Lua table into a string, so you can, for example, store it as room's userdata
+
+local
+ 
+toserialize
+ 
+=
+ 
+yajl
+.
+to_string
+(
+continents
+)
+
+setRoomUserData
+(
+1
+,
+ 
+"areaContinents"
+,
+ 
+toserialize
+)
+
+## yajl.to_value
+
+yajl.to_value(data)
+
+Decodes JSON data (as a string) into a Lua table. This function is very efficient - if you need to dencode into JSON, use this.
+
+Example
+
+-- given the serialization example above with yajl.to_string, you can deserialize room userdata back into a table
+
+local
+ 
+tmp
+ 
+=
+ 
+getRoomUserData
+(
+1
+,
+ 
+"areaContinents"
+)
+
+if
+ 
+tmp
+ 
+==
+ 
+""
+ 
+then
+ 
+return
+ 
+end
+
+local
+ 
+continents
+ 
+=
+ 
+yajl
+.
+to_value
+(
+tmp
+)
+
+display
+(
+continents
+)

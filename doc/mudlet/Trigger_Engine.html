@@ -1,0 +1,654 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:Trigger Engine - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"Zz6Cp6kny0FgwpAhn7cKVQAAAAE","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:Trigger_Engine","wgTitle":"Trigger Engine","wgCurRevisionId":22134,"wgRevisionId":22134,"wgArticleId":190,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Pages with syntax highlighting errors","Mudlet Manual"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:Trigger_Engine","wgRelevantArticleId":190,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[
+],"wgULSAcceptLanguageList":["en-us","en","zh-tw","zh","ja-jp","ja"],"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Manual on triggering on game output, highlighting matches, literal text or regex patterns, combining triggers, etc."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="Trigger Engine"/>
+
+	<meta property="og:description" content="Manual on triggering on game output, highlighting matches, literal text or regex patterns, combining triggers, etc."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:Trigger_Engine"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_Trigger_Engine rootpage-Manual_Trigger_Engine skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:Trigger Engine</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Trigger_Engine"><span class="tocnumber">1</span> <span class="toctext">Trigger Engine</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Simple_Trigger_Matching"><span class="tocnumber">1.1</span> <span class="toctext">Simple Trigger Matching</span></a>
+<ul>
+<li class="toclevel-3 tocsection-3"><a href="#Steps_To_Create_A_Trigger"><span class="tocnumber">1.1.1</span> <span class="toctext">Steps To Create A Trigger</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-4"><a href="#Simple_Highlighter_Triggers"><span class="tocnumber">1.2</span> <span class="toctext">Simple Highlighter Triggers</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#Testing_Triggers"><span class="tocnumber">1.3</span> <span class="toctext">Testing Triggers</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#Pattern_Matching_Types"><span class="tocnumber">1.4</span> <span class="toctext">Pattern Matching Types</span></a>
+<ul>
+<li class="toclevel-3 tocsection-7"><a href="#Substring"><span class="tocnumber">1.4.1</span> <span class="toctext">Substring</span></a></li>
+<li class="toclevel-3 tocsection-8"><a href="#Perl_Regex"><span class="tocnumber">1.4.2</span> <span class="toctext">Perl Regex</span></a></li>
+<li class="toclevel-3 tocsection-9"><a href="#Start_of_Line"><span class="tocnumber">1.4.3</span> <span class="toctext">Start of Line</span></a></li>
+<li class="toclevel-3 tocsection-10"><a href="#Exact_Match"><span class="tocnumber">1.4.4</span> <span class="toctext">Exact Match</span></a></li>
+<li class="toclevel-3 tocsection-11"><a href="#Lua_Function"><span class="tocnumber">1.4.5</span> <span class="toctext">Lua Function</span></a>
+<ul>
+<li class="toclevel-4 tocsection-12"><a href="#Lua_Syntax_Primer:_Expressions"><span class="tocnumber">1.4.5.1</span> <span class="toctext">Lua Syntax Primer: Expressions</span></a></li>
+</ul>
+</li>
+<li class="toclevel-3 tocsection-13"><a href="#Line_Spacer"><span class="tocnumber">1.4.6</span> <span class="toctext">Line Spacer</span></a></li>
+<li class="toclevel-3 tocsection-14"><a href="#Color_Trigger"><span class="tocnumber">1.4.7</span> <span class="toctext">Color Trigger</span></a></li>
+<li class="toclevel-3 tocsection-15"><a href="#Prompt"><span class="tocnumber">1.4.8</span> <span class="toctext">Prompt</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-16"><a href="#Multi-Line_Triggers_and_Multi-Condition_Triggers"><span class="tocnumber">1.5</span> <span class="toctext">Multi-Line Triggers and Multi-Condition Triggers</span></a>
+<ul>
+<li class="toclevel-3 tocsection-17"><a href="#.22multiline_.2F_AND.22_and_.22OR.22_Condition_Triggers"><span class="tocnumber">1.5.1</span> <span class="toctext">"multiline / AND" and "OR" Condition Triggers</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-18"><a href="#Trigger_Chains_.26_Filter_Chains"><span class="tocnumber">1.6</span> <span class="toctext">Trigger Chains &amp; Filter Chains</span></a>
+<ul>
+<li class="toclevel-3 tocsection-19"><a href="#Chains"><span class="tocnumber">1.6.1</span> <span class="toctext">Chains</span></a></li>
+<li class="toclevel-3 tocsection-20"><a href="#Filters"><span class="tocnumber">1.6.2</span> <span class="toctext">Filters</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-21"><a href="#Named_Capture_Patterns"><span class="tocnumber">1.7</span> <span class="toctext">Named Capture Patterns</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="Trigger_Engine">Trigger Engine</span></h1>
+<p>Unlike alias that define patterns that match on user input, triggers define patterns that match on game output. In other words, triggers react to text that has been sent by the game, whereas alias react to user commands that have been typed into the command line.
+</p>
+<h2><span class="mw-headline" id="Simple_Trigger_Matching">Simple Trigger Matching</span></h2>
+<p><a href="/w/File:Simple-trigger.png" class="image"><img alt="Simple-trigger.png" src="/images/thumb/5/5d/Simple-trigger.png/600px-Simple-trigger.png" decoding="async" width="600" height="425" srcset="/images/thumb/5/5d/Simple-trigger.png/900px-Simple-trigger.png 1.5x, /images/5/5d/Simple-trigger.png 2x" /></a>
+</p><p><br />
+<img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  QUICKSTART: Here is a simple <b><a rel="nofollow" class="external text" href="https://www.youtube.com/watch?v=URbwW41LBcQ&amp;hd=1">video tutorial</a></b> on how to make basic triggers in Mudlet.
+</p>
+<h3><span class="mw-headline" id="Steps_To_Create_A_Trigger">Steps To Create A Trigger</span></h3>
+<ol><li>Click on the "Add" button to create a new trigger.</li>
+<li>Put the text pattern that you’d like to trigger on into the trigger conditions table on the right side of the screen above the script editor.</li>
+<li>Choose the correct <a href="/w/Manual:Trigger_Engine#Pattern_Matching_Types" title="Manual:Trigger Engine">pattern type</a> of your trigger pattern in the drop down list on the right side of the trigger pattern i.e. in the second column of the trigger pattern table. If you define multiple patterns in the same trigger, your trigger will run whenever any one of these patterns matches unless you chose the AND-trigger option, in which case the trigger will only fire if all patterns match within a specified amount of lines from the game. For more advanced information on AND and OR trigger see the corresponding <a href="/w/Manual:Trigger_Engine#.22multiline_.2F_AND.22_and_.22OR.22_Condition_Triggers" title="Manual:Trigger Engine">AND/OR trigger section below</a>.</li>
+<li>Define what happens when the trigger matches. Usually, this will be done by a Lua script in the Lua editor below the table with the pattern list. In the beginning, you can simply choose the "highlight trigger" option to make your trigger highlight the text that it has triggered on or send a clear text command to the game whenever the trigger fires until you have learned enough Lua to more meaningful scripts. Clear text command can be defined in the "send plain text" input box next to the trigger name above the pattern table.</li>
+<li>Save the new trigger and then activate it with the padlock icon button. By default, new triggers are deactivated and thus will do nothing unless you explicitly activate them. Activated triggers show a green tick in the little blue box on the left side of the trigger name in the trigger tree on the left side of the script editor dialog.</li></ol>
+<p>There are three ways to save your changes; click on the save icon, adding another new trigger, clicking on another trigger item. Triggers that have not been saved yet cannot be activated. 
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  If you see a bug icon instead of an activation box, there is some error that prevents activation of your trigger. Check the error message above the pattern table.
+</p>
+<blockquote><p>Example: You want to trigger on the word "pond" in a line such as: "The frog swims in the pond. Plop." All you need to do is add "pond" as a pattern and choose "substring" as a pattern type. Then enter the command you like to send to the game if the trigger matches. For example enter "drink water" into the "send plain text" input box and activate your new trigger. Your new trigger will send the command "drink water" to the game any time it sees the word "pond" somewhere in the game output.</p></blockquote>
+<h2><span class="mw-headline" id="Simple_Highlighter_Triggers">Simple Highlighter Triggers</span></h2>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Beginners should use Mudlets automated highlight triggers in the beginning to get the hang of the different trigger and pattern types quicker. 
+</p>
+<ol><li>Create a new trigger and add a pattern as detailed above.</li>
+<li>Click on the "highlight trigger" option and pick a foreground and a background color. When the trigger matches it automatically highlights its pattern.</li>
+<li>Save.</li></ol>
+<p>This is one of the most used form of triggers in mudding. It is a quick way of highlighting words that are important to you at the moment. This helps you spot things at a single glance instead of reading the entire text. You don’t have to know anything about scripting, regular expressions etc. to use highlight triggers. Just type in the word you like to be highlighted, select appropriate colors, save the new trigger and activate it.
+</p><p>More advanced users will often want to do custom highlighting from within scripts. This is how it works: If you want to highlight the word "pond" in the above example you have to add the following little Lua script to the script editor on the lower right side of the Script Editor window:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>selectString( "pond", 1 )
+fg( "red" )
+bg( "blue" )
+resetFormat()</pre></div>
+<p><br />
+</p>
+<h2><span class="mw-headline" id="Testing_Triggers">Testing Triggers</span></h2>
+<p>You can test your triggers with the <code>`echo</code> alias from the command line.  This requires the echo package, which is installed by default on a new profile.
+</p><p><code>
+`echo A test line.
+</code></p><p><code>`echo One line.$Next line.$Third line.
+</code>
+</p><p>Or from your Lua code using <a href="/w/Manual:Miscellaneous_Functions#feedTriggers" title="Manual:Miscellaneous Functions">feedTriggers</a>
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>feedTriggers([[
+You are carrying:
+  a credstick                                       a pair of steel toed boots (worn)
+  a Soko Sukeban (worn)                             a medikit
+  a cherry moon katana                              a GPS device
+  a NV contacts                                     a Tsunami MkII
+  a MeshGirl Helm                                   an Alto 500 CellPhone
+  a Kantan Sukeban (worn)                         
+Your load barely slows you down.
+]])</pre></div>
+<p>Alternatively, you can also record a replay and play it - triggers will be matched on it.
+</p><p><br />
+</p>
+<h2><span class="mw-headline" id="Pattern_Matching_Types">Pattern Matching Types</span></h2>
+<h3><span class="mw-headline" id="Substring">Substring</span></h3>
+<p>This trigger type will match any text on a single line.  Useful for matching strings of text which don't change at all.
+</p><p>Examples:
+</p>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>pond
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match</span> (pond matches the word pond)
+</td></tr></tbody></table>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>pond
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the swamp.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: red;">no match (pond does not match swamp)</span>
+</td></tr></tbody></table>
+<hr />
+<h3><span class="mw-headline" id="Perl_Regex">Perl Regex</span></h3>
+<p>This trigger type will match text using Regular Expressions (Regex). Regex in Perl is a special text string for describing a search pattern within a given text.  For example \w+ is used to match a single word, or \d is used to match a single digit.
+</p><p>Pattern matching also allows the match to be saved in the matches table variable if enclosed in parentheses.  matches[1] contains the entire line of the trigger whereas matches[2] contains the first regex pattern (in our examples pond or swamp).
+</p><p>Examples:
+</p>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog swims in the (\w+).
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match (\w+ matches pond, and is also saved to matches[2] variable)</span>
+</td></tr></tbody></table>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog swims in the (\w+).
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the swamp.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match (\w+ matches swamp)</span>
+</td></tr></tbody></table>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog swims in the (\w+).
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The fish swims in the pond.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: red;">no match (fish should be changed to a regex pattern \w+)</span>
+</td></tr></tbody></table>
+<hr />
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  <a rel="nofollow" class="external text" href="https://regex101.com">regex101.com</a> is highly recommended to testing out your regular expressions.  It includes a pattern tester, cheat sheet and explanations about the matches.
+</p>
+<h3><span class="mw-headline" id="Start_of_Line">Start of Line</span></h3>
+<p>This is a combined variation of substring matching and regex matching.  This type will match any line with text at the start of the string only.
+</p><p>Examples:
+</p>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match</span> (The frog is at the start of the string)
+</td></tr></tbody></table>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>frog swims
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the swamp.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: red;">no match (frog swims is not at the start of the string)</span>
+</td></tr></tbody></table>
+<hr />
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This is exactly the same as using a Perl regex pattern with the ^ anchor (start of a line).
+</p>
+<h3><span class="mw-headline" id="Exact_Match">Exact Match</span></h3>
+<p>The string must match exactly the pattern.  On a whole line, this is the same as using a perl regex pattern with the ^ and $ (start and end of line) anchors.
+</p><p>Examples:
+</p>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match</span> (the entire line matches)
+</td></tr></tbody></table>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>The frog swims in the pond.
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td>The frog swims in the pond.  The bird flies in the sky.
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: red;">no match (The entire line does not match as the bird information has been added. This would match a start of line pattern though)</span>
+</td></tr></tbody></table>
+<hr />
+<h3><span class="mw-headline" id="Lua_Function">Lua Function</span></h3>
+<p>The purpose of Lua function triggers is to be able to run Lua scripts as trigger conditions.  This trigger types takes an actual Lua function as the pattern.  This function must return true or false to evaluate correctly, but will only match when returned true.
+</p><p>For example, let's say we wish to enable our entire offensive combat triggers when we commence combat, but otherwise be disabled when we are not in combat.  One would create a trigger chain that contains all the offensive triggers. The chain head (the root trigger of the chain) simply contains this Lua function condition as its only trigger condition: <code>return inCombat</code>
+</p><p>Now, whenever you enter combat you set the variable "inCombat" to true and thus automatically enable you entire combat triggers that are otherwise disabled.
+</p><p>Examples of patterns:
+</p>
+<ul><li><code>if myVar &gt; 20 then return true else return false end</code></li>
+<li><code>if myFunc() &lt; myVar then return true else return false end</code></li>
+<li><code>return myFunc()</code> if myFunc returns a boolean value</li></ul>
+<p>Another example:
+</p><p>Create a new trigger with the pattern <code>checkHealth()</code>. Define a new Lua function <code>checkHealth()</code>. Open the script editor, add a new script "health monitor" and add this code to the new script.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>function checkHealth()
+    if health &lt;= 100 then  -- health is a variable we capture from e.g. the prompt or GMCP
+        echo( "WARNING: Low health! I have to run away!\n" )
+        send( "flee" )     -- we send a command to run away to the game
+        return true
+    else
+        return false
+    end
+end</pre></div>
+<h4><span class="mw-headline" id="Lua_Syntax_Primer:_Expressions">Lua Syntax Primer: Expressions</span></h4>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Mudlet used to only allow the boolean <i>true</i> value as the return value to consider the pattern to have been a match. It has since been improved to allow any value Lua would consider true - but if you see any Lua Function Conditions (LFC) making use of <i>and true or false</i> at the end, that'd be why.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>if A == B then (...)   ----&gt; if A equals B
+if A ~= B then (...)   ----&gt; if A *NOT* equals B
+if A &lt;= B then (...)   ----&gt; if A is smaller or equal to B
+if A &gt;= B then (...)   ----&gt; if A is greater or equal to B
+if A &lt; B then (...)    ----&gt; if A is smaller than B
+if A &gt; B then (...)    ----&gt; if A is greater than B</pre></div>
+<p>The operators <i>and</i> and <i>or</i> behave differently in Lua than in most other programming languages as they are not guaranteed to return a boolean value.<a rel="nofollow" class="external autonumber" href="http://hisham.hm/2011/05/04/luas-and-or-as-a-ternary-operator/">[1]</a>
+</p><p>Lua Function Conditions (LFC) effectively means that you run the Lua code they represent on every single line that is received from the game, unless the LFCs are part of a multi-condition trigger, in which case the LFCs would only be run when they would be the current test-condition of their respective trigger state. LFCs are implemented in such a way that the trigger engine only calls the compiled byte code, but running as few scripts as possible is always the best idea. LFCs are nice and handy, and for most people the performance aspect will not be relevant at all.
+</p>
+<h3><span class="mw-headline" id="Line_Spacer">Line Spacer</span></h3>
+<p>To make the engine skip lines in a multiline / AND trigger, use the line spacer pattern: select 'line spacer' as the type and put in a number on the left to make it go to the next X lines, for example 1 will make it go to the next line.  See <a href="/w/Manual:Trigger_Engine#.22multiline_.2F_AND.22_and_.22OR.22_Condition_Triggers" title="Manual:Trigger Engine">the multline section below</a> for further explanation.
+</p>
+<h3><span class="mw-headline" id="Color_Trigger">Color Trigger</span></h3>
+<p>This type of trigger matches the color of the text, as opposed to the actual text incoming.  Both foreground and background matching is available and you will be prompted to select the required colors.
+</p><p>Examples:
+</p>
+<hr />
+<table>
+
+<tbody><tr>
+<td><b>Pattern:</b></td>
+<td>Foreground color [ANSI 12], Background color [ANSI 15] (blue foreground on a white background)
+</td></tr>
+<tr>
+<td><b>String:</b></td>
+<td><span style="color: blue;">The bird flies in the sky.</span>
+</td></tr>
+<tr>
+<td><b>Outcome:</b></td>
+<td><span style="color: green;">match (the COLOR matches)</span>
+</td></tr></tbody></table>
+<hr />
+<h3><span class="mw-headline" id="Prompt">Prompt</span></h3>
+<p>This type of trigger will only work with servers that have implemented the telnet suboption GO AHEAD.  If you server does not implement GA this will be shown in the bottom right corner of Mudlet with the characters No GA.
+</p><p>This option has one function, to match your prompt and will fire when it does.
+</p>
+<h2><span class="mw-headline" id="Multi-Line_Triggers_and_Multi-Condition_Triggers">Multi-Line Triggers and Multi-Condition Triggers</span></h2>
+<p>Multi Condition Triggers are the most advanced feature of Mudlets trigger engine. Like trigger chains or filter chains they are a form of AND-Triggers. All conditions in the list must have matched within the specified margin of lines (delta), in order to trigger the script. Normal triggers fire and run the script as soon as one of the conditions in the regex list is met i.e. if one of the regex/string matches match - or the Lua function condition returns true, the trigger script is run. In multiline triggers, however, each single regex/string/Lua function condition in the list has to have matched within the specified margin of lines at least once to trigger the script. The sequence of the conditions is binding. This means that if the 10th regex on the regex list would be matched on the eleventh line after the match of the first line happened, the trigger will NOT run unless the margin of lines is set to 11. If condition #3 is true but currently #2 is waiting to be true, condition #3 is ignored and must be true again after condition #2 has been true. Conditions can also be Lua Functions or plain Lua code that returns a boolean truth value. You can mix all types of conditions to build complex multi-condition triggers that only fire if all conditions are met. This is a very powerful feature as it reduces the amount of scripting to a minimum or even takes away with the need to script formerly complex processes completely. Multicondition triggers are multi-line triggers, i. e. the conditions can all be met in a single line or many lines after the first condition has been fulfilled. This effectively reduces the amount of complexity as you have all the important conditions placed into a single trigger and all the tedious bookkeeping, variable and condition state accounting is being done by Mudlets trigger engine. The result of this is that the amount of manual condition checking via many different trigger scripts and legions of if condition1 == true then check condition2 can be forgotten about. All you have to do is to define the conditions and the final action that is taken if the trigger fires.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  to retrieve wildcards in multi-line or multi-condition triggers, use the <b>multimatches[line][match]</b> table instead of matches[].
+</p>
+<div class="center"><div class="floatnone"><a href="/w/File:Trigger-engine-diagram.png" class="image"><img alt="Trigger-engine-diagram.png" src="/images/5/55/Trigger-engine-diagram.png" decoding="async" width="500" height="949" class="thumbborder" /></a></div></div> 
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This diagram shows what steps are involved in the process of problem solving with Mudlets trigger engine. The main question is: How do we arrive at a solution to our problem, and how can we simplify the problem as much as possible?
+</p><p>Example: Let’s go back to our pond &amp; frog example. We have explained the difference between AND-triggers and OR-triggers. If you have a room description consisting of 3 lines:
+</p>
+<div class="light-grey-panel" style="width:100%; background:#F0F0F0; margin-top:1.2em; border:1px solid #ccc; color:#0000FF;">
+<ol><li>You see a pond</li>
+<li>You see a frog.</li>
+<li>The frog sits on a stone.</li></ol>
+</div>
+<p>Every single one of these 3 lines will be fed into the trigger engine one after another. If we define an OR-trigger with a condition list consisting of 3 condition patterns:
+</p>
+<dl><dd>condition #1 pattern = pond</dd>
+<dd>condition #2 pattern = frog</dd>
+<dd>condition #3 pattern = stone</dd></dl>
+<p>Whether or not a condition is found to be true also depends on another property, namely the type of the condition. The condition type can be among others:
+</p>
+<div class="light-grey-panel" style="width:100%; background:#F0F0F0; border:1px solid #ccc; color:#000;">
+<ol><li>substring matching → the condition is true if the condition pattern is a substring of the output line from the game. In other words: If the pattern "pond" is contained in any line of output, the condition is true.</li>
+<li>begin of line matching → the condition is only true if the condition pattern can be found at the beginning of a line from the game.</li>
+<li>Perl regular expression → the condition is true if the Perl regex pattern is matched. You’ll find more information on Perl regex below.</li>
+<li>Lua code that returns a truth value e.g. a call to a function check() that return either true or false depending on the condition</li></ol>
+</div>
+<p>In our example we chose condition type "substring" for all three conditions. Consequently, the trigger will fire the command or script 3 times i. e. the trigger will do on each line it is matched against because in every line at least one condition evaluates to true because the pattern is a substring of the line.
+</p>
+<div class="light-grey-panel" style="width:100%; background:#F0F0F0; border:1px solid #ccc; color:#000;">
+<dl><dd>in line #1 we get: pond = true.</dd>
+<dd>in line #2 we get frog = true and</dd>
+<dd>in line #3 two conditions are true i.e. frog=true and stone = true</dd></dl>
+</div>
+<p>Because an OR-trigger fires on the first condition that is true and ignores the rest the trigger will only execute 3 times on these 3 lines although 4 conditions are true.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>   <span style="color:#0000FF;"><b>CAUTION:</b> The multi line condition switch must be turned off to get an OR-trigger! If the multi-line condition switch is turned on the trigger becomes an AND trigger which means that the trigger only fires if all conditions are true and fulfilled in the correct sequence. With OR-triggers the sequence is irrelevant.</span>
+</p><p>To complicate matters, however, you don’t want your trigger to fire 3 commands, because you want to use this room description as a whole to fire your trigger e. g. this pond is the only kind of ponds in the entire world that doesn’t have poisoned water. So you want to make sure that you only drink water from a pond of this kind and from no other pond. Your solution is to use Multi Condition Triggers (MCT). If you check the MCT checkbox this trigger will fire only once from now on - and only if all conditions are met i e. when you can guarantee that you only drink water from a good pond because your drinking trigger is matching on the entire room description despite that this room description my be spread over a number of lines. (NOTE: If you have word wrap turned off in your game chances are that the entire room description will be contained in a single line, but we are trying to keep the examples as easy as possible.)
+</p><p>Sadly, there are many unfriendly people in this world and somebody goes around and poisons your good ponds. Consequently, you would want to examine the frog and find out if it is poisoned before drinking water from the pond. This is difficult because the villain is a mean magician who used illusion spells to make everything look like the good pond. To solve the problem you can now resort to Lua function conditions in the trigger condition list that perform certain check ups to put the current room description into a wider context e. g. check if you have been here before etc. This adds yet another level of complexity to your problem but this is a very powerful means to use the full potential of Mudlets MCTs.
+</p><p>You can combine all forms of conditions with trigger chains, filters and Lua functions. Mudlet gives you relatively easy to use tools that require no programming background. However, these tools can evolve into complex powerful problem solving mechanisms if they are combined with each other thus enabling non-programmer users to solve problems that would need a profound programming background in other gameclients. However, unlocking the full potential of Mudlet requires you do learn some Lua basics. In this manual we’ll try to be as easy on you as we can in this respect, but it’s highly recommended that you dig deeper into Lua after a while. It’s one of the easiest fully fledged scripting languages available, easy to learn and the fastest of them all, and this is why it has been chosen by us. You don’t need to become a programmer to be able to use Mudlet effectively. All you have to know is how to work with variables and how to do if conditions and maybe a few loops. But knowing more won’t harm you and it will make your systems more effective.
+</p>
+<h3><span id="&quot;multiline_/_AND&quot;_and_&quot;OR&quot;_Condition_Triggers"></span><span class="mw-headline" id=".22multiline_.2F_AND.22_and_.22OR.22_Condition_Triggers">"multiline / AND" and "OR" Condition Triggers</span></h3>
+<p>Multiline, or AND triggers execute their respective command or script only if all conditions in their respective conditions expression list are fulfilled. 
+</p><p>OR-Triggers execute when <b>any one of</b> their conditions is true. To make OR-Triggers you simply have to add a few conditions to the conditions list e.g. in our example: "pond", "frog", "Plop". The trigger will now also execute on lines like this: "A frog is green" or "You hear a loud Plop!" because "frog" matched in the first line and "Plop" matched in the second line.
+</p>
+<div class="thumb tnone"><div class="thumbinner" style="width:461px;"><a href="/w/File:OR_trigger.png" class="image"><img alt="" src="/images/0/0c/OR_trigger.png" decoding="async" width="459" height="269" class="thumbimage" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/w/File:OR_trigger.png" class="internal" title="Enlarge"></a></div>Any of the patterns in this trigger can match for it to fire</div></div></div>
+<p>Multiline / AND triggers execute when <b>all of</b> their conditions are true. Taking the previous patterns of "pond", "frog", "Plop" and clicking the 'AND' button will make the trigger not fire on "A frog is green" or "You hear a loud Plop!" anymore, because all 3 patterns don't match. It however would fire on "In a brown pond, the frog said Plop!" because all 3 patterns matched. As you might have noticed, all 3 patterns are on the same line: this means that in a multiline/AND trigger, the next pattern starts matching on the same line to make this work.
+</p><p>To make the engine skip lines in a multiline / AND trigger, use the line spacer pattern: select 'line spacer' as the type and put in a number on the left to make it go to the next X lines, for example 1 will make it go to the next line.
+</p><p>The simplest form of AND-Triggers in Mudlet are Trigger Chains or Filter Chains, whatever you’d like to call it.
+</p>
+<div class="thumb tnone"><div class="thumbinner" style="width:668px;"><a href="/w/File:AND_trigger.png" class="image"><img alt="" src="/images/a/a9/AND_trigger.png" decoding="async" width="666" height="229" class="thumbimage" /></a>  <div class="thumbcaption"><div class="magnify"><a href="/w/File:AND_trigger.png" class="internal" title="Enlarge"></a></div>All of the patterns have to match for it to fire. This is a common example of a "shielded regex" - don't run the expensive regex all the time unless you really need to, and match on the faster begin of line the majority of the time</div></div></div>
+<h2><span id="Trigger_Chains_&amp;_Filter_Chains"></span><span class="mw-headline" id="Trigger_Chains_.26_Filter_Chains">Trigger Chains &amp; Filter Chains</span></h2>
+<p>"Chains" and "filters" are different trigger group entities in Mudlet and serve completely different ends.
+</p>
+<h3><span class="mw-headline" id="Chains">Chains</span></h3>
+<p>A chain is defined in Mudlet by making a trigger group and adding a trigger pattern to the group. A group without a pattern is a simple trigger group that serves no other purposes than adding structure to your trigger system in order to organize your triggers better. Such a normal trigger group will always grant access to its children unless it has been explicitly disabled (= all access to itself or any of its children is locked) either manually or by a script.
+</p><p>A trigger group with a defined trigger pattern, however, will behave like a normal trigger and match if the pattern matches. Such a trigger group is called "chain head". A chain head will only grant access to its children if the trigger pattern has matched and the chain has been enabled. Thus, chains can be looked at as a mechanism to automatically enable and disable triggers or groups of triggers when a certain condition has been met i. e. the trigger pattern of the chain head has been matched. (However, technically this is not correct as disabled child triggers will not be invoked if the chain head matches. In other words, in chains you can still have enabled/disabled elements. The idea of a chain can better be described by necessary and sufficient condition - both of which need to be met before a child trigger is being run.)
+</p><p>Adding child triggers to this group will add elements to the trigger chain. These chain elements will only be activated if the chain head has matched before and thus opened the trigger chain. The chain stays open until the "keep chain open for x lines" value has been reached. The default is 0 which means that the chain only stays open for the current line. When access to the chain has been granted all child triggers will be tested against the content of the current line. Consequently, trigger chains are a means to automatically enable/disable trigger groups without the hassle of enabling and disabling trigger groups manually. This has 2 important advantages: Chains are faster than conventional solutions and chains reduce the complexity of your scripts and greatly reduce the usual system bugs that inevitably go along with enable/disable trigger xy function calls as it’s very difficult and error prone to enable and disable your triggers correctly in large complex trigger systems. This is one of the most powerful features in Mudlet and should be used whenever possible.
+</p><p>Let’s look at a practical example for a trigger chain:
+</p><p>My newbie prompt on Achaea looks like this <code>500h, 500m ex-</code> when I have balance and <code>500h, 500m e-</code> when I have lost balance. We are going to develop a prompt detection trigger that raises the event gotPrompt and sets the variables <code>myBalance=true</code> or <code>myBalance=false</code> To begin with, we add a new trigger group and add the Perl regex pattern to detect the prompt:
+</p><p><code>^(\d+)h, (\d+)m</code>
+</p><p>The pattern reads in plain English: At the beginning of a prompt line there are is a number directly followed by the letter h, a comma, a space and another number followed by the letter h. Whenever this pattern matches the trigger will fire and we’ll know that we have a prompt line. We use the 2 numbers that we captured in our pattern to update our health and mana stats.
+</p><p>Detecting balance is more difficult as balance is indicated by the letters ex- on the same line after the prompt and imbalance is indicated by the letters e-. As we have set a pattern in a trigger group (folder), the folder is turned into a trigger chain head. It will now only let data through to its children when its own pattern is matched. In other words, the child triggers of the trigger chain will only receive data on prompt lines. We are going to take advantage of this by adding two simple substring triggers to detect balance and imbalance. The balance trigger pattern is ex- and the imbalance detector pattern is e-.
+</p><p>In the two balance detection triggers we now write <code>myBalance=false</code> and <code>myBalance=true</code> respectively plus a little echo on the screen that shows our current balance status.
+</p><p>We could now add a call <code>deleteLine()</code> to the prompt detection trigger to erase the prompt from the screen if we don’t want to see it as we have computed all relevant information.
+</p>
+<h3><span class="mw-headline" id="Filters">Filters</span></h3>
+<p>You can turn a trigger chain head into a filter by checking the "only pass matches" option. This changes the content of what is forwarded as trigger text to the children triggers in the chain. Chains forward the content of the current line as trigger text whereas filters forward the matched pattern instead of the current line. In other words, the text of the current line is filtered according to the pattern of the filter. For example: You want to know the exits in the current room. The simplest solution is a simple filter on <code>You see exits to: (.*)</code> Then you simply add triggers to the filter chain such as <code>north</code>, <code>south</code>, <code>west</code>, <code>east</code> etc. The direction triggers will only be called if the filter head has matched.
+</p><p>Imagine the following scenario: You want to collect some berries. You know that the room contains some berries if the room description contains the words "You are inside a forest. There are some strawberries." or "You are inside a forest. There are some blackberries." and there are always only one kind of berry in the room. You make a new substring trigger for this line, but instead of choosing a regular trigger, you chose to add a new trigger group. Now you add <code>You are inside a forest\. There are some (\w+)\.</code> as an Regular Expression to the expression list of the trigger group. <b><span style="color:blue">When adding conditions to a trigger group, the trigger group turns from an organizational unit into a filter unit, if the "filter" option is checked.</span></b> From now on this folder is a filter and will only let its matches pass through. In our case this is exactly what we want, because we don’t want to collect all sorts of berries, but we only want 2 particular kinds, namely, strawberries and blackberries, and we know that these berries can only be trusted if they are picked inside a forest as other areas may contain contaminated berries. Now you add two regular triggers to our berry-in-the-forest filter - one containing the condition: <code>strawberries</code> and the other one <code>blackberries</code>. Then we add the commands to pick the particular kind of berry to both triggers (send field). Now what happens is that as soon as a room description reads "You are inside a forest. There are some strawberries/blackberries." the filter will let the kind of berry pass through to our two berry triggers and they will issue commands to pick berries, if there are such berries. However, in any other situation the words "strawberries" and "blackberries" will NOT trigger a pick - only in the above scenario when the filter parent’s condition is met. This is a very nice way to solve complicated problems with a few easy filter chains. This example is trivial, but using filter chains will rapidly show you how formerly complicated things that could only be solved with very complicated regular expressions can be solved easily now with a couple of filter chains.
+</p>
+<h2><span class="mw-headline" id="Named_Capture_Patterns">Named Capture Patterns</span></h2>
+<p>You can use named patterns - that is, giving your captures names instead of [2], [3], [4] numbers - by adding <b>?&lt;variablename&gt;</b> to your capture in Mudlet 4.11+:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>-- before: 
+(\w+) = matches[2]
+
+-- now:
+(?&lt;name&gt;\w+) = matches.name or matches["name"]
+(?&lt;weapon&gt;\w+) = matches.weapon or matches["weapon"]</pre></div>
+<p>This can be particularly handy if you have several patterns in a trigger and the location of matches[n] moves around. Try this out in <a rel="nofollow" class="external text" href="https://forums.mudlet.org/viewtopic.php?f=6&amp;t=23040">a demo package</a>.
+</p><p>Named capture groups still will be available under their respective number in <code>matches</code>.
+</p><p>You can programatically check if your Mudlet supports this feature with <code>mudlet.supports.namedPatterns</code>.
+</p><p>Example: 
+</p><p>Let's assume we want to capture name and class of character, but MUD outputs it two ways.
+</p>
+<ol><li><code>My name is Dargoth. My class is a warrior.</code></li>
+<li><code>I am a wizard and my name is Delwing.</code></li></ol>
+<p>Instead of creating two different triggers we can create only one containing alternative matching patterns:
+</p>
+<ol><li><code>^My name is (?&lt;name&gt;\w+)\. My class is a (?&lt;class&gt;\w+)\.</code></li>
+<li><code>^I am a (?&lt;class&gt;\w+)\ and my name is (?&lt;name&gt;\w+)\.</code></li></ol>
+<p>Notice that class and name come in different order, therefore in first case we will have name under matches[2] and in second case under matches[3]. With named capture groups in both cases we will have name available under matches.name and class under matches.class.
+</p><p>Code example to handle named matches above:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre>  echo("Name: " .. matches.name .. "\n")
+  echo("Class: " .. matches.class .. "\n")</pre></div>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  To verify whether named groups are available you can use flag <code>mudlet.supports.namedGroups</code>.
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20241120204304
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.064 seconds
+Real time usage: 0.126 seconds
+Preprocessor visited node count: 213/1000000
+Post‐expand include size: 713/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 2279/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   86.819      1 -total
+  4.73%    4.103     10 Template:Note
+  3.96%    3.437      1 Template:TOC_right
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:190-0!canonical and timestamp 20241120204328 and revision id 22134
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:Trigger_Engine&amp;oldid=22134">https://wiki.mudlet.org/index.php?title=Manual:Trigger_Engine&amp;oldid=22134</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/w/Category:Pages_with_syntax_highlighting_errors" title="Category:Pages with syntax highlighting errors">Pages with syntax highlighting errors</a></li><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3ATrigger+Engine" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3ATrigger+Engine" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:Trigger_Engine">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:Trigger_Engine&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:Trigger_Engine">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:Trigger_Engine&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:Trigger_Engine&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:Trigger_Engine" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:Trigger_Engine" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:Trigger_Engine&amp;oldid=22134" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:Trigger_Engine&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 20 November 2024, at 20:43.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.064","walltime":"0.126","ppvisitednodes":{"value":213,"limit":1000000},"postexpandincludesize":{"value":713,"limit":2097152},"templateargumentsize":{"value":0,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":2279,"limit":5000000},"timingprofile":["100.00%   86.819      1 -total","  4.73%    4.103     10 Template:Note","  3.96%    3.437      1 Template:TOC_right"]},"cachereport":{"timestamp":"20241120204304","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":58});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1cbcf183c8a',t:'MTc5Mzk4NzQ2OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1cbcf183c8a',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20241121004527 -->
+</html>

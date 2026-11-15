@@ -1,0 +1,895 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:Table Functions - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"aeMycm6ZLAi4J8820cyy4AAAAAI","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:Table_Functions","wgTitle":"Table Functions","wgCurRevisionId":23083,"wgRevisionId":23083,"wgArticleId":159,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Mudlet Manual","Mudlet API"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:Table_Functions","wgRelevantArticleId":159,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],
+"wgULSAcceptLanguageList":["en-us","en"],"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Mudlet API documentation for functions to manipulate tables. Through them you can add to tables, remove values, check if a value is present in the table, check the size of a table, and more."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="Table Functions"/>
+
+	<meta property="og:description" content="Mudlet API documentation for functions to manipulate tables. Through them you can add to tables, remove values, check if a value is present in the table, check the size of a table, and more."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:Table_Functions"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_Table_Functions rootpage-Manual_Table_Functions skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:Table Functions</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Table_Functions"><span class="tocnumber">1</span> <span class="toctext">Table Functions</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#spairs"><span class="tocnumber">1.1</span> <span class="toctext">spairs</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#table.collect"><span class="tocnumber">1.2</span> <span class="toctext">table.collect</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#table.complement"><span class="tocnumber">1.3</span> <span class="toctext">table.complement</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#table.concat"><span class="tocnumber">1.4</span> <span class="toctext">table.concat</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#table.contains"><span class="tocnumber">1.5</span> <span class="toctext">table.contains</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#table.deepcopy"><span class="tocnumber">1.6</span> <span class="toctext">table.deepcopy</span></a></li>
+<li class="toclevel-2 tocsection-8"><a href="#table.intersection"><span class="tocnumber">1.7</span> <span class="toctext">table.intersection</span></a></li>
+<li class="toclevel-2 tocsection-9"><a href="#table.insert"><span class="tocnumber">1.8</span> <span class="toctext">table.insert</span></a></li>
+<li class="toclevel-2 tocsection-10"><a href="#table.index_of"><span class="tocnumber">1.9</span> <span class="toctext">table.index_of</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#table.is_empty"><span class="tocnumber">1.10</span> <span class="toctext">table.is_empty</span></a></li>
+<li class="toclevel-2 tocsection-12"><a href="#table.keys"><span class="tocnumber">1.11</span> <span class="toctext">table.keys</span></a></li>
+<li class="toclevel-2 tocsection-13"><a href="#table.load"><span class="tocnumber">1.12</span> <span class="toctext">table.load</span></a></li>
+<li class="toclevel-2 tocsection-14"><a href="#table.matches"><span class="tocnumber">1.13</span> <span class="toctext">table.matches</span></a></li>
+<li class="toclevel-2 tocsection-15"><a href="#table.maxn"><span class="tocnumber">1.14</span> <span class="toctext">table.maxn</span></a></li>
+<li class="toclevel-2 tocsection-16"><a href="#table.n_collect"><span class="tocnumber">1.15</span> <span class="toctext">table.n_collect</span></a></li>
+<li class="toclevel-2 tocsection-17"><a href="#table.n_filter"><span class="tocnumber">1.16</span> <span class="toctext">table.n_filter</span></a></li>
+<li class="toclevel-2 tocsection-18"><a href="#table.n_flatten"><span class="tocnumber">1.17</span> <span class="toctext">table.n_flatten</span></a></li>
+<li class="toclevel-2 tocsection-19"><a href="#table.n_matches"><span class="tocnumber">1.18</span> <span class="toctext">table.n_matches</span></a></li>
+<li class="toclevel-2 tocsection-20"><a href="#table.n_union"><span class="tocnumber">1.19</span> <span class="toctext">table.n_union</span></a></li>
+<li class="toclevel-2 tocsection-21"><a href="#table.n_complement"><span class="tocnumber">1.20</span> <span class="toctext">table.n_complement</span></a></li>
+<li class="toclevel-2 tocsection-22"><a href="#table.n_intersection"><span class="tocnumber">1.21</span> <span class="toctext">table.n_intersection</span></a></li>
+<li class="toclevel-2 tocsection-23"><a href="#table.pickle"><span class="tocnumber">1.22</span> <span class="toctext">table.pickle</span></a></li>
+<li class="toclevel-2 tocsection-24"><a href="#table.remove"><span class="tocnumber">1.23</span> <span class="toctext">table.remove</span></a></li>
+<li class="toclevel-2 tocsection-25"><a href="#table.save"><span class="tocnumber">1.24</span> <span class="toctext">table.save</span></a></li>
+<li class="toclevel-2 tocsection-26"><a href="#table.sort"><span class="tocnumber">1.25</span> <span class="toctext">table.sort</span></a></li>
+<li class="toclevel-2 tocsection-27"><a href="#table.size"><span class="tocnumber">1.26</span> <span class="toctext">table.size</span></a></li>
+<li class="toclevel-2 tocsection-28"><a href="#table.unpickle"><span class="tocnumber">1.27</span> <span class="toctext">table.unpickle</span></a></li>
+<li class="toclevel-2 tocsection-29"><a href="#table.update"><span class="tocnumber">1.28</span> <span class="toctext">table.update</span></a></li>
+<li class="toclevel-2 tocsection-30"><a href="#table.union"><span class="tocnumber">1.29</span> <span class="toctext">table.union</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="Table_Functions">Table Functions</span></h1>
+<p>These functions are used to manipulate tables. Through them you can add to tables, remove values, check if a value is present in the table, check the size of a table, and more.
+</p>
+<h2><span class="mw-headline" id="spairs">spairs</span></h2>
+<dl><dt>spairs(tbl, sortFunction)</dt>
+<dd>Returns an iterator similar to pairs(tbl) but sorts the keys before iterating through them.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>tbl:</i></li></ul>
+<dl><dd>The table to iterate over</dd></dl>
+<ul><li><i>sortFunction:</i></li></ul>
+<dl><dd>The function to use for determining what order to iterate the items in the table. Defaults to alphanumeric sorting by key. Similar to <a href="/w/Manual:Lua_Functions#table.sort" title="Manual:Lua Functions">table.sort</a>. See example for more info.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.10</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">tbl</span> <span class="o">=</span> <span class="p">{</span> <span class="n">Tom</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">Mary</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">Joe</span> <span class="o">=</span> <span class="mi">23</span> <span class="p">}</span>
+
+<span class="c1">-- This iterates, sorting based on the key (which is the name in this case)</span>
+<span class="kr">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">thingies</span> <span class="kr">in</span> <span class="n">spairs</span><span class="p">(</span><span class="n">tbl</span><span class="p">)</span> <span class="kr">do</span>
+  <span class="n">echo</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;%s has %d thingies</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">thingies</span><span class="p">))</span>
+<span class="kr">end</span>
+<span class="cm">--[[</span>
+<span class="cm">Joe has 23 thingies</span>
+<span class="cm">Mary has 50 thingies</span>
+<span class="cm">Tom has 40 thingies</span>
+<span class="cm">--]]</span>
+
+<span class="c1">-- The function used below sorts based on the value. </span>
+<span class="kr">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">thingies</span> <span class="kr">in</span> <span class="n">spairs</span><span class="p">(</span><span class="n">tbl</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="kr">return</span> <span class="n">t</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="kr">end</span><span class="p">)</span> <span class="kr">do</span> <span class="c1">--iterate from lowest value to highest</span>
+  <span class="n">echo</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;%s has %d thingies</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">thingies</span><span class="p">))</span>
+<span class="kr">end</span>
+<span class="cm">--[[</span>
+<span class="cm">Joe has 23 thingies</span>
+<span class="cm">Tom has 40 thingies</span>
+<span class="cm">Mary has 50 thingies</span>
+<span class="cm">--]]</span>
+
+<span class="c1">-- This function can be used to sort a group of Geyser gauges based on their value (what percentage of the gauge is filled)</span>
+<span class="kd">local</span> <span class="n">gaugeSort</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">avalue</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">a</span><span class="p">].</span><span class="n">value</span> <span class="ow">or</span> <span class="mi">100</span> <span class="c1">-- treat non-gauges as though they are full gauges. If you know for -sure- the table only has gauges the &#39;or 100&#39; is not needed.</span>
+    <span class="kd">local</span> <span class="n">bvalue</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">b</span><span class="p">].</span><span class="n">value</span> <span class="ow">or</span> <span class="mi">100</span>
+    <span class="kr">return</span> <span class="n">avalue</span> <span class="o">&lt;</span> <span class="n">bvalue</span>
+<span class="kr">end</span>
+<span class="kr">for</span> <span class="n">_</span><span class="p">,</span><span class="n">gauge</span> <span class="kr">in</span> <span class="n">spairs</span><span class="p">(</span><span class="n">tblOfGauges</span><span class="p">,</span> <span class="n">gaugeSort</span><span class="p">)</span> <span class="kr">do</span>
+  <span class="c1">-- do what you want with the gauges. First one will be the least full, then the next least full, until the last which will be the most full. </span>
+  <span class="c1">-- If you replace the &lt; with a &gt; it will go from most full to least full instead.</span>
+<span class="kr">end</span>
+
+<span class="c1">-- This function sorts a table according to a priority field</span>
+<span class="kd">local</span> <span class="n">items</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="p">[</span><span class="s2">&quot;a pencil&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>  <span class="n">priority</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">},</span>
+  <span class="p">[</span><span class="s2">&quot;a pen&quot;</span><span class="p">]</span>    <span class="o">=</span> <span class="p">{</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">priority</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">},</span>
+  <span class="p">[</span><span class="s2">&quot;a marker&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>   <span class="n">priority</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">},</span>
+  <span class="p">[</span><span class="s2">&quot;a crayon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">priority</span> <span class="o">=</span> <span class="mi">4</span> <span class="p">},</span>
+<span class="p">}</span>
+
+<span class="kr">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="kr">in</span> <span class="n">spairs</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">t</span><span class="p">[</span><span class="n">a</span><span class="p">].</span><span class="n">priority</span> <span class="o">&lt;</span> <span class="n">t</span><span class="p">[</span><span class="n">b</span><span class="p">].</span><span class="n">priority</span>
+<span class="kr">end</span><span class="p">)</span> <span class="kr">do</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">color</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">priority</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">--output</span>
+<span class="n">a</span> <span class="n">marker</span>    <span class="n">red</span>    <span class="mi">1</span>    
+<span class="n">a</span> <span class="n">pen</span>    <span class="n">black</span>    <span class="mi">2</span>    
+<span class="n">a</span> <span class="n">pencil</span>    <span class="n">blue</span>    <span class="mi">3</span>    
+<span class="n">a</span> <span class="n">crayon</span>    <span class="n">green</span>    <span class="mi">4</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.collect">table.collect</span></h2>
+<dl><dt>table.collect(tbl, func)</dt>
+<dd>Returns a table that is every key-value pair from tbl for which func(key,value) returns true</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>tbl:</i></li></ul>
+<dl><dd>The table to collect items from</dd></dl>
+<ul><li><i>func:</i></li></ul>
+<dl><dd>the function to use for testing if an item should be collected or not</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.8</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">vitals</span> <span class="o">=</span> <span class="p">{</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">3482</span><span class="p">,</span> <span class="n">maxhp</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span> <span class="n">mana</span> <span class="o">=</span> <span class="mi">3785</span><span class="p">,</span> <span class="n">maxmana</span> <span class="o">=</span> <span class="mi">5000</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">pullHpKeys</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="nb">string.match</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;hp&quot;</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kc">true</span> <span class="kr">end</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">hp_values</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">collect</span><span class="p">(</span><span class="n">vitals</span><span class="p">,</span> <span class="n">pullHpKeys</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">hp_values</span><span class="p">)</span>
+</pre></div>
+<p>This prints the following:
+</p>
+<pre>{
+  hp = 3482,
+  maxhp = 5000
+}
+</pre>
+<dl><dt>Returns</dt>
+<dd>A table containing all the key/value pairs from tbl that cause func(key,value) to return true</dd></dl>
+<h2><span class="mw-headline" id="table.complement">table.complement</span></h2>
+<dl><dt>table.complement (set1, set2)</dt>
+<dd>Returns a table that is the relative complement of the first table with respect to the second table. Returns a complement of key/value pairs.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table1:</i></li>
+<li><i>table2:</i></li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">t1</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">t2</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">comp</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">complement</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+</pre></div>
+<p>This prints the following:
+</p>
+<pre>  key = 1,
+  [2] = 2,
+  [3] = 3
+</pre>
+<dl><dt>Returns</dt>
+<dd>A table containing all the key/value pairs from table1 that do not match the key/value pairs from table2.</dd></dl>
+<h2><span class="mw-headline" id="table.concat">table.concat</span></h2>
+<dl><dt>table.concat(table, [delimiter], [startingindex], [endingindex])</dt>
+<dd>Joins a table into a string. Each item must be something which can be transformed into a string.</dd>
+<dd>Returns the joined string.</dd>
+<dd>See also: <a href="/w/Manual:Lua_Functions#string.split" title="Manual:Lua Functions">string.split</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table to concatenate into a string. Passed as a table.</dd></dl>
+<ul><li><b>delimiter:</b></li></ul>
+<dl><dd>Optional string to use to separate each element in the joined string. Passed as a string.</dd></dl>
+<ul><li><b>startingindex:</b></li></ul>
+<dl><dd>Optional parameter to specify which index to begin the joining at. Passed as an integer.</dd></dl>
+<ul><li><b>endingindex:</b></li></ul>
+<dl><dd>Optional parameter to specify the last index to join. Passed as an integer.</dd></dl>
+<dl><dt>Examples</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">--This shows a basic concat with none of the optional arguments</span>
+<span class="n">testTable</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span><span class="s2">&quot;blah&quot;</span><span class="p">,}</span>
+<span class="n">testString</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">testTable</span><span class="p">)</span>
+<span class="c1">--testString would be equal to &quot;12hiblah&quot;</span>
+
+<span class="c1">--This example shows the concat using the optional delimiter</span>
+<span class="n">testString</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">testTable</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">)</span>
+<span class="c1">--testString would be equal to &quot;1, 2, hi, blah&quot;</span>
+
+<span class="c1">--This example shows the concat using the delimiter and the optional starting index</span>
+<span class="n">testString</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">testTable</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">--testString would be equal to &quot;2, hi, blah&quot;</span>
+
+<span class="c1">--And finally, one which uses all of the arguments</span>
+<span class="n">testString</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">testTable</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">--testString would be equal to &quot;2, hi&quot;</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.contains">table.contains</span></h2>
+<dl><dt>table.contains (t, value)</dt>
+<dd>Determines if a table contains a value as a key or as a value (recursive as of Mudlet 4.8+).</dd>
+<dd>Returns true or false</dd></dl>
+<dl><dt>See also</dt>
+<dd><a href="/w/Manual:Lua_Functions#table.index_of" title="Manual:Lua Functions">table.index_of</a></dd></dl>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This tests for the 'value' parameter as either a <b>key</b> or <b>value</b> in the table. That means this will return true: table.contains({"Bob"}, 1)
+</p>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>t:</b></li></ul>
+<dl><dd>The table in which you are checking for the presence of the item as key or value..</dd></dl>
+<ul><li><b>value:</b></li></ul>
+<dl><dd>The value you are checking for within the table.</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">test_table</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;value1&quot;</span><span class="p">,</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span> <span class="s2">&quot;value3&quot;</span><span class="p">,</span> <span class="s2">&quot;value4&quot;</span><span class="p">,</span> <span class="s2">&quot;value5&quot;</span><span class="p">,</span> <span class="s2">&quot;value6&quot;</span><span class="p">,</span> <span class="s2">&quot;value7&quot;</span><span class="p">}</span>
+<span class="kr">if</span> <span class="n">table</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">test_table</span><span class="p">,</span> <span class="s2">&quot;value1&quot;</span><span class="p">)</span> <span class="kr">then</span> 
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Got value 1!&quot;</span><span class="p">)</span>
+<span class="kr">else</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Don&#39;t have it. Sorry!&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- if the table has just a few values, you can skip making a local, named table:</span>
+<span class="kr">if</span> <span class="n">table</span><span class="p">.</span><span class="n">contains</span><span class="p">({</span><span class="s2">&quot;Anna&quot;</span><span class="p">,</span> <span class="s2">&quot;Alanna&quot;</span><span class="p">,</span> <span class="s2">&quot;Hanna&quot;</span><span class="p">},</span> <span class="s2">&quot;Anna&quot;</span><span class="p">)</span> <span class="kr">then</span> 
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Have &#39;Anna&#39; in the list!&quot;</span><span class="p">)</span>
+<span class="kr">else</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Don&#39;t have the name. Sorry!&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- don&#39;t forget, it will return true if the item is a key in the table as well</span>
+<span class="n">display</span><span class="p">(</span><span class="n">table</span><span class="p">.</span><span class="n">contains</span><span class="p">({</span><span class="s2">&quot;bob&quot;</span><span class="p">},</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">-- displays true, as 1 is the key/index for &quot;bob&quot;</span>
+<span class="c1">-- If you really only want to check values, try table.index_of, which returns the key a value is found at, or nil if it is not found.</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.deepcopy">table.deepcopy</span></h2>
+<dl><dt>table.deepcopy (table)</dt>
+<dd>Returns a complete copy of the table.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table which you'd like to get a copy of.</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">test_table</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;value1&quot;</span><span class="p">,</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span> <span class="s2">&quot;value3&quot;</span><span class="p">,</span> <span class="s2">&quot;value4&quot;</span> <span class="p">}</span>
+
+<span class="c1">-- by just doing:</span>
+<span class="kd">local</span> <span class="n">newtable</span> <span class="o">=</span> <span class="n">test_table</span>
+<span class="c1">-- you&#39;re linking newtable to test_table. Any change in test_table will be reflected in newtable.</span>
+
+<span class="c1">-- however, by doing:</span>
+<span class="kd">local</span> <span class="n">newtable</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">test_table</span><span class="p">)</span>
+<span class="c1">-- the two tables are completely separate now.</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.intersection">table.intersection</span></h2>
+<dl><dt>table.intersection (set1, set2)</dt>
+<dd>Returns a table that is the relative intersection of the first table with respect to the second table. Returns a intersection of key/value pairs.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table1:</i></li>
+<li><i>table2:</i></li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">t1</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">t2</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">intersect</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">intersect</span><span class="p">)</span>
+</pre></div>
+<p>This prints the following:
+</p>
+<pre>  key = 1,
+  1
+</pre>
+<dl><dt>Returns</dt>
+<dd>A table containing all the key/value pairs from table1 that match the key/value pairs from table2.</dd></dl>
+<h2><span class="mw-headline" id="table.insert">table.insert</span></h2>
+<dl><dt>table.insert(table, [pos,] value)</dt>
+<dd>Inserts element <b>value</b> at position <b>pos</b> in <b>table</b>, shifting up other elements to open space, if necessary. The default <b>value</b> for <b>pos</b> is n+1, where n is the length of the table, so that a call table.insert(t,x) inserts x at the end of table t.</dd>
+<dd>See also: <a href="/w/Manual:Lua_Functions#table.remove" title="Manual:Lua Functions">table.remove</a></dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table in which you are inserting the value</dd></dl>
+<ul><li><b>pos:</b></li></ul>
+<dl><dd>Optional argument, determining where the value will be inserted.</dd></dl>
+<ul><li><b>value:</b></li></ul>
+<dl><dd>The variable that you are inserting into the table. Can be a regular variable, or even a table or function*.</dd></dl>
+<dl><dt>Examples</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">--it will insert whats inside the variable of matches[2] into at the end of table of &#39;test_db_name&#39;. </span>
+<span class="nb">table.insert</span><span class="p">(</span><span class="n">test_db_name</span><span class="p">,</span> <span class="n">matches</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="c1">--it will insert other thing at the first position of this table.</span>
+<span class="nb">table.insert</span><span class="p">(</span><span class="n">test_db_name</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;jgcampbell300&quot;</span><span class="p">)</span>
+
+<span class="cm">--[=[</span>
+
+<span class="cm">This results:</span>
+
+<span class="cm">test_db_name = {</span>
+<span class="cm">    &quot;jgcampbell300&quot;,</span>
+<span class="cm">    &quot;SlySven&quot;</span>
+<span class="cm">}</span>
+<span class="cm">]=]</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.index_of">table.index_of</span></h2>
+<dl><dt>table.index_of(table, value)</dt></dl>
+<p>Returns the index (location) of an item in an indexed table, or <b>nil</b> if it's not found. Think of it as a table.find function (although it is called table.index_of).
+</p>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table in which you are searching the value</dd></dl>
+<ul><li><b>value:</b></li></ul>
+<dl><dd>The variable that you are searching for in the table.</dd></dl>
+<dl><dt>Examples</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- will return 1, because &#39;hi&#39; is the first item in the list</span>
+<span class="n">table</span><span class="p">.</span><span class="n">index_of</span><span class="p">({</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">},</span> <span class="s2">&quot;hi&quot;</span><span class="p">)</span>
+
+<span class="c1">-- will return 3, because &#39;greetings&#39; is third in the list</span>
+<span class="n">table</span><span class="p">.</span><span class="n">index_of</span><span class="p">({</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">},</span> <span class="s2">&quot;greetings&quot;</span><span class="p">)</span>
+
+<span class="c1">-- you can also use this in combination with table.remove(), which requires the location of the item to delete</span>
+<span class="kd">local</span> <span class="n">words</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">}</span>
+<span class="nb">table.remove</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">table</span><span class="p">.</span><span class="n">index_of</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">))</span>
+
+<span class="c1">-- however that won&#39;t work if the word isn&#39;t present, table.remove(mytable, nil (from table.index_of)) will give an error</span>
+<span class="c1">-- so if you&#39;re unsure, confirm with table.contains first</span>
+<span class="kd">local</span> <span class="n">words</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">}</span>
+<span class="kr">if</span> <span class="n">table</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="nb">table.remove</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">table</span><span class="p">.</span><span class="n">index_of</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="s2">&quot;greetings&quot;</span><span class="p">))</span>
+<span class="kr">end</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.is_empty">table.is_empty</span></h2>
+<dl><dt>table.is_empty(table)</dt>
+<dd>Check if a table is devoid of any values.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table you are checking for values.</dd></dl>
+<h2><span class="mw-headline" id="table.keys">table.keys</span></h2>
+<dl><dt>table.keys(table)</dt>
+<dd>return a table that is the collection of the keys in use by the table passed in</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table you are collecting keys from.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.1</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span>   <span class="kd">local</span> <span class="n">testTable</span> <span class="o">=</span> <span class="p">{</span>
+     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;thing&quot;</span><span class="p">,</span>
+     <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+     <span class="n">malfunction</span> <span class="o">=</span> <span class="s2">&quot;major&quot;</span>
+   <span class="p">}</span>
+   <span class="kd">local</span> <span class="n">keys</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">keys</span><span class="p">(</span><span class="n">testTable</span><span class="p">)</span>
+   <span class="c1">-- key is now a table { &quot;name&quot;, &quot;type&quot;, &quot;malfunction&quot; } but the order cannot be guaranteed</span>
+   <span class="c1">-- as pairs() does not iterate in a guaranteed order. If you want the keys in alphabetical</span>
+   <span class="c1">-- run table.sort(keys) and keys == { &quot;malfunction&quot;, &quot;name&quot;, &quot;type&quot; }</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.load">table.load</span></h2>
+<dl><dt>table.load(location, table)</dt>
+<dd>Load a table from an external file into mudlet.</dd>
+<dd>See also: <a href="/w/Manual:Lua_Functions#table.save" title="Manual:Lua Functions">table.save</a></dd></dl>
+<p>Tip: you can load a table from anywhere on your computer, but it's preferable to have them consolidated somewhere connected to Mudlet, such as the <a href="/w/Manual:Lua_Functions#getMudletHomeDir" title="Manual:Lua Functions">current profile</a>.
+</p>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><b>location:</b></li></ul>
+<dl><dd>Where you are loading the table from. Can be anywhere on your computer.</dd></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table that you are loading into - it must exist already.</dd></dl>
+<dl><dd>Example:</dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- This will load the table mytable from the lua file mytable present in your Mudlet Home Directory.</span>
+<span class="n">mytable</span> <span class="o">=</span> <span class="n">mytable</span> <span class="ow">or</span> <span class="p">{}</span>
+<span class="kr">if</span> <span class="n">io</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">getMudletHomeDir</span><span class="p">()</span><span class="o">..</span><span class="s2">&quot;/mytable.lua&quot;</span><span class="p">)</span> <span class="kr">then</span>
+  <span class="n">table</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">getMudletHomeDir</span><span class="p">()</span><span class="o">..</span><span class="s2">&quot;/mytable.lua&quot;</span><span class="p">,</span> <span class="n">mytable</span><span class="p">)</span> <span class="c1">-- using / is OK on Windows too.</span>
+<span class="kr">end</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.matches">table.matches</span></h2>
+<dl><dt>table.matches(tbl, pattern, [pattern2], [pattern_n], [check_keys])</dt>
+<dd>Returns a table of key-value pairs from tbl which match one of the supplied patterns when checked via string.match. This function is not recursive - nested tables within tbl will not be checked, only the top-level.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>tbl:</i></li></ul>
+<dl><dd>the table you want to check over using string.match</dd></dl>
+<ul><li><i>pattern:</i></li></ul>
+<dl><dd>the pattern you want to use to check each key-value pair. You may specify multiple patterns, separated by commas</dd></dl>
+<ul><li><i>check_keys:</i></li></ul>
+<dl><dd>boolean argument, set to true if you want to include a key-value pair if the key or value string.matches. If you do not set this, only the value will be checked</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.8</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">items</span> <span class="o">=</span> <span class="p">{</span> <span class="n">this</span> <span class="o">=</span> <span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="n">something</span> <span class="o">=</span> <span class="s2">&quot;else&quot;</span><span class="p">,</span> <span class="n">more</span> <span class="o">=</span> <span class="s2">&quot;keypairs&quot;</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="s2">&quot;%d&quot;</span><span class="p">)</span>
+<span class="c1">-- here matches will be { hp = 400 }</span>
+<span class="kd">local</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="s2">&quot;%d&quot;</span><span class="p">,</span> <span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+<span class="c1">-- here matches will be { hp = 400, this = &quot;that&quot;, [4] = &quot;toast&quot; }</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.maxn">table.maxn</span></h2>
+<dl><dt>table.maxn(table)</dt>
+<dd>Returns the largest positive numerical index of the given table, or zero if the table has no positive numerical indices. (To do its job this function does a linear traversal of the whole table.)</dd></dl>
+<h2><span class="mw-headline" id="table.n_collect">table.n_collect</span></h2>
+<dl><dt>table.n_collect(tbl, func(value))</dt>
+<dd>returns a table which contains every unique value from tbl for which func(value) returns true. Ignores keys. Table returned is ipairs iterable.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>tbl:</i></li></ul>
+<dl><dd>the table you want to collect values from</dd></dl>
+<ul><li><i>func(value):</i></li></ul>
+<dl><dd>the function to check each value against</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.8</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">items</span> <span class="o">=</span> <span class="p">{</span> 
+  <span class="n">this</span> <span class="o">=</span> <span class="s2">&quot;that&quot;</span><span class="p">,</span>
+  <span class="n">other</span> <span class="o">=</span> <span class="s2">&quot;thing&quot;</span><span class="p">,</span>
+  <span class="n">otter</span> <span class="o">=</span> <span class="s2">&quot;potato&quot;</span><span class="p">,</span>
+  <span class="n">honey</span> <span class="o">=</span> <span class="s2">&quot;bee&quot;</span>
+<span class="p">}</span>
+<span class="kd">local</span> <span class="n">beginsWithTH</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="nb">string.match</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;^th&quot;</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kc">true</span> <span class="kr">end</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">nmatches</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_collect</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">beginsWithTH</span><span class="p">)</span>
+<span class="c1">-- nmatches will be { &quot;that&quot;, &quot;thing&quot; }</span>
+<span class="c1">-- the order will not necessarily be preserved</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.n_filter">table.n_filter</span></h2>
+<dl><dt>table.n_filter(table, function(element[, index[, table]]))</dt>
+<dd>Returns a new table with all elements that pass the test implemented by the provided function. If no elements pass the test, an empty table will be returned.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table:</i> the table you wish to filter values out of.</li>
+<li><i>function:</i> the function to test each element of the array. Return true to keep the element, false otherwise. It accepts three arguments:
+<ul><li><i>element:</i> The current element being processed in the table.</li>
+<li><i>index:</i> (optional) The index of the current element being processed in the table.</li>
+<li><i>table:</i> (optional) The table <b>n_filter</b> was called upon.</li></ul></li></ul>
+<dl><dt>Examples</dt>
+<dd></dd></dl>
+<p>Filter out small values:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">isBigEnough</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="kr">return</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="n">filtered</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_filter</span><span class="p">({</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">44</span><span class="p">},</span> <span class="n">isBigEnough</span><span class="p">)</span>
+<span class="c1">-- filtered: {12, 130, 44}</span>
+</pre></div>
+<p>Filter out invalid entries:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">invalidEntries</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kd">local</span> <span class="n">entries</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">15</span> <span class="p">},</span> <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="p">},</span> <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">},</span> <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">3</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="mf">12.2</span> <span class="p">},</span> <span class="p">{</span> <span class="p">},</span> <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="kc">nil</span> <span class="p">},</span> <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="kc">false</span> <span class="p">},</span>
+  <span class="p">{</span> <span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;not a number&#39;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">isNumber</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="kr">return</span> <span class="n">t</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">filterByID</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">isNumber</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="p">.</span><span class="n">id</span> <span class="o">~=</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="kc">true</span>
+  <span class="kr">end</span>
+  <span class="n">invalidEntries</span> <span class="o">=</span> <span class="n">invalidEntries</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">return</span> <span class="kc">false</span>
+<span class="kr">end</span>
+
+<span class="kd">local</span> <span class="n">entriesByID</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_filter</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">filterByID</span><span class="p">)</span>
+<span class="c1">-- invalidEntries: 5</span>
+<span class="c1">-- entriesByID: { { id = 15 }, { id = -1 }, { id = 3 }, { id = 12.2 } }</span>
+</pre></div>
+<p>Filter out content based on search criteria:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">fruits</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;banana&#39;</span><span class="p">,</span> <span class="s1">&#39;grapes&#39;</span><span class="p">,</span> <span class="s1">&#39;mango&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">}</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">filterItems</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">table</span><span class="p">.</span><span class="n">n_filter</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">item</span><span class="p">:</span><span class="n">lower</span><span class="p">():</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">:</span><span class="n">lower</span><span class="p">())</span>
+  <span class="kr">end</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">filterItems</span><span class="p">(</span><span class="n">fruits</span><span class="p">,</span> <span class="s1">&#39;ap&#39;</span><span class="p">)</span> <span class="c1">-- {&#39;apple&#39;, &#39;grapes&#39;}</span>
+<span class="n">filterItems</span><span class="p">(</span><span class="n">fruits</span><span class="p">,</span> <span class="s1">&#39;an&#39;</span><span class="p">)</span> <span class="c1">-- {&#39;banana&#39;, &#39;mango&#39;, &#39;orange&#39;}</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.n_flatten">table.n_flatten</span></h2>
+<dl><dt>table.n_flatten(table)</dt>
+<dd>Returns a new table with the sub-table elements concatenated into it.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table:</i> A table of nested sub-tables you wish to flatten.</li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">t1</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}};</span>
+<span class="kd">local</span> <span class="n">t2</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}}};</span>
+<span class="kd">local</span> <span class="n">t3</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">}}}}};</span>
+<span class="n">table</span><span class="p">.</span><span class="n">n_flatten</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span> <span class="c1">-- {1, 2, 3, 4}</span>
+<span class="n">table</span><span class="p">.</span><span class="n">n_flatten</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="c1">-- {1, 2, 3, 4, 5, 6}</span>
+<span class="n">table</span><span class="p">.</span><span class="n">n_flatten</span><span class="p">(</span><span class="n">t3</span><span class="p">)</span> <span class="c1">-- {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.n_matches">table.n_matches</span></h2>
+<dl><dt>table.n_matches(tbl, pattern, [pattern2], [patternN])</dt>
+<dd>Returns a table of unique values within tbl which one of the supplied patterns matches using string.match</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>tbl:</i></li></ul>
+<dl><dd>The table you want to search for values</dd></dl>
+<ul><li><i>pattern:</i></li></ul>
+<dl><dd>The pattern you want to check each value with, using string.match. You can supply multiple patterns, separated by commas</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.8</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">items</span> <span class="o">=</span> <span class="p">{</span> <span class="n">this</span> <span class="o">=</span> <span class="s2">&quot;that&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;other&quot;</span><span class="p">,</span> <span class="n">hp</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">mana</span> <span class="o">=</span> <span class="mi">40</span> <span class="p">}</span>
+<span class="kd">local</span> <span class="n">matches</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_matches</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="s2">&quot;%a&quot;</span><span class="p">)</span>
+<span class="c1">-- matches will be { &quot;that&quot;, &quot;other&quot; }</span>
+<span class="c1">-- order is not preserved/guaranteed</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.n_union">table.n_union</span></h2>
+<dl><dt>table.n_union (table1, table2)</dt>
+<dd>Returns a numerically indexed table that is the union of the provided tables (that is - merges two indexed lists together). This is a union of unique values. The order and keys of the input tables are not preserved.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table1:</i> the first table as an indexed list.</li>
+<li><i>table2:</i> the second table as an indexed list.</li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">table</span><span class="p">.</span><span class="n">n_union</span><span class="p">({</span><span class="s2">&quot;bob&quot;</span><span class="p">,</span> <span class="s2">&quot;mary&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;august&quot;</span><span class="p">,</span> <span class="s2">&quot;justinian&quot;</span><span class="p">}))</span>
+
+<span class="p">{</span>
+  <span class="s2">&quot;bob&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;mary&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;august&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;justinian&quot;</span>
+<span class="p">}</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.n_complement">table.n_complement</span></h2>
+<dl><dt>table.n_complement (set1, set2)</dt>
+<dd>Returns a table that is the relative complement of the first numerically indexed table with respect to the second numerically indexed table. Returns a numerically indexed complement of values.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>table1:</i></li>
+<li><i>table2:</i></li></ul>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">t1</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">t2</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">comp</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_complement</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+</pre></div>
+<p>This prints the following:
+</p>
+<pre>  1,
+  3,
+  5
+</pre>
+<dl><dt>Returns</dt>
+<dd>A table containing all the values from table1 that do not match the values from table2.</dd></dl>
+<h2><span class="mw-headline" id="table.n_intersection">table.n_intersection</span></h2>
+<dl><dt>table.n_intersection (...)</dt>
+<dd>Returns a numerically indexed table that is the intersection of the provided tables. This is an intersection of unique values. The order and keys of the input tables are not preserved</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">t1</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">t2</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">intersect</span> <span class="o">=</span> <span class="n">table</span><span class="p">.</span><span class="n">n_intersection</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">intersect</span><span class="p">)</span>
+</pre></div>
+<p>This prints the following:
+</p>
+<pre>  2,
+  4,
+  6
+</pre>
+<dl><dt>Returns</dt>
+<dd>A table containing the values that are found in every one of the tables.</dd></dl>
+<h2><span class="mw-headline" id="table.pickle">table.pickle</span></h2>
+<dl><dt>table.pickle( t, file, tables, lookup )</dt>
+<dd>Internal function used by table.save() for serializing data.</dd></dl>
+<h2><span class="mw-headline" id="table.remove">table.remove</span></h2>
+<dl><dt>table.remove(table, value_position)</dt>
+<dd>Remove a value from an indexed table, by the values position in the table.</dd>
+<dd>See also: <a href="/w/Manual:Lua_Functions#table.insert" title="Manual:Lua Functions">table.insert</a></dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><b>table</b></li></ul>
+<dl><dd>The indexed table you are removing the value from.</dd></dl>
+<ul><li><b>value_position</b></li></ul>
+<dl><dd>The indexed number for the value you are removing.</dd></dl>
+<dl><dt>Example</dt>
+<dd></dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">testTable</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;cry&quot;</span><span class="p">,</span> <span class="s2">&quot;why&quot;</span> <span class="p">}</span>
+<span class="nb">table.remove</span><span class="p">(</span><span class="n">testTable</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">-- will remove hi from the table</span>
+<span class="c1">-- new testTable after the remove</span>
+<span class="n">testTable</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;cry&quot;</span><span class="p">,</span> <span class="s2">&quot;why&quot;</span> <span class="p">}</span>
+<span class="c1">-- original position of hi was 1, after the remove, position 1 has become bye</span>
+<span class="c1">-- any values under the removed value are moved up, 5 becomes 4, 4 becomes 3, etc</span>
+</pre></div> 
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  To remove a value from a key-value table, it's best to simply change the value to nil.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">testTable</span> <span class="o">=</span> <span class="p">{</span> <span class="n">test</span> <span class="o">=</span> <span class="s2">&quot;testing&quot;</span><span class="p">,</span> <span class="n">go</span> <span class="o">=</span> <span class="s2">&quot;boom&quot;</span><span class="p">,</span> <span class="n">frown</span> <span class="o">=</span> <span class="s2">&quot;glow&quot;</span> <span class="p">}</span>
+<span class="nb">table.remove</span><span class="p">(</span><span class="n">testTable</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span> <span class="c1">-- this will error</span>
+<span class="n">testTable</span><span class="p">.</span><span class="n">test</span> <span class="o">=</span> <span class="kc">nil</span> <span class="c1">-- won&#39;t error</span>
+<span class="n">testTable</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span> <span class="c1">-- won&#39;t error</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.save">table.save</span></h2>
+<dl><dt>table.save(location, table)</dt>
+<dd>Save a table into an external file in <b>location</b>.</dd>
+<dd>See also: <a href="/w/Manual:Lua_Functions#table.load" title="Manual:Lua Functions">table.load</a></dd></dl>
+<dl><dt>Parameters</dt>
+<dd></dd></dl>
+<ul><li><b>location:</b></li></ul>
+<dl><dd>Where you want the table file to be saved. Can be anywhere on your computer.</dd></dl>
+<ul><li><b>table:</b></li></ul>
+<dl><dd>The table that you are saving to the file.</dd></dl>
+<dl><dd>Example:</dd></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Saves the table mytable to the lua file mytable in your Mudlet Home Directory</span>
+<span class="n">table</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">getMudletHomeDir</span><span class="p">()</span><span class="o">..</span><span class="s2">&quot;/mytable.lua&quot;</span><span class="p">,</span> <span class="n">mytable</span><span class="p">)</span>
+</pre></div>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  If the file does not exist it will be created, however if the path (directories) specified do not exist, an error will be thrown. For both linux and windows
+<code>/</code> can be used as a serperator.
+</p>
+<h2><span class="mw-headline" id="table.sort">table.sort</span></h2>
+<dl><dt>table.sort(Table [, comp])</dt>
+<dd>Sorts table elements in a given order, in-place, from <code>Table[1]</code> to <code>Table[n]</code>, where <code>n</code> is the length of the table.</dd></dl>
+<dl><dd>If <code>comp</code> is given, then it must be a function that receives two table elements, and returns true when the first is less than the second (so that not <code>comp(a[i+1],a[i])</code> will be true after the sort). If <code>comp</code> is not given, then the standard Lua operator <code>&lt;</code> is used instead.</dd></dl>
+<dl><dd>The sort algorithm is not stable; that is, elements considered equal by the given order may have their relative positions changed by the sort.</dd></dl>
+<dl><dd>See <a rel="nofollow" class="external free" href="https://www.lua.org/pil/19.3.html">https://www.lua.org/pil/19.3.html</a> for more info</dd></dl>
+<h2><span class="mw-headline" id="table.size">table.size</span></h2>
+<dl><dt>table.size (t)</dt>
+<dd>Returns the size of a key-value table (this function has to iterate through all of the table to count all elements).</dd>
+<dd>Returns a number.</dd></dl>
+<dl><dt>Parameters</dt></dl>
+<ul><li><i>t:</i></li></ul>
+<dl><dd>The table you are checking the size of.</dd></dl>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b> 
+For index based tables you can get the size with the # operator:
+This is the standard Lua way of getting the size of index tables i.e. ipairs() type of tables with numerical indices. 
+To get the size of tables that use user defined keys instead of automatic indices (pairs() type) you need to use the function table.size() referenced above.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kd">local</span> <span class="n">test_table</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;value1&quot;</span><span class="p">,</span> <span class="s2">&quot;value2&quot;</span><span class="p">,</span> <span class="s2">&quot;value3&quot;</span><span class="p">,</span> <span class="s2">&quot;value4&quot;</span> <span class="p">}</span>
+<span class="n">myTableSize</span> <span class="o">=</span> <span class="o">#</span><span class="n">test_table</span>
+<span class="c1">-- This would return 4.</span>
+<span class="kd">local</span> <span class="n">myTable</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span> <span class="o">=</span> <span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="s2">&quot;key2&quot;</span> <span class="o">=</span> <span class="s2">&quot;bye&quot;</span><span class="p">,</span> <span class="s2">&quot;key3&quot;</span> <span class="o">=</span> <span class="s2">&quot;time to go&quot;</span> <span class="p">}</span>
+<span class="n">table</span><span class="p">.</span><span class="n">size</span><span class="p">(</span><span class="n">myTable</span><span class="p">)</span>
+<span class="c1">-- This would return 3.</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.unpickle">table.unpickle</span></h2>
+<dl><dt>table.unpickle( t, tables, tcopy, pickled )</dt>
+<dd>Internal function used by table.load() for deserialization.</dd></dl>
+<h2><span class="mw-headline" id="table.update">table.update</span></h2>
+<dl><dt>table.update(table1, table2)</dt>
+<dd>Returns a table in which key/value pairs from table2 are added to table1, and any keys present in both tables are assigned the value from table2, so that the resulting table is table1 updated with information from table2.</dd></dl>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">table</span><span class="p">.</span><span class="n">update</span><span class="p">({</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="n">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">5</span><span class="p">}))</span>
+<span class="p">{</span>
+   <span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="n">b</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+   <span class="n">c</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+   <span class="n">d</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="p">}</span>
+
+<span class="c1">-- to just set a table to new values, assign it directly:</span>
+<span class="n">mytable</span> <span class="o">=</span> <span class="p">{</span><span class="n">key1</span> <span class="o">=</span> <span class="s2">&quot;newvalue&quot;</span><span class="p">}</span>
+</pre></div>
+<h2><span class="mw-headline" id="table.union">table.union</span></h2>
+<dl><dt>table.union(...)</dt>
+<dd>Returns a table that is the union of the provided tables. This is a union of key/value pairs. If two or more tables contain different values associated with the same key, that key in the returned table will contain a subtable containing all relevant values. See table.n_union() for a union of values. Note that the resulting table may not be reliably traversable with ipairs() due to the fact that it preserves keys. If there is a gap in numerical indices, ipairs() will cease traversal.</dd></dl>
+<dl><dt>Examples</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">tableA</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span>
+   <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">456</span><span class="p">,</span>
+   <span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1">---</span>
+<span class="n">tableB</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+   <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+   <span class="p">[</span><span class="s2">&quot;test2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kr">function</span><span class="p">()</span> <span class="kr">return</span> <span class="kc">true</span> <span class="kr">end</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1">---</span>
+<span class="n">tableC</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1">---</span>
+<span class="n">table</span><span class="p">.</span><span class="n">union</span><span class="p">(</span><span class="n">tableA</span><span class="p">,</span> <span class="n">tableB</span><span class="p">,</span> <span class="n">tableC</span><span class="p">)</span>
+<span class="c1">-- will return the following:</span>
+<span class="p">{</span>
+   <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">123</span><span class="p">,</span>
+      <span class="mi">23</span><span class="p">,</span>
+   <span class="p">},</span>
+   <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">456</span><span class="p">,</span>
+   <span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+   <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;c&quot;</span><span class="p">,</span>
+   <span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+   <span class="p">[</span><span class="s2">&quot;test2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kr">function</span><span class="p">()</span> <span class="kr">return</span> <span class="kc">true</span> <span class="kr">end</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+<!-- 
+NewPP limit report
+Cached time: 20260418025456
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.096 seconds
+Real time usage: 0.162 seconds
+Preprocessor visited node count: 326/1000000
+Post‐expand include size: 1950/2097152 bytes
+Template argument size: 19/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 51478/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00%   90.699      1 -total
+  4.20%    3.808      4 Template:Note
+  3.54%    3.207      1 Template:TOC_right
+  3.11%    2.824      6 Template:MudletVersion
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:159-0!canonical and timestamp 20260418025606 and revision id 23083
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:Table_Functions&amp;oldid=23083">https://wiki.mudlet.org/index.php?title=Manual:Table_Functions&amp;oldid=23083</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li><li><a href="/w/Category:Mudlet_API" title="Category:Mudlet API">Mudlet API</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3ATable+Functions" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3ATable+Functions" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:Table_Functions">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:Table_Functions&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:Table_Functions">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:Table_Functions&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:Table_Functions&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:Table_Functions" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:Table_Functions" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:Table_Functions&amp;oldid=23083" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:Table_Functions&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 18 April 2026, at 02:56.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.096","walltime":"0.162","ppvisitednodes":{"value":326,"limit":1000000},"postexpandincludesize":{"value":1950,"limit":2097152},"templateargumentsize":{"value":19,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":51478,"limit":5000000},"timingprofile":["100.00%   90.699      1 -total","  4.20%    3.808      4 Template:Note","  3.54%    3.207      1 Template:TOC_right","  3.11%    2.824      6 Template:MudletVersion"]},"cachereport":{"timestamp":"20260418025456","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":56});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1c33f0fa5f5',t:'MTc5Mzk4NzQ2Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1c33f0fa5f5',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20260418072746 -->
+</html>

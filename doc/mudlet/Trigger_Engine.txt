@@ -1,0 +1,477 @@
+Mudlet: Trigger_Engine
+
+Fuente oficial: https://wiki.mudlet.org/w/Manual:Trigger_Engine
+Copia consultable; véase manifest.json para fecha, hash y atribución.
+
+# Trigger Engine
+
+Unlike alias that define patterns that match on user input, triggers define patterns that match on game output. In other words, triggers react to text that has been sent by the game, whereas alias react to user commands that have been typed into the command line.
+
+## Simple Trigger Matching
+
+Simple-trigger.png
+
+Note
+ 
+Note:
+  QUICKSTART: Here is a simple 
+video tutorial
+ on how to make basic triggers in Mudlet.
+
+### Steps To Create A Trigger
+
+Click on the "Add" button to create a new trigger.
+
+Put the text pattern that you’d like to trigger on into the trigger conditions table on the right side of the screen above the script editor.
+
+Choose the correct 
+pattern type
+ of your trigger pattern in the drop down list on the right side of the trigger pattern i.e. in the second column of the trigger pattern table. If you define multiple patterns in the same trigger, your trigger will run whenever any one of these patterns matches unless you chose the AND-trigger option, in which case the trigger will only fire if all patterns match within a specified amount of lines from the game. For more advanced information on AND and OR trigger see the corresponding 
+AND/OR trigger section below
+.
+
+Define what happens when the trigger matches. Usually, this will be done by a Lua script in the Lua editor below the table with the pattern list. In the beginning, you can simply choose the "highlight trigger" option to make your trigger highlight the text that it has triggered on or send a clear text command to the game whenever the trigger fires until you have learned enough Lua to more meaningful scripts. Clear text command can be defined in the "send plain text" input box next to the trigger name above the pattern table.
+
+Save the new trigger and then activate it with the padlock icon button. By default, new triggers are deactivated and thus will do nothing unless you explicitly activate them. Activated triggers show a green tick in the little blue box on the left side of the trigger name in the trigger tree on the left side of the script editor dialog.
+
+There are three ways to save your changes; click on the save icon, adding another new trigger, clicking on another trigger item. Triggers that have not been saved yet cannot be activated. 
+
+Note
+ 
+Note:
+  If you see a bug icon instead of an activation box, there is some error that prevents activation of your trigger. Check the error message above the pattern table.
+
+Example: You want to trigger on the word "pond" in a line such as: "The frog swims in the pond. Plop." All you need to do is add "pond" as a pattern and choose "substring" as a pattern type. Then enter the command you like to send to the game if the trigger matches. For example enter "drink water" into the "send plain text" input box and activate your new trigger. Your new trigger will send the command "drink water" to the game any time it sees the word "pond" somewhere in the game output.
+
+## Simple Highlighter Triggers
+
+Note
+ 
+Note:
+  Beginners should use Mudlets automated highlight triggers in the beginning to get the hang of the different trigger and pattern types quicker. 
+
+Create a new trigger and add a pattern as detailed above.
+
+Click on the "highlight trigger" option and pick a foreground and a background color. When the trigger matches it automatically highlights its pattern.
+
+Save.
+
+This is one of the most used form of triggers in mudding. It is a quick way of highlighting words that are important to you at the moment. This helps you spot things at a single glance instead of reading the entire text. You don’t have to know anything about scripting, regular expressions etc. to use highlight triggers. Just type in the word you like to be highlighted, select appropriate colors, save the new trigger and activate it.
+
+More advanced users will often want to do custom highlighting from within scripts. This is how it works: If you want to highlight the word "pond" in the above example you have to add the following little Lua script to the script editor on the lower right side of the Script Editor window:
+
+selectString( "pond", 1 )
+fg( "red" )
+bg( "blue" )
+resetFormat()
+
+## Testing Triggers
+
+You can test your triggers with the 
+`echo
+ alias from the command line.  This requires the echo package, which is installed by default on a new profile.
+
+`echo A test line.
+
+`echo One line.$Next line.$Third line.
+
+Or from your Lua code using 
+feedTriggers
+
+feedTriggers([[
+You are carrying:
+  a credstick                                       a pair of steel toed boots (worn)
+  a Soko Sukeban (worn)                             a medikit
+  a cherry moon katana                              a GPS device
+  a NV contacts                                     a Tsunami MkII
+  a MeshGirl Helm                                   an Alto 500 CellPhone
+  a Kantan Sukeban (worn)                         
+Your load barely slows you down.
+]])
+
+Alternatively, you can also record a replay and play it - triggers will be matched on it.
+
+## Pattern Matching Types
+
+### Substring
+
+This trigger type will match any text on a single line.  Useful for matching strings of text which don't change at all.
+
+Examples:
+
+Pattern:: String:
+pond: The frog swims in the pond.
+
+Pattern:: Outcome:
+pond: match (pond matches the word pond)
+
+Pattern:: String:
+pond: The frog swims in the swamp.
+
+Pattern:: Outcome:
+pond: no match (pond does not match swamp)
+
+### Perl Regex
+
+This trigger type will match text using Regular Expressions (Regex). Regex in Perl is a special text string for describing a search pattern within a given text.  For example \w+ is used to match a single word, or \d is used to match a single digit.
+
+Pattern matching also allows the match to be saved in the matches table variable if enclosed in parentheses.  matches[1] contains the entire line of the trigger whereas matches[2] contains the first regex pattern (in our examples pond or swamp).
+
+Examples:
+
+Pattern:: String:
+The frog swims in the (\w+).: The frog swims in the pond.
+
+Pattern:: Outcome:
+The frog swims in the (\w+).: match (\w+ matches pond, and is also saved to matches[2] variable)
+
+Pattern:: String:
+The frog swims in the (\w+).: The frog swims in the swamp.
+
+Pattern:: Outcome:
+The frog swims in the (\w+).: match (\w+ matches swamp)
+
+Pattern:: String:
+The frog swims in the (\w+).: The fish swims in the pond.
+
+Pattern:: Outcome:
+The frog swims in the (\w+).: no match (fish should be changed to a regex pattern \w+)
+
+Note
+ 
+Note:
+ 
+regex101.com
+ is highly recommended to testing out your regular expressions.  It includes a pattern tester, cheat sheet and explanations about the matches.
+
+### Start of Line
+
+This is a combined variation of substring matching and regex matching.  This type will match any line with text at the start of the string only.
+
+Examples:
+
+Pattern:: String:
+The frog: The frog swims in the pond.
+
+Pattern:: Outcome:
+The frog: match (The frog is at the start of the string)
+
+Pattern:: String:
+frog swims: The frog swims in the swamp.
+
+Pattern:: Outcome:
+frog swims: no match (frog swims is not at the start of the string)
+
+Note
+ 
+Note:
+  This is exactly the same as using a Perl regex pattern with the ^ anchor (start of a line).
+
+### Exact Match
+
+The string must match exactly the pattern.  On a whole line, this is the same as using a perl regex pattern with the ^ and $ (start and end of line) anchors.
+
+Examples:
+
+Pattern:: String:
+The frog swims in the pond.: The frog swims in the pond.
+
+Pattern:: Outcome:
+The frog swims in the pond.: match (the entire line matches)
+
+Pattern:: String:
+The frog swims in the pond.: The frog swims in the pond.  The bird flies in the sky.
+
+Pattern:: Outcome:
+The frog swims in the pond.: no match (The entire line does not match as the bird information has been added. This would match a start of line pattern though)
+
+### Lua Function
+
+The purpose of Lua function triggers is to be able to run Lua scripts as trigger conditions.  This trigger types takes an actual Lua function as the pattern.  This function must return true or false to evaluate correctly, but will only match when returned true.
+
+For example, let's say we wish to enable our entire offensive combat triggers when we commence combat, but otherwise be disabled when we are not in combat.  One would create a trigger chain that contains all the offensive triggers. The chain head (the root trigger of the chain) simply contains this Lua function condition as its only trigger condition: 
+return inCombat
+
+Now, whenever you enter combat you set the variable "inCombat" to true and thus automatically enable you entire combat triggers that are otherwise disabled.
+
+Examples of patterns:
+
+if myVar > 20 then return true else return false end
+
+if myFunc() < myVar then return true else return false end
+
+return myFunc()
+ if myFunc returns a boolean value
+
+Another example:
+
+Create a new trigger with the pattern 
+checkHealth()
+. Define a new Lua function 
+checkHealth()
+. Open the script editor, add a new script "health monitor" and add this code to the new script.
+
+function checkHealth()
+    if health <= 100 then  -- health is a variable we capture from e.g. the prompt or GMCP
+        echo( "WARNING: Low health! I have to run away!\n" )
+        send( "flee" )     -- we send a command to run away to the game
+        return true
+    else
+        return false
+    end
+end
+
+#### Lua Syntax Primer: Expressions
+
+Note
+ 
+Note:
+  Mudlet used to only allow the boolean 
+true
+ value as the return value to consider the pattern to have been a match. It has since been improved to allow any value Lua would consider true - but if you see any Lua Function Conditions (LFC) making use of 
+and true or false
+ at the end, that'd be why.
+
+if A == B then (...)   ----> if A equals B
+if A ~= B then (...)   ----> if A *NOT* equals B
+if A <= B then (...)   ----> if A is smaller or equal to B
+if A >= B then (...)   ----> if A is greater or equal to B
+if A < B then (...)    ----> if A is smaller than B
+if A > B then (...)    ----> if A is greater than B
+
+The operators 
+and
+ and 
+or
+ behave differently in Lua than in most other programming languages as they are not guaranteed to return a boolean value.
+[1]
+
+Lua Function Conditions (LFC) effectively means that you run the Lua code they represent on every single line that is received from the game, unless the LFCs are part of a multi-condition trigger, in which case the LFCs would only be run when they would be the current test-condition of their respective trigger state. LFCs are implemented in such a way that the trigger engine only calls the compiled byte code, but running as few scripts as possible is always the best idea. LFCs are nice and handy, and for most people the performance aspect will not be relevant at all.
+
+### Line Spacer
+
+To make the engine skip lines in a multiline / AND trigger, use the line spacer pattern: select 'line spacer' as the type and put in a number on the left to make it go to the next X lines, for example 1 will make it go to the next line.  See 
+the multline section below
+ for further explanation.
+
+### Color Trigger
+
+This type of trigger matches the color of the text, as opposed to the actual text incoming.  Both foreground and background matching is available and you will be prompted to select the required colors.
+
+Examples:
+
+Pattern:: String:
+Foreground color [ANSI 12], Background color [ANSI 15] (blue foreground on a white background): The bird flies in the sky.
+
+Pattern:: Outcome:
+Foreground color [ANSI 12], Background color [ANSI 15] (blue foreground on a white background): match (the COLOR matches)
+
+### Prompt
+
+This type of trigger will only work with servers that have implemented the telnet suboption GO AHEAD.  If you server does not implement GA this will be shown in the bottom right corner of Mudlet with the characters No GA.
+
+This option has one function, to match your prompt and will fire when it does.
+
+## Multi-Line Triggers and Multi-Condition Triggers
+
+Multi Condition Triggers are the most advanced feature of Mudlets trigger engine. Like trigger chains or filter chains they are a form of AND-Triggers. All conditions in the list must have matched within the specified margin of lines (delta), in order to trigger the script. Normal triggers fire and run the script as soon as one of the conditions in the regex list is met i.e. if one of the regex/string matches match - or the Lua function condition returns true, the trigger script is run. In multiline triggers, however, each single regex/string/Lua function condition in the list has to have matched within the specified margin of lines at least once to trigger the script. The sequence of the conditions is binding. This means that if the 10th regex on the regex list would be matched on the eleventh line after the match of the first line happened, the trigger will NOT run unless the margin of lines is set to 11. If condition #3 is true but currently #2 is waiting to be true, condition #3 is ignored and must be true again after condition #2 has been true. Conditions can also be Lua Functions or plain Lua code that returns a boolean truth value. You can mix all types of conditions to build complex multi-condition triggers that only fire if all conditions are met. This is a very powerful feature as it reduces the amount of scripting to a minimum or even takes away with the need to script formerly complex processes completely. Multicondition triggers are multi-line triggers, i. e. the conditions can all be met in a single line or many lines after the first condition has been fulfilled. This effectively reduces the amount of complexity as you have all the important conditions placed into a single trigger and all the tedious bookkeeping, variable and condition state accounting is being done by Mudlets trigger engine. The result of this is that the amount of manual condition checking via many different trigger scripts and legions of if condition1 == true then check condition2 can be forgotten about. All you have to do is to define the conditions and the final action that is taken if the trigger fires.
+
+Note
+ 
+Note:
+  to retrieve wildcards in multi-line or multi-condition triggers, use the 
+multimatches[line][match]
+ table instead of matches[].
+
+Trigger-engine-diagram.png
+
+Note
+ 
+Note:
+  This diagram shows what steps are involved in the process of problem solving with Mudlets trigger engine. The main question is: How do we arrive at a solution to our problem, and how can we simplify the problem as much as possible?
+
+Example: Let’s go back to our pond & frog example. We have explained the difference between AND-triggers and OR-triggers. If you have a room description consisting of 3 lines:
+
+You see a pond
+
+You see a frog.
+
+The frog sits on a stone.
+
+Every single one of these 3 lines will be fed into the trigger engine one after another. If we define an OR-trigger with a condition list consisting of 3 condition patterns:
+
+condition #1 pattern = pond
+
+condition #2 pattern = frog
+
+condition #3 pattern = stone
+
+Whether or not a condition is found to be true also depends on another property, namely the type of the condition. The condition type can be among others:
+
+substring matching → the condition is true if the condition pattern is a substring of the output line from the game. In other words: If the pattern "pond" is contained in any line of output, the condition is true.
+
+begin of line matching → the condition is only true if the condition pattern can be found at the beginning of a line from the game.
+
+Perl regular expression → the condition is true if the Perl regex pattern is matched. You’ll find more information on Perl regex below.
+
+Lua code that returns a truth value e.g. a call to a function check() that return either true or false depending on the condition
+
+In our example we chose condition type "substring" for all three conditions. Consequently, the trigger will fire the command or script 3 times i. e. the trigger will do on each line it is matched against because in every line at least one condition evaluates to true because the pattern is a substring of the line.
+
+in line #1 we get: pond = true.
+
+in line #2 we get frog = true and
+
+in line #3 two conditions are true i.e. frog=true and stone = true
+
+Because an OR-trigger fires on the first condition that is true and ignores the rest the trigger will only execute 3 times on these 3 lines although 4 conditions are true.
+
+Note
+ 
+Note:
+ 
+CAUTION:
+ The multi line condition switch must be turned off to get an OR-trigger! If the multi-line condition switch is turned on the trigger becomes an AND trigger which means that the trigger only fires if all conditions are true and fulfilled in the correct sequence. With OR-triggers the sequence is irrelevant.
+
+To complicate matters, however, you don’t want your trigger to fire 3 commands, because you want to use this room description as a whole to fire your trigger e. g. this pond is the only kind of ponds in the entire world that doesn’t have poisoned water. So you want to make sure that you only drink water from a pond of this kind and from no other pond. Your solution is to use Multi Condition Triggers (MCT). If you check the MCT checkbox this trigger will fire only once from now on - and only if all conditions are met i e. when you can guarantee that you only drink water from a good pond because your drinking trigger is matching on the entire room description despite that this room description my be spread over a number of lines. (NOTE: If you have word wrap turned off in your game chances are that the entire room description will be contained in a single line, but we are trying to keep the examples as easy as possible.)
+
+Sadly, there are many unfriendly people in this world and somebody goes around and poisons your good ponds. Consequently, you would want to examine the frog and find out if it is poisoned before drinking water from the pond. This is difficult because the villain is a mean magician who used illusion spells to make everything look like the good pond. To solve the problem you can now resort to Lua function conditions in the trigger condition list that perform certain check ups to put the current room description into a wider context e. g. check if you have been here before etc. This adds yet another level of complexity to your problem but this is a very powerful means to use the full potential of Mudlets MCTs.
+
+You can combine all forms of conditions with trigger chains, filters and Lua functions. Mudlet gives you relatively easy to use tools that require no programming background. However, these tools can evolve into complex powerful problem solving mechanisms if they are combined with each other thus enabling non-programmer users to solve problems that would need a profound programming background in other gameclients. However, unlocking the full potential of Mudlet requires you do learn some Lua basics. In this manual we’ll try to be as easy on you as we can in this respect, but it’s highly recommended that you dig deeper into Lua after a while. It’s one of the easiest fully fledged scripting languages available, easy to learn and the fastest of them all, and this is why it has been chosen by us. You don’t need to become a programmer to be able to use Mudlet effectively. All you have to know is how to work with variables and how to do if conditions and maybe a few loops. But knowing more won’t harm you and it will make your systems more effective.
+
+### "multiline / AND" and "OR" Condition Triggers
+
+Multiline, or AND triggers execute their respective command or script only if all conditions in their respective conditions expression list are fulfilled. 
+
+OR-Triggers execute when 
+any one of
+ their conditions is true. To make OR-Triggers you simply have to add a few conditions to the conditions list e.g. in our example: "pond", "frog", "Plop". The trigger will now also execute on lines like this: "A frog is green" or "You hear a loud Plop!" because "frog" matched in the first line and "Plop" matched in the second line.
+
+Any of the patterns in this trigger can match for it to fire
+
+Multiline / AND triggers execute when 
+all of
+ their conditions are true. Taking the previous patterns of "pond", "frog", "Plop" and clicking the 'AND' button will make the trigger not fire on "A frog is green" or "You hear a loud Plop!" anymore, because all 3 patterns don't match. It however would fire on "In a brown pond, the frog said Plop!" because all 3 patterns matched. As you might have noticed, all 3 patterns are on the same line: this means that in a multiline/AND trigger, the next pattern starts matching on the same line to make this work.
+
+To make the engine skip lines in a multiline / AND trigger, use the line spacer pattern: select 'line spacer' as the type and put in a number on the left to make it go to the next X lines, for example 1 will make it go to the next line.
+
+The simplest form of AND-Triggers in Mudlet are Trigger Chains or Filter Chains, whatever you’d like to call it.
+
+All of the patterns have to match for it to fire. This is a common example of a "shielded regex" - don't run the expensive regex all the time unless you really need to, and match on the faster begin of line the majority of the time
+
+## Trigger Chains & Filter Chains
+
+"Chains" and "filters" are different trigger group entities in Mudlet and serve completely different ends.
+
+### Chains
+
+A chain is defined in Mudlet by making a trigger group and adding a trigger pattern to the group. A group without a pattern is a simple trigger group that serves no other purposes than adding structure to your trigger system in order to organize your triggers better. Such a normal trigger group will always grant access to its children unless it has been explicitly disabled (= all access to itself or any of its children is locked) either manually or by a script.
+
+A trigger group with a defined trigger pattern, however, will behave like a normal trigger and match if the pattern matches. Such a trigger group is called "chain head". A chain head will only grant access to its children if the trigger pattern has matched and the chain has been enabled. Thus, chains can be looked at as a mechanism to automatically enable and disable triggers or groups of triggers when a certain condition has been met i. e. the trigger pattern of the chain head has been matched. (However, technically this is not correct as disabled child triggers will not be invoked if the chain head matches. In other words, in chains you can still have enabled/disabled elements. The idea of a chain can better be described by necessary and sufficient condition - both of which need to be met before a child trigger is being run.)
+
+Adding child triggers to this group will add elements to the trigger chain. These chain elements will only be activated if the chain head has matched before and thus opened the trigger chain. The chain stays open until the "keep chain open for x lines" value has been reached. The default is 0 which means that the chain only stays open for the current line. When access to the chain has been granted all child triggers will be tested against the content of the current line. Consequently, trigger chains are a means to automatically enable/disable trigger groups without the hassle of enabling and disabling trigger groups manually. This has 2 important advantages: Chains are faster than conventional solutions and chains reduce the complexity of your scripts and greatly reduce the usual system bugs that inevitably go along with enable/disable trigger xy function calls as it’s very difficult and error prone to enable and disable your triggers correctly in large complex trigger systems. This is one of the most powerful features in Mudlet and should be used whenever possible.
+
+Let’s look at a practical example for a trigger chain:
+
+My newbie prompt on Achaea looks like this 
+500h, 500m ex-
+ when I have balance and 
+500h, 500m e-
+ when I have lost balance. We are going to develop a prompt detection trigger that raises the event gotPrompt and sets the variables 
+myBalance=true
+ or 
+myBalance=false
+ To begin with, we add a new trigger group and add the Perl regex pattern to detect the prompt:
+
+^(\d+)h, (\d+)m
+
+The pattern reads in plain English: At the beginning of a prompt line there are is a number directly followed by the letter h, a comma, a space and another number followed by the letter h. Whenever this pattern matches the trigger will fire and we’ll know that we have a prompt line. We use the 2 numbers that we captured in our pattern to update our health and mana stats.
+
+Detecting balance is more difficult as balance is indicated by the letters ex- on the same line after the prompt and imbalance is indicated by the letters e-. As we have set a pattern in a trigger group (folder), the folder is turned into a trigger chain head. It will now only let data through to its children when its own pattern is matched. In other words, the child triggers of the trigger chain will only receive data on prompt lines. We are going to take advantage of this by adding two simple substring triggers to detect balance and imbalance. The balance trigger pattern is ex- and the imbalance detector pattern is e-.
+
+In the two balance detection triggers we now write 
+myBalance=false
+ and 
+myBalance=true
+ respectively plus a little echo on the screen that shows our current balance status.
+
+We could now add a call 
+deleteLine()
+ to the prompt detection trigger to erase the prompt from the screen if we don’t want to see it as we have computed all relevant information.
+
+### Filters
+
+You can turn a trigger chain head into a filter by checking the "only pass matches" option. This changes the content of what is forwarded as trigger text to the children triggers in the chain. Chains forward the content of the current line as trigger text whereas filters forward the matched pattern instead of the current line. In other words, the text of the current line is filtered according to the pattern of the filter. For example: You want to know the exits in the current room. The simplest solution is a simple filter on 
+You see exits to: (.*)
+ Then you simply add triggers to the filter chain such as 
+north
+, 
+south
+, 
+west
+, 
+east
+ etc. The direction triggers will only be called if the filter head has matched.
+
+Imagine the following scenario: You want to collect some berries. You know that the room contains some berries if the room description contains the words "You are inside a forest. There are some strawberries." or "You are inside a forest. There are some blackberries." and there are always only one kind of berry in the room. You make a new substring trigger for this line, but instead of choosing a regular trigger, you chose to add a new trigger group. Now you add 
+You are inside a forest\. There are some (\w+)\.
+ as an Regular Expression to the expression list of the trigger group. 
+When adding conditions to a trigger group, the trigger group turns from an organizational unit into a filter unit, if the "filter" option is checked.
+ From now on this folder is a filter and will only let its matches pass through. In our case this is exactly what we want, because we don’t want to collect all sorts of berries, but we only want 2 particular kinds, namely, strawberries and blackberries, and we know that these berries can only be trusted if they are picked inside a forest as other areas may contain contaminated berries. Now you add two regular triggers to our berry-in-the-forest filter - one containing the condition: 
+strawberries
+ and the other one 
+blackberries
+. Then we add the commands to pick the particular kind of berry to both triggers (send field). Now what happens is that as soon as a room description reads "You are inside a forest. There are some strawberries/blackberries." the filter will let the kind of berry pass through to our two berry triggers and they will issue commands to pick berries, if there are such berries. However, in any other situation the words "strawberries" and "blackberries" will NOT trigger a pick - only in the above scenario when the filter parent’s condition is met. This is a very nice way to solve complicated problems with a few easy filter chains. This example is trivial, but using filter chains will rapidly show you how formerly complicated things that could only be solved with very complicated regular expressions can be solved easily now with a couple of filter chains.
+
+## Named Capture Patterns
+
+You can use named patterns - that is, giving your captures names instead of [2], [3], [4] numbers - by adding 
+?<variablename>
+ to your capture in Mudlet 4.11+:
+
+-- before: 
+(\w+) = matches[2]
+
+-- now:
+(?<name>\w+) = matches.name or matches["name"]
+(?<weapon>\w+) = matches.weapon or matches["weapon"]
+
+This can be particularly handy if you have several patterns in a trigger and the location of matches[n] moves around. Try this out in 
+a demo package
+.
+
+Named capture groups still will be available under their respective number in 
+matches
+.
+
+You can programatically check if your Mudlet supports this feature with 
+mudlet.supports.namedPatterns
+.
+
+Example: 
+
+Let's assume we want to capture name and class of character, but MUD outputs it two ways.
+
+My name is Dargoth. My class is a warrior.
+
+I am a wizard and my name is Delwing.
+
+Instead of creating two different triggers we can create only one containing alternative matching patterns:
+
+^My name is (?<name>\w+)\. My class is a (?<class>\w+)\.
+
+^I am a (?<class>\w+)\ and my name is (?<name>\w+)\.
+
+Notice that class and name come in different order, therefore in first case we will have name under matches[2] and in second case under matches[3]. With named capture groups in both cases we will have name available under matches.name and class under matches.class.
+
+Code example to handle named matches above:
+
+  echo("Name: " .. matches.name .. "\n")
+  echo("Class: " .. matches.class .. "\n")
+
+Note
+ 
+Note:
+  To verify whether named groups are available you can use flag 
+mudlet.supports.namedGroups
+.

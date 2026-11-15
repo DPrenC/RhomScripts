@@ -1,0 +1,1162 @@
+
+<!DOCTYPE html>
+<html class="client-nojs" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<title>Manual:Event Engine - Mudlet</title>
+<script>document.documentElement.className="client-js";RLCONF={"wgBreakFrames":!1,"wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgRequestId":"aub5vbZokML0QD3tBwAQUgAABBg","wgCSPNonce":!1,"wgCanonicalNamespace":"Manual","wgCanonicalSpecialPageName":!1,"wgNamespaceNumber":332,"wgPageName":"Manual:Event_Engine","wgTitle":"Event Engine","wgCurRevisionId":23450,"wgRevisionId":23450,"wgArticleId":193,"wgIsArticle":!0,"wgIsRedirect":!1,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Mudlet Manual"],"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgRelevantPageName":"Manual:Event_Engine","wgRelevantArticleId":193,"wgIsProbablyEditable":!1,"wgRelevantPageIsProbablyEditable":!1,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgULSAcceptLanguageList":["en-us","en"],
+"wgULSCurrentAutonym":"English","wgVisualEditor":{"pageLanguageCode":"en","pageLanguageDir":"ltr","pageVariantFallbacks":"en"},"wgULSPosition":"personal","wgEditSubmitButtonLabelPublish":!1};RLSTATE={"site.styles":"ready","noscript":"ready","user.styles":"ready","user":"ready","user.options":"loading","ext.pygments":"ready","skins.vector.styles.legacy":"ready","mediawiki.toc.styles":"ready","ext.uls.pt":"ready","ext.DarkMode.styles":"ready","ext.visualEditor.desktopArticleTarget.noscript":"ready"};RLPAGEMODULES=["site","mediawiki.page.startup","mediawiki.page.ready","mediawiki.toc","skins.vector.legacy.js","ext.uls.interface","ext.moderation.notify","ext.moderation.notify.desktop","ext.moderation.ve","ext.moderation.ajaxhook","ext.DarkMode","ext.visualEditor.desktopArticleTarget.init","ext.visualEditor.targetLoader"];</script>
+<script>(RLQ=window.RLQ||[]).push(function(){mw.loader.implement("user.options@1hzgi",function($,jQuery,require,module){/*@nomin*/mw.user.tokens.set({"patrolToken":"+\\","watchToken":"+\\","csrfToken":"+\\"});
+});});</script>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=ext.DarkMode.styles%7Cext.pygments%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cmediawiki.toc.styles%7Cskins.vector.styles.legacy&amp;only=styles&amp;skin=vector"/>
+<script async="" src="/load.php?lang=en&amp;modules=startup&amp;only=scripts&amp;raw=1&amp;skin=vector"></script>
+<meta name="ResourceLoaderDynamicStyles" content=""/>
+<link rel="stylesheet" href="/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector"/>
+<meta name="generator" content="MediaWiki 1.35.0"/>
+<meta name="description" content="Manual on events, which events exist, how to raise events, how to handle them."/>
+<link rel="shortcut icon" href="/favicon.ico"/>
+<link rel="search" type="application/opensearchdescription+xml" href="/opensearch_desc.php" title="Mudlet (en)"/>
+<link rel="EditURI" type="application/rsd+xml" href="https://wiki.mudlet.org/api.php?action=rsd"/>
+<link rel="alternate" type="application/atom+xml" title="Mudlet Atom feed" href="/index.php?title=Special:RecentChanges&amp;feed=atom"/>
+	<meta property="og:type" content="article"/>
+
+	<meta property="og:site_name" content="Mudlet"/>
+
+	<meta property="og:title" content="Event Engine"/>
+
+	<meta property="og:description" content="Manual on events, which events exist, how to raise events, how to handle them."/>
+
+	<meta property="og:url" content="https://wiki.mudlet.org/w/Manual:Event_Engine"/>
+
+<!--[if lt IE 9]><script src="/resources/lib/html5shiv/html5shiv.js"></script><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr mw-hide-empty-elt ns-332 ns-subject page-Manual_Event_Engine rootpage-Manual_Event_Engine skin-vector action-view skin-vector-legacy">
+<div id="mw-page-base" class="noprint"></div>
+<div id="mw-head-base" class="noprint"></div>
+<div id="content" class="mw-body" role="main">
+	<a id="top"></a>
+	<div id="siteNotice" class="mw-body-content"></div>
+	<div class="mw-indicators mw-body-content">
+	</div>
+	<h1 id="firstHeading" class="firstHeading" lang="en">Manual:Event Engine</h1>
+	<div id="bodyContent" class="mw-body-content">
+		<div id="siteSub" class="noprint">From Mudlet</div>
+		<div id="contentSub"></div>
+		<div id="contentSub2"></div>
+		
+		<div id="jump-to-nav"></div>
+		<a class="mw-jump-link" href="#mw-head">Jump to navigation</a>
+		<a class="mw-jump-link" href="#searchInput">Jump to search</a>
+		<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><div class="mw-parser-output"><table cellspacing="0" cellpadding="0" style="clear: right; margin-bottom: .5em; float: right; padding: .5em 0 .8em 1.4em; background: none; width: auto;">
+<tbody><tr>
+<td><div id="toc" class="toc" role="navigation" aria-labelledby="mw-toc-heading"><input type="checkbox" role="button" id="toctogglecheckbox" class="toctogglecheckbox" style="display:none" /><div class="toctitle" lang="en" dir="ltr"><h2 id="mw-toc-heading">Contents</h2><span class="toctogglespan"><label class="toctogglelabel" for="toctogglecheckbox"></label></span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Event_System"><span class="tocnumber">1</span> <span class="toctext">Event System</span></a>
+<ul>
+<li class="toclevel-2 tocsection-2"><a href="#Registering_an_event_handler_via_UI"><span class="tocnumber">1.1</span> <span class="toctext">Registering an event handler via UI</span></a></li>
+<li class="toclevel-2 tocsection-3"><a href="#Registering_an_event_from_a_script"><span class="tocnumber">1.2</span> <span class="toctext">Registering an event from a script</span></a></li>
+<li class="toclevel-2 tocsection-4"><a href="#Raising_a_custom_event"><span class="tocnumber">1.3</span> <span class="toctext">Raising a custom event</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#Example_of_registering_and_raising_an_event"><span class="tocnumber">1.4</span> <span class="toctext">Example of registering and raising an event</span></a></li>
+<li class="toclevel-2 tocsection-6"><a href="#Gamepad_functionality"><span class="tocnumber">1.5</span> <span class="toctext">Gamepad functionality</span></a></li>
+<li class="toclevel-2 tocsection-7"><a href="#Mudlet-raised_events"><span class="tocnumber">1.6</span> <span class="toctext">Mudlet-raised events</span></a>
+<ul>
+<li class="toclevel-3 tocsection-8"><a href="#AdjustableContainerReposition"><span class="tocnumber">1.6.1</span> <span class="toctext">AdjustableContainerReposition</span></a></li>
+<li class="toclevel-3 tocsection-9"><a href="#AdjustableContainerRepositionFinish"><span class="tocnumber">1.6.2</span> <span class="toctext">AdjustableContainerRepositionFinish</span></a></li>
+<li class="toclevel-3 tocsection-10"><a href="#channel102Message"><span class="tocnumber">1.6.3</span> <span class="toctext">channel102Message</span></a></li>
+<li class="toclevel-3 tocsection-11"><a href="#mapModeChangeEvent"><span class="tocnumber">1.6.4</span> <span class="toctext">mapModeChangeEvent</span></a></li>
+<li class="toclevel-3 tocsection-12"><a href="#mapOpenEvent"><span class="tocnumber">1.6.5</span> <span class="toctext">mapOpenEvent</span></a></li>
+<li class="toclevel-3 tocsection-13"><a href="#sysAppStyleSheetChange"><span class="tocnumber">1.6.6</span> <span class="toctext">sysAppStyleSheetChange</span></a></li>
+<li class="toclevel-3 tocsection-14"><a href="#sysBufferShrinkEvent"><span class="tocnumber">1.6.7</span> <span class="toctext">sysBufferShrinkEvent</span></a></li>
+<li class="toclevel-3 tocsection-15"><a href="#sysCommandLineDeleted"><span class="tocnumber">1.6.8</span> <span class="toctext">sysCommandLineDeleted</span></a></li>
+<li class="toclevel-3 tocsection-16"><a href="#sysConnectionEvent"><span class="tocnumber">1.6.9</span> <span class="toctext">sysConnectionEvent</span></a></li>
+<li class="toclevel-3 tocsection-17"><a href="#sysConsoleSizeChanged"><span class="tocnumber">1.6.10</span> <span class="toctext">sysConsoleSizeChanged</span></a></li>
+<li class="toclevel-3 tocsection-18"><a href="#sysCustomHttpDone"><span class="tocnumber">1.6.11</span> <span class="toctext">sysCustomHttpDone</span></a></li>
+<li class="toclevel-3 tocsection-19"><a href="#sysCustomHttpError"><span class="tocnumber">1.6.12</span> <span class="toctext">sysCustomHttpError</span></a></li>
+<li class="toclevel-3 tocsection-20"><a href="#sysDataSendRequest"><span class="tocnumber">1.6.13</span> <span class="toctext">sysDataSendRequest</span></a></li>
+<li class="toclevel-3 tocsection-21"><a href="#sysDeleteHttpDone"><span class="tocnumber">1.6.14</span> <span class="toctext">sysDeleteHttpDone</span></a></li>
+<li class="toclevel-3 tocsection-22"><a href="#sysDeleteHttpError"><span class="tocnumber">1.6.15</span> <span class="toctext">sysDeleteHttpError</span></a></li>
+<li class="toclevel-3 tocsection-23"><a href="#sysDisconnectionEvent"><span class="tocnumber">1.6.16</span> <span class="toctext">sysDisconnectionEvent</span></a></li>
+<li class="toclevel-3 tocsection-24"><a href="#sysDownloadDone"><span class="tocnumber">1.6.17</span> <span class="toctext">sysDownloadDone</span></a></li>
+<li class="toclevel-3 tocsection-25"><a href="#sysDownloadError"><span class="tocnumber">1.6.18</span> <span class="toctext">sysDownloadError</span></a></li>
+<li class="toclevel-3 tocsection-26"><a href="#sysDownloadFileProgress"><span class="tocnumber">1.6.19</span> <span class="toctext">sysDownloadFileProgress</span></a></li>
+<li class="toclevel-3 tocsection-27"><a href="#sysDropEvent"><span class="tocnumber">1.6.20</span> <span class="toctext">sysDropEvent</span></a></li>
+<li class="toclevel-3 tocsection-28"><a href="#sysDropUrlEvent"><span class="tocnumber">1.6.21</span> <span class="toctext">sysDropUrlEvent</span></a></li>
+<li class="toclevel-3 tocsection-29"><a href="#sysExitEvent"><span class="tocnumber">1.6.22</span> <span class="toctext">sysExitEvent</span></a></li>
+<li class="toclevel-3 tocsection-30"><a href="#sysGetHttpDone"><span class="tocnumber">1.6.23</span> <span class="toctext">sysGetHttpDone</span></a></li>
+<li class="toclevel-3 tocsection-31"><a href="#sysGetHttpError"><span class="tocnumber">1.6.24</span> <span class="toctext">sysGetHttpError</span></a></li>
+<li class="toclevel-3 tocsection-32"><a href="#sysInstall"><span class="tocnumber">1.6.25</span> <span class="toctext">sysInstall</span></a></li>
+<li class="toclevel-3 tocsection-33"><a href="#sysInstallModule"><span class="tocnumber">1.6.26</span> <span class="toctext">sysInstallModule</span></a></li>
+<li class="toclevel-3 tocsection-34"><a href="#sysInstallPackage"><span class="tocnumber">1.6.27</span> <span class="toctext">sysInstallPackage</span></a></li>
+<li class="toclevel-3 tocsection-35"><a href="#sysIrcMessage"><span class="tocnumber">1.6.28</span> <span class="toctext">sysIrcMessage</span></a></li>
+<li class="toclevel-3 tocsection-36"><a href="#sysLabelDeleted"><span class="tocnumber">1.6.29</span> <span class="toctext">sysLabelDeleted</span></a></li>
+<li class="toclevel-3 tocsection-37"><a href="#sysLoadEvent"><span class="tocnumber">1.6.30</span> <span class="toctext">sysLoadEvent</span></a></li>
+<li class="toclevel-3 tocsection-38"><a href="#sysLuaInstallModule"><span class="tocnumber">1.6.31</span> <span class="toctext">sysLuaInstallModule</span></a></li>
+<li class="toclevel-3 tocsection-39"><a href="#sysLuaUninstallModule"><span class="tocnumber">1.6.32</span> <span class="toctext">sysLuaUninstallModule</span></a></li>
+<li class="toclevel-3 tocsection-40"><a href="#sysManualLocationSetEvent"><span class="tocnumber">1.6.33</span> <span class="toctext">sysManualLocationSetEvent</span></a></li>
+<li class="toclevel-3 tocsection-41"><a href="#sysMapAreaChanged"><span class="tocnumber">1.6.34</span> <span class="toctext">sysMapAreaChanged</span></a></li>
+<li class="toclevel-3 tocsection-42"><a href="#sysMapDownloadEvent"><span class="tocnumber">1.6.35</span> <span class="toctext">sysMapDownloadEvent</span></a></li>
+<li class="toclevel-3 tocsection-43"><a href="#sysMapperButtonAction"><span class="tocnumber">1.6.36</span> <span class="toctext">sysMapperButtonAction</span></a></li>
+<li class="toclevel-3 tocsection-44"><a href="#sysMapWindowMousePressEvent"><span class="tocnumber">1.6.37</span> <span class="toctext">sysMapWindowMousePressEvent</span></a></li>
+<li class="toclevel-3 tocsection-45"><a href="#sysMiniConsoleDeleted"><span class="tocnumber">1.6.38</span> <span class="toctext">sysMiniConsoleDeleted</span></a></li>
+<li class="toclevel-3 tocsection-46"><a href="#sysMediaFinished"><span class="tocnumber">1.6.39</span> <span class="toctext">sysMediaFinished</span></a></li>
+<li class="toclevel-3 tocsection-47"><a href="#sysMMCPChatMessage"><span class="tocnumber">1.6.40</span> <span class="toctext">sysMMCPChatMessage</span></a></li>
+<li class="toclevel-3 tocsection-48"><a href="#sysMMCPIncomingSnoopMessage"><span class="tocnumber">1.6.41</span> <span class="toctext">sysMMCPIncomingSnoopMessage</span></a></li>
+<li class="toclevel-3 tocsection-49"><a href="#sysMMCPPeerUpdateEvent"><span class="tocnumber">1.6.42</span> <span class="toctext">sysMMCPPeerUpdateEvent</span></a></li>
+<li class="toclevel-3 tocsection-50"><a href="#sysMMCPSideChannelMessage"><span class="tocnumber">1.6.43</span> <span class="toctext">sysMMCPSideChannelMessage</span></a></li>
+<li class="toclevel-3 tocsection-51"><a href="#sysPathChanged"><span class="tocnumber">1.6.44</span> <span class="toctext">sysPathChanged</span></a></li>
+<li class="toclevel-3 tocsection-52"><a href="#sysPostHttpDone"><span class="tocnumber">1.6.45</span> <span class="toctext">sysPostHttpDone</span></a></li>
+<li class="toclevel-3 tocsection-53"><a href="#sysPostHttpError"><span class="tocnumber">1.6.46</span> <span class="toctext">sysPostHttpError</span></a></li>
+<li class="toclevel-3 tocsection-54"><a href="#sysProfileFocusChangeEvent"><span class="tocnumber">1.6.47</span> <span class="toctext">sysProfileFocusChangeEvent</span></a></li>
+<li class="toclevel-3 tocsection-55"><a href="#sysProtocolDisabled"><span class="tocnumber">1.6.48</span> <span class="toctext">sysProtocolDisabled</span></a></li>
+<li class="toclevel-3 tocsection-56"><a href="#sysProtocolEnabled"><span class="tocnumber">1.6.49</span> <span class="toctext">sysProtocolEnabled</span></a></li>
+<li class="toclevel-3 tocsection-57"><a href="#sysPutHttpDone"><span class="tocnumber">1.6.50</span> <span class="toctext">sysPutHttpDone</span></a></li>
+<li class="toclevel-3 tocsection-58"><a href="#sysPutHttpError"><span class="tocnumber">1.6.51</span> <span class="toctext">sysPutHttpError</span></a></li>
+<li class="toclevel-3 tocsection-59"><a href="#sysScrollBoxDeleted"><span class="tocnumber">1.6.52</span> <span class="toctext">sysScrollBoxDeleted</span></a></li>
+<li class="toclevel-3 tocsection-60"><a href="#sysServerGuiInstalled"><span class="tocnumber">1.6.53</span> <span class="toctext">sysServerGuiInstalled</span></a></li>
+<li class="toclevel-3 tocsection-61"><a href="#sysSettingChanged"><span class="tocnumber">1.6.54</span> <span class="toctext">sysSettingChanged</span></a></li>
+<li class="toclevel-3 tocsection-62"><a href="#sysSoundFinished"><span class="tocnumber">1.6.55</span> <span class="toctext">sysSoundFinished</span></a></li>
+<li class="toclevel-3 tocsection-63"><a href="#sysSpeedwalkFinished"><span class="tocnumber">1.6.56</span> <span class="toctext">sysSpeedwalkFinished</span></a></li>
+<li class="toclevel-3 tocsection-64"><a href="#sysSpeedwalkPaused"><span class="tocnumber">1.6.57</span> <span class="toctext">sysSpeedwalkPaused</span></a></li>
+<li class="toclevel-3 tocsection-65"><a href="#sysSpeedwalkResumed"><span class="tocnumber">1.6.58</span> <span class="toctext">sysSpeedwalkResumed</span></a></li>
+<li class="toclevel-3 tocsection-66"><a href="#sysSpeedwalkStarted"><span class="tocnumber">1.6.59</span> <span class="toctext">sysSpeedwalkStarted</span></a></li>
+<li class="toclevel-3 tocsection-67"><a href="#sysSpeedwalkStopped"><span class="tocnumber">1.6.60</span> <span class="toctext">sysSpeedwalkStopped</span></a></li>
+<li class="toclevel-3 tocsection-68"><a href="#sysSyncInstallModule"><span class="tocnumber">1.6.61</span> <span class="toctext">sysSyncInstallModule</span></a></li>
+<li class="toclevel-3 tocsection-69"><a href="#sysSyncUninstallModule"><span class="tocnumber">1.6.62</span> <span class="toctext">sysSyncUninstallModule</span></a></li>
+<li class="toclevel-3 tocsection-70"><a href="#sysTelnetEvent"><span class="tocnumber">1.6.63</span> <span class="toctext">sysTelnetEvent</span></a></li>
+<li class="toclevel-3 tocsection-71"><a href="#sysTextEditDeleted"><span class="tocnumber">1.6.64</span> <span class="toctext">sysTextEditDeleted</span></a></li>
+<li class="toclevel-3 tocsection-72"><a href="#sysUninstall"><span class="tocnumber">1.6.65</span> <span class="toctext">sysUninstall</span></a></li>
+<li class="toclevel-3 tocsection-73"><a href="#sysUninstallModule"><span class="tocnumber">1.6.66</span> <span class="toctext">sysUninstallModule</span></a></li>
+<li class="toclevel-3 tocsection-74"><a href="#sysUninstallPackage"><span class="tocnumber">1.6.67</span> <span class="toctext">sysUninstallPackage</span></a></li>
+<li class="toclevel-3 tocsection-75"><a href="#sysUnzipDone"><span class="tocnumber">1.6.68</span> <span class="toctext">sysUnzipDone</span></a></li>
+<li class="toclevel-3 tocsection-76"><a href="#sysUnzipError"><span class="tocnumber">1.6.69</span> <span class="toctext">sysUnzipError</span></a></li>
+<li class="toclevel-3 tocsection-77"><a href="#sysUserWindowResizeEvent"><span class="tocnumber">1.6.70</span> <span class="toctext">sysUserWindowResizeEvent</span></a></li>
+<li class="toclevel-3 tocsection-78"><a href="#sysWindowMousePressEvent"><span class="tocnumber">1.6.71</span> <span class="toctext">sysWindowMousePressEvent</span></a></li>
+<li class="toclevel-3 tocsection-79"><a href="#sysWindowMouseReleaseEvent"><span class="tocnumber">1.6.72</span> <span class="toctext">sysWindowMouseReleaseEvent</span></a></li>
+<li class="toclevel-3 tocsection-80"><a href="#sysWindowOverflowEvent"><span class="tocnumber">1.6.73</span> <span class="toctext">sysWindowOverflowEvent</span></a></li>
+<li class="toclevel-3 tocsection-81"><a href="#sysWindowResizeEvent"><span class="tocnumber">1.6.74</span> <span class="toctext">sysWindowResizeEvent</span></a></li>
+<li class="toclevel-3 tocsection-82"><a href="#ttsPitchChanged"><span class="tocnumber">1.6.75</span> <span class="toctext">ttsPitchChanged</span></a></li>
+<li class="toclevel-3 tocsection-83"><a href="#ttsRateChanged"><span class="tocnumber">1.6.76</span> <span class="toctext">ttsRateChanged</span></a></li>
+<li class="toclevel-3 tocsection-84"><a href="#ttsSpeechError"><span class="tocnumber">1.6.77</span> <span class="toctext">ttsSpeechError</span></a></li>
+<li class="toclevel-3 tocsection-85"><a href="#ttsSpeechPaused"><span class="tocnumber">1.6.78</span> <span class="toctext">ttsSpeechPaused</span></a></li>
+<li class="toclevel-3 tocsection-86"><a href="#ttsSpeechQueued"><span class="tocnumber">1.6.79</span> <span class="toctext">ttsSpeechQueued</span></a></li>
+<li class="toclevel-3 tocsection-87"><a href="#ttsSpeechReady"><span class="tocnumber">1.6.80</span> <span class="toctext">ttsSpeechReady</span></a></li>
+<li class="toclevel-3 tocsection-88"><a href="#ttsSpeechStarted"><span class="tocnumber">1.6.81</span> <span class="toctext">ttsSpeechStarted</span></a></li>
+<li class="toclevel-3 tocsection-89"><a href="#ttsVoiceChanged"><span class="tocnumber">1.6.82</span> <span class="toctext">ttsVoiceChanged</span></a></li>
+<li class="toclevel-3 tocsection-90"><a href="#ttsVolumeChanged"><span class="tocnumber">1.6.83</span> <span class="toctext">ttsVolumeChanged</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+
+</td></tr></tbody></table>
+<h1><span class="mw-headline" id="Event_System">Event System</span></h1>
+<p>Events in Mudlet allow a paradigm of system-building that is easy to maintain (because if you’d like to restructure something, you’d have to do less work), enables interoperability (making a collection of scripts that work with each other is easier) and enables an event-based way of programming.
+</p><p>The essentials of it are as such: you use Scripts to define which events a function should listen to, and when the event is raised, the said function(s) will be called. Events can also have function parameters with them, which’ll be passed onto the receiving functions.
+</p>
+<h2><span class="mw-headline" id="Registering_an_event_handler_via_UI">Registering an event handler via UI</span></h2>
+<p>Registering an event handler means that you’ll be telling Mudlet what function it should call for you when an event is raised, so it’s a two step process - you need to tell it both what function you’d like to have called, and on what event it should be called.
+</p><p>To tell it what function should be called, create a new script, and <b>give the script the name of the function you’d like to be called</b>. This is the only time where an items name matters in Mudlet. You can define the function right inside the script as well, if you’d like.
+</p><p>Next, we tell it what event or events this function should be called on - you can add multiple entries. To do that, enter the events name in the Add User Defined Event Handler: field, press enter, and it’ll go into the list - and that is all.
+</p>
+<div class="center"><div class="floatnone"><a href="/w/File:Gui-event-handler.png" class="image"><img alt="Gui-event-handler.png" src="/images/thumb/0/01/Gui-event-handler.png/600px-Gui-event-handler.png" decoding="async" width="600" height="463" srcset="/images/thumb/0/01/Gui-event-handler.png/900px-Gui-event-handler.png 1.5x, /images/0/01/Gui-event-handler.png 2x" /></a></div></div>
+<h2><span class="mw-headline" id="Registering_an_event_from_a_script">Registering an event from a script</span></h2>
+<p>You can also register your event with the <i><a href="/w/Manual:Miscellaneous_Functions#registerAnonymousEventHandler" title="Manual:Miscellaneous Functions">registerAnonymousEventHandler(event name, function reference, [one shot])</a></i> function inside your scripts:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- example taken from the God Wars 2 (http://godwars2.org) Mudlet UI - forces the window to keep to a certain size</span>
+<span class="kr">function</span> <span class="nf">keepStaticSize</span><span class="p">()</span>
+  <span class="n">setMainWindowSize</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span><span class="mi">720</span><span class="p">)</span>
+<span class="kr">end</span> <span class="c1">-- keepStaticSize</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysWindowResizeEvent&quot;</span><span class="p">,</span> <span class="n">keepStaticSize</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+</pre></div>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>&#160;: <a rel="nofollow" class="external text" href="https://wiki.mudlet.org/w/Manual:Lua_Functions#registerNamedEventHandler">registerNamedEventHandler</a> can also be used. Doing so causes Mudlet to handle saving of the IDs for you.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Mudlet also uses the event system in-game protocols (like GMCP, MSDP and others).
+</p>
+<h2><span class="mw-headline" id="Raising_a_custom_event">Raising a custom event</span></h2>
+<p>To raise an event, you'd use the <a href="/w/Manual:Lua_Functions#raiseEvent" title="Manual:Lua Functions">raiseEvent()</a> function:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">raiseEvent</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="n">arguments</span><span class="p">...])</span>
+</pre></div>
+<p>It takes an event name as the first argument, and then any amount of arguments after it which will be passed onto the receiving functions.
+</p>
+<h2><span class="mw-headline" id="Example_of_registering_and_raising_an_event">Example of registering and raising an event</span></h2>
+<p>Add a script to each profile you need the event.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- This is the function that will be called when the event is raised.</span>
+<span class="c1">-- &quot;event&quot; is set to the event name.</span>
+<span class="c1">-- &quot;arg&quot; is the argument(s) provided with raiseEvent/raiseGlobalEvent.</span>
+<span class="c1">-- &quot;profile&quot; - Is the profile name from where the raiseGlobalEvent was triggered from</span>
+<span class="c1">--             It is &#39;nil&#39; if raiseEvent() was used.</span>
+<span class="kr">function</span> <span class="nf">onMyEvent</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">profile</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Event: &quot;</span> <span class="o">..</span> <span class="n">event</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Arg  : &quot;</span> <span class="o">..</span> <span class="n">arg</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="c1">-- If the event is not raised with raiseGlobalEvent() profile will be &#39;nil&#39;</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Profile: &quot;</span> <span class="o">..</span> <span class="p">(</span><span class="n">profile</span> <span class="ow">or</span> <span class="s2">&quot;Local&quot;</span><span class="p">)</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- Register the event handler.</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;my_event&quot;</span><span class="p">,</span> <span class="n">onMyEvent</span><span class="p">)</span>
+</pre></div>
+<p>To raise the event you can call:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Trigger only in the current profile:</span>
+<span class="n">raiseEvent</span><span class="p">(</span><span class="s2">&quot;my_event&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+
+<span class="c1">-- Trigger the event in all OTHER profiles:</span>
+<span class="n">raiseGlobalEvent</span><span class="p">(</span><span class="s2">&quot;my_event&quot;</span><span class="p">,</span> <span class="s2">&quot;Hello World!&quot;</span><span class="p">)</span>
+</pre></div>
+<p>To review, count and extract from an unknown number of arguments received by an event:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">eventArgs</span><span class="p">(...)</span>
+  <span class="kd">local</span> <span class="n">args</span> <span class="o">=</span> <span class="p">{...}</span>
+  <span class="kd">local</span> <span class="n">amount</span> <span class="o">=</span> <span class="o">#</span><span class="n">args</span>
+  <span class="kd">local</span> <span class="n">first</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;Number of arguments: &quot;</span> <span class="o">..</span> <span class="n">amount</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Table of all arguments: &quot;</span><span class="p">)</span>
+  <span class="n">display</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;First argument: &quot;</span> <span class="o">..</span> <span class="n">first</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h2><span class="mw-headline" id="Gamepad_functionality">Gamepad functionality</span></h2>
+<p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  will be removed in 4.18 as this is blocking Mudlet updates and is not used by players.
+</p><p>Gamepad functions are not fully supported with all operating systems and hardware.  Windows supports XInput devices like Xbox 360 and Xbox One controllers.  DirectInput controllers like a PlayStation 4 controller can be translated to XInput with third party software.  Mudlet on Linux can support gamepads but only if you compile it yourself.  The automated builds are made using the oldest supported version of Ubuntu, and the <a rel="nofollow" class="external text" href="https://doc.qt.io/qt-5/qtgamepad-index.html">Qt5 gamepad module</a> was <a rel="nofollow" class="external text" href="https://packages.ubuntu.com/search?keywords=libqt5gamepad5-dev">not available on Ubuntu 18.04 LTS</a>.
+</p>
+<h2><span class="mw-headline" id="Mudlet-raised_events">Mudlet-raised events</span></h2>
+<p>Mudlet itself also creates events for your scripts to hook on. The following events are generated currently:
+</p>
+<h3><span class="mw-headline" id="AdjustableContainerReposition">AdjustableContainerReposition</span></h3>
+<p>Raised while a <a href="/w/Manual:Geyser#Adjustable.Container" title="Manual:Geyser">adjustable container</a> is re-positioned.  
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">repositioningContainer</span><span class="p">(</span><span class="n">eventName</span><span class="p">,</span> <span class="n">containerName</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mouseAction</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{containerName}: {x}x, {y}y, {width}x{height}, using mouse? {mouseAction}&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;AdjustableContainerReposition&quot;</span><span class="p">,</span> <span class="n">repositioningContainer</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="AdjustableContainerRepositionFinish">AdjustableContainerRepositionFinish</span></h3>
+<p>Raised when an <a href="/w/Manual:Geyser#Adjustable.Container" title="Manual:Geyser">adjustable container</a> done being re-positioned.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">finishedRepositioning</span><span class="p">(</span><span class="n">eventName</span><span class="p">,</span> <span class="n">containerName</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{containerName}: {x}x, {y}y, {width}x{height}&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;AdjustableContainerRepositionFinish&quot;</span><span class="p">,</span> <span class="n">finishedRepositioning</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="channel102Message">channel102Message</span></h3>
+<p>Raised when a telnet sub-option 102 message is received (which comprises of two numbers passed in the event). This is of particular use with the <a rel="nofollow" class="external text" href="http://www.aardwolf.com">Aardwolf MUD</a> who originated this protocol. See <a rel="nofollow" class="external text" href="http://forums.mudlet.org/viewtopic.php?f=6&amp;t=1471">this</a> forum topic for more about the Mudlet Aardwolf GUI that makes use of this.
+</p>
+<h3><span class="mw-headline" id="mapModeChangeEvent">mapModeChangeEvent</span></h3>
+<p>Raised when the mapper is switching between "view-only" and "editing" mode of the <a href="/w/Manual:Mapper#Visual_Map_Editor" title="Manual:Mapper">Visual Map Editor</a>. A value of "editing" or "viewing" will be given as argument to indicate which mode was entered.
+</p>
+<h3><span class="mw-headline" id="mapOpenEvent">mapOpenEvent</span></h3>
+<p>Raised when the mapper is opened - either the floating dock or the in-Mudlet widget.
+</p>
+<h3><span class="mw-headline" id="sysAppStyleSheetChange">sysAppStyleSheetChange</span></h3>
+<p>Raised when <a href="/w/Manual:UI_Functions#setAppStyleSheet" title="Manual:UI Functions">setAppStyleSheet</a> is called and a new stylesheet applied to Mudlet.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- This will respond to a future (as yet unpublished) addition to the Mudlet code that will allow some</span>
+<span class="c1">-- of a default application style sheet to be supplied with Mudlet to compensate for some text colors</span>
+<span class="c1">-- that do not show up equally well in both light and dark desktop themes. That, perhaps, might finally</span>
+<span class="c1">-- allow different colored texts to be uses again for the trigger item types!</span>
+<span class="kr">function</span> <span class="nf">appStyleSheetChangeEvent</span><span class="p">(</span> <span class="n">event</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">source</span> <span class="p">)</span>
+  <span class="kr">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;system&quot;</span> <span class="kr">then</span>
+    <span class="n">colorTable</span> <span class="o">=</span> <span class="n">colorTable</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="kr">if</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;mudlet-dark-theme&quot;</span> <span class="kr">then</span>
+      <span class="n">colorTable</span><span class="p">.</span><span class="n">blue</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">255</span><span class="p">}</span>
+      <span class="n">colorTable</span><span class="p">.</span><span class="n">green</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="kr">elseif</span> <span class="n">tag</span> <span class="o">==</span> <span class="s2">&quot;mudlet-light-theme&quot;</span> <span class="kr">then</span>
+      <span class="n">colorTable</span><span class="p">.</span><span class="n">blue</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">}</span>
+      <span class="n">colorTable</span><span class="p">.</span><span class="n">green</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">64</span><span class="p">}</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.19</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysBufferShrinkEvent">sysBufferShrinkEvent</span></h3>
+<p>Raised when the oldest lines are removed from the back of any console or buffer belonging to a profile because it has reached the limit (either the default or that set by <a href="/w/Manual:Mudlet_Object_Functions#setConsoleBufferSize" title="Manual:Mudlet Object Functions">setConsoleBufferSize</a>). The two additional arguments within the event are: the name of the console or buffer and the number of lines removed from the beginning of the buffer. This information will be useful for any situation where a line number is being stored as it will need to be decremented by that number of lines in order to continue to refer to the same line (assuming that it is still present - indicated by the number remaining positive) after the oldest ones have been removed.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.17</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysCommandLineDeleted">sysCommandLineDeleted</span></h3>
+<p>Raised when a command line is successfully deleted via <a href="/w/Manual:UI_Functions#deleteCommandLine" title="Manual:UI Functions">deleteCommandLine()</a> or Geyser's <code>CommandLine:delete()</code> method. The event provides the name of the deleted command line as an argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This event is raised after the command line has been marked for deletion but before Qt's event loop has completed the deletion. The command line should be considered gone for practical purposes.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  The main command line cannot be deleted, so this event will never be raised for it.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysCommandLineDeleted"</li>
+<li><i>commandLineName</i>: The name of the command line that was deleted</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Register an event handler for command line deletion</span>
+<span class="kr">function</span> <span class="nf">onCommandLineDeleted</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">commandLineName</span><span class="p">)</span>
+  <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;Command line &#39;{commandLineName}&#39; has been deleted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  
+  <span class="c1">-- Clean up any command history or aliases specific to this command line</span>
+  <span class="kr">if</span> <span class="n">commandLineHistory</span><span class="p">[</span><span class="n">commandLineName</span><span class="p">]</span> <span class="kr">then</span>
+    <span class="n">commandLineHistory</span><span class="p">[</span><span class="n">commandLineName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysCommandLineDeleted&quot;</span><span class="p">,</span> <span class="n">onCommandLineDeleted</span><span class="p">)</span>
+
+<span class="c1">-- Now when you delete a command line, the handler will be called</span>
+<span class="n">createCommandLine</span><span class="p">(</span><span class="s2">&quot;customInput&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">deleteCommandLine</span><span class="p">(</span><span class="s2">&quot;customInput&quot;</span><span class="p">)</span>
+<span class="c1">-- Output: Command line &#39;customInput&#39; has been deleted.</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysConnectionEvent">sysConnectionEvent</span></h3>
+<p>Raised when the profile becomes connected to a MUD.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This is raised the moment the socket opens, before Mudlet and the game have negotiated anything - so GMCP, MSDP, ATCP and MXP are all still unavailable to a handler running here. To act as soon as one of them is usable, handle <a href="#sysProtocolEnabled">sysProtocolEnabled</a> instead.
+</p>
+<h3><span class="mw-headline" id="sysConsoleSizeChanged">sysConsoleSizeChanged</span></h3>
+<p>This event is raised when the (scrollable part of) the main or a sub-console or a user-window changes in size. After the event name as the first argument (as is "standard") additional arguments contain:
+</p>
+<ul><li>the name (string) of the console involved ("<i>main</i>" for the main console)</li>
+<li>the number of characters (<i>em-space</i> equivalents) wide the new size is</li>
+<li>the number of lines tall the new size is</li>
+<li>the number of characters taken up by a visible time stamp (will be <b>0</b> if this detail is not visible).</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysCustomHttpDone">sysCustomHttpDone</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#customHTTP" title="Manual:Networking Functions">customHTTP()</a> request completes successfully. Arguments with the event are the URL that the request was sent to and the response body (if it's less than 10k characters) and HTTP method.
+</p><p>See also <a href="#sysCustomHttpError">sysCustomHttpError</a>.
+</p>
+<h3><span class="mw-headline" id="sysCustomHttpError">sysCustomHttpError</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#customHTTP" title="Manual:Networking Functions">customHTTP()</a> request fails. Arguments are the error message and the URL that the request was sent to and HTTP method.
+</p><p>See also <a href="#sysCustomHttpDone">sysCustomHttpDone</a>.
+</p>
+<h3><span class="mw-headline" id="sysDataSendRequest">sysDataSendRequest</span></h3>
+<p>Raised right before a command from the send(), sendAll() functions or the command line is sent to the game - useful for keeping track of what your last command was, manipulating input or even denying the command to be sent if necessary with <a href="/w/Manual:Miscellaneous_Functions#denyCurrentSend" title="Manual:Miscellaneous Functions">denyCurrentSend()</a>.
+</p><p>sysDataSendRequest will send the event name and the command sent (in string form) to the functions registered to it. IE: commandSent in the example below will be "eat hambuger" if the user entered only that into command line and pressed enter, send("eat hamburger"), sendAll("eat humburger", "eat fish") or sendAll("eat fish", "eat humburger")
+</p><p>Note: if you'll be making use of denyCurrentSend(), you <i>really should</i> notify the user that you denied their command - unexperienced ones might conclude that your script or Mudlet is buggy if they don't see visual feedback. Do not mis-use this and use it as <a rel="nofollow" class="external text" href="https://en.wikipedia.org/wiki/Keylogger">keylogger</a> either.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- cancels all &quot;eat hambuger&quot; commands</span>
+<span class="kr">function</span> <span class="nf">cancelEatHamburger</span><span class="p">(</span><span class="n">eventName</span><span class="p">,</span> <span class="n">commandSent</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">commandSent</span> <span class="o">==</span> <span class="s2">&quot;eat hamburger&quot;</span> <span class="kr">then</span>
+    <span class="n">denyCurrentSend</span><span class="p">()</span> <span class="c1">--cancels the command sent.</span>
+    <span class="n">cecho</span><span class="p">(</span><span class="s2">&quot;&lt;red&gt;Denied! You can&#39;t do &quot;</span><span class="o">..</span><span class="n">commandSent</span><span class="o">..</span><span class="s2">&quot; right now.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="kr">end</span> <span class="c1">--if commandSent == eat hamburger</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDataSendRequest&quot;</span><span class="p">,</span> <span class="n">cancelEatHamburger</span><span class="p">)</span>
+</pre></div>
+<p>If you wanted to control input you could set a bool after a trigger.
+This is useful if you want alias like control, do not know what text will be entered, but do know a trigger that WILL occur just before the user enters the command.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">controlInput</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span> 
+  <span class="kr">if</span> <span class="n">changeCMDInput</span> <span class="kr">then</span>
+    <span class="n">changeCMDInput</span> <span class="o">=</span> <span class="kc">false</span> <span class="c1">--set this if check to false to it doesn&#39;t occur every input</span>
+    <span class="c1">--Also set the bool check BEFORE any send() functions within a sysDataSendRequest function</span>
+    <span class="n">sendAll</span><span class="p">(</span><span class="n">command</span> <span class="o">..</span> <span class="s2">&quot;some target&quot;</span><span class="p">,</span> <span class="n">command</span> <span class="o">..</span> <span class="s2">&quot;some other target&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="c1">--Duplicate and unknown command</span>
+    <span class="n">denyCurrentSend</span><span class="p">()</span> <span class="c1">--Deny the original command, not the commands sent with sendAll.</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDataSendRequest&quot;</span><span class="p">,</span> <span class="n">controlInput</span><span class="p">)</span>
+</pre></div>
+<p>Take note that functions registered under sysDataSendRequest WILL trigger with ALL commands that are sent.
+</p>
+<h3><span class="mw-headline" id="sysDeleteHttpDone">sysDeleteHttpDone</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#deleteHTTP" title="Manual:Networking Functions">deleteHTTP()</a> request completes successfully. Arguments with the event are the URL that the request was sent to and the response body (if it's less than 10k characters).
+</p><p>See also <a href="#sysDeleteHttpError">sysDeleteHttpError</a>.
+</p>
+<h3><span class="mw-headline" id="sysDeleteHttpError">sysDeleteHttpError</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#deleteHTTP" title="Manual:Networking Functions">deleteHTTP()</a> request fails. Arguments are the error message and the URL that the request was sent to.
+</p><p>See also <a href="#sysDeleteHttpDone">sysDeleteHttpDone</a>.
+</p>
+<h3><span class="mw-headline" id="sysDisconnectionEvent">sysDisconnectionEvent</span></h3>
+<p>Raised when the profile becomes disconnected, either manually or by the game.
+</p><p>If you'd like to automatically reconnect when you get disconnected, make a new <code>Script</code> and add this inside:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDisconnectionEvent&quot;</span><span class="p">,</span> <span class="n">reconnect</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysDownloadDone">sysDownloadDone</span></h3>
+<p>Raised when Mudlet is finished downloading a file successfully - the location of the downloaded file is passed as a second argument, the file size is passed as the third, and the HTTP response is passed as the fourth.
+</p><p>Example - put it into a new script and save it to run:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- create a function to parse the downloaded webpage and display a result</span>
+<span class="kr">function</span> <span class="nf">downloaded_file</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+  <span class="c1">-- is the file that downloaded ours?</span>
+  <span class="kr">if</span> <span class="ow">not</span> <span class="n">filename</span><span class="p">:</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;achaea-who-count.html&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
+
+  <span class="c1">-- read the contents of the webpage in</span>
+  <span class="kd">local</span> <span class="n">f</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">webpage</span> <span class="o">=</span> <span class="nb">io.open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">f</span> <span class="kr">then</span> <span class="n">webpage</span> <span class="o">=</span> <span class="n">f</span><span class="p">:</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;*a&quot;</span><span class="p">);</span> <span class="nb">io.close</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="kr">end</span>
+  <span class="c1">-- delete the file on disk, don&#39;t clutter</span>
+  <span class="nb">os.remove</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+  <span class="c1">-- parse our downloaded file for the player count</span>
+  <span class="kd">local</span> <span class="n">pc</span> <span class="o">=</span> <span class="n">webpage</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s">[[Total: (%d+) players online]]</span><span class="p">)</span>
+  <span class="n">display</span><span class="p">(</span><span class="s2">&quot;Achaea has &quot;</span><span class="o">..</span><span class="nb">tostring</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span><span class="o">..</span><span class="s2">&quot; players on right now.&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="c1">-- register our function to run on the event that something was downloaded</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDownloadDone&quot;</span><span class="p">,</span> <span class="n">downloaded_file</span><span class="p">)</span>
+
+<span class="c1">-- download a list of fake users for a demo</span>
+<span class="n">downloadFile</span><span class="p">(</span><span class="n">getMudletHomeDir</span><span class="p">()</span><span class="o">..</span><span class="s2">&quot;/achaea-who-count.html&quot;</span><span class="p">,</span> <span class="s2">&quot;https://www.achaea.com/game/who&quot;</span><span class="p">)</span>
+</pre></div>
+<p>You should see a result like this:
+</p><p><a href="/w/File:DownloadFile_demo.png" class="image"><img alt="DownloadFile demo.png" src="/images/thumb/0/0e/DownloadFile_demo.png/800px-DownloadFile_demo.png" decoding="async" width="800" height="261" srcset="/images/thumb/0/0e/DownloadFile_demo.png/1200px-DownloadFile_demo.png 1.5x, /images/0/0e/DownloadFile_demo.png 2x" /></a>
+</p>
+<h3><span class="mw-headline" id="sysDownloadError">sysDownloadError</span></h3>
+<p>Raised when downloading a file failed - the second argument contains the error message, the third the local filename that was to be used and the actual URL used (might not be the same as what was given if redirection took place).
+</p>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">--if a download fails notify the player.</span>
+<span class="kr">function</span> <span class="nf">downloadErrorEventHandler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">errorFound</span><span class="p">,</span> <span class="n">localFilename</span><span class="p">,</span> <span class="n">usedUrl</span><span class="p">)</span>
+    <span class="n">cecho</span><span class="p">(</span><span class="s2">&quot;fuction downloadErrorEventHandler, &quot;</span><span class="o">..</span><span class="n">errorFound</span><span class="p">)</span>
+    <span class="n">debugc</span><span class="p">(</span><span class="s2">&quot;fuction downloadErrorEventHandler, &quot;</span><span class="o">..</span><span class="n">errorFound</span><span class="p">)</span> <span class="c1">--display to error screen in editor</span>
+<span class="kr">end</span> <span class="c1">--function downloadErrorEventHandler</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDownloadError&quot;</span><span class="p">,</span> <span class="n">downloadErrorEventHandler</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysDownloadFileProgress">sysDownloadFileProgress</span></h3>
+<p>Raised while file is being downloaded to indicate progess of download.
+</p><p>The arguments passed areː: event name, url of download, bytes downloaded, total bytes (if available).
+</p>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- will show progress bar while download file and hide it after file download is complete</span>
+<span class="kd">local</span> <span class="n">progressBar</span> <span class="o">=</span> <span class="n">Geyser</span><span class="p">.</span><span class="n">Gauge</span><span class="p">:</span><span class="n">new</span><span class="p">({</span>
+  <span class="n">name</span><span class="o">=</span><span class="s2">&quot;downloadProgressBar&quot;</span><span class="p">,</span>
+  <span class="n">x</span><span class="o">=</span><span class="s2">&quot;25%&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;10%&quot;</span><span class="p">,</span>
+  <span class="n">width</span><span class="o">=</span><span class="s2">&quot;50%&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s2">&quot;5%&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="n">progressBar</span><span class="p">:</span><span class="n">setFontSize</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+<span class="n">progressBar</span><span class="p">:</span><span class="n">setAlignment</span><span class="p">(</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">progressBar</span><span class="p">:</span><span class="n">hide</span><span class="p">()</span>
+
+
+<span class="kd">local</span> <span class="n">fileUrl</span> <span class="o">=</span> <span class="s2">&quot;https://www.mudlet.org/download/Mudlet-4.10.1-linux-x64.AppImage.tar&quot;</span>
+<span class="kd">local</span> <span class="n">targetFile</span> <span class="o">=</span> <span class="n">getMudletHomeDir</span><span class="p">()</span> <span class="o">..</span> <span class="s2">&quot;/Mudlet.tar&quot;</span>
+<span class="kr">function</span> <span class="nf">handleProgress</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">bytesDownloaded</span><span class="p">,</span> <span class="n">totalBytes</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">url</span> <span class="o">~=</span> <span class="n">fileUrl</span> <span class="kr">then</span>
+    <span class="kr">return</span>
+  <span class="kr">end</span>
+  
+  <span class="n">progressBar</span><span class="p">:</span><span class="n">show</span><span class="p">()</span>
+  
+  <span class="kr">if</span> <span class="ow">not</span> <span class="n">totalBytes</span> <span class="kr">then</span>
+    <span class="n">bytesDownloaded</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">totalBytes</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+  
+  <span class="n">progressBar</span><span class="p">:</span><span class="n">setValue</span><span class="p">(</span><span class="n">bytesDownloaded</span><span class="p">,</span> <span class="n">totalBytes</span><span class="p">,</span> <span class="nb">math.floor</span><span class="p">((</span><span class="n">bytesDownloaded</span> <span class="o">/</span> <span class="n">totalBytes</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="o">..</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDownloadFileProgress&quot;</span><span class="p">,</span> <span class="n">handleProgress</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nf">hideProgressBar</span><span class="p">()</span>
+  <span class="n">tempTimer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span> <span class="n">progressBar</span><span class="p">:</span><span class="n">hide</span><span class="p">()</span> <span class="kr">end</span><span class="p">)</span>
+<span class="kr">end</span> 
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDownloadDone&quot;</span><span class="p">,</span> <span class="n">hideProgressBar</span><span class="p">)</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDownloadError&quot;</span><span class="p">,</span> <span class="n">hideProgressBar</span><span class="p">)</span>
+
+<span class="n">downloadFile</span><span class="p">(</span><span class="n">targetFile</span><span class="p">,</span> <span class="n">fileUrl</span><span class="p">)</span>
+</pre></div>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.11</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysDropEvent">sysDropEvent</span></h3>
+<p>Raised when a file is dropped on the Mudlet main window or a userwindow.
+The arguments passed areː filepath, suffix, xpos, ypos, and consolename - "main" for the main window and otherwise of the userwindow/miniconsole name.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.8</span><span class="version-label-plus">+</span></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onDragAndDrop</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">suffix</span><span class="p">,</span> <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">,</span> <span class="n">consolename</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;Dropped new file into %s: %s (suffix: %s)&quot;</span><span class="p">,</span> <span class="n">consolename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+<span class="kr">end</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDropEvent&quot;</span><span class="p">,</span> <span class="n">onDragAndDrop</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysDropUrlEvent">sysDropUrlEvent</span></h3>
+<p>Raised when a url is dropped on the Mudlet main window or a userwindow.
+As an url at the moment Mudlet understands
+The arguments passed areː url, schema, xpos, ypos, and consolename - "main" for the main window and otherwise of the userwindow/miniconsole name.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.11</span><span class="version-label-plus">+</span></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onDragAndDropUrl</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">xpos</span><span class="p">,</span> <span class="n">ypos</span><span class="p">,</span> <span class="n">consolename</span><span class="p">)</span>
+  <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;Dropped new url into %s: %s (suffix: %s)&quot;</span><span class="p">,</span> <span class="n">consolename</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+  <span class="kr">if</span> <span class="n">schema</span> <span class="o">==</span> <span class="s2">&quot;http&quot;</span> <span class="ow">or</span> <span class="n">schema</span> <span class="o">==</span> <span class="s2">&quot;https&quot;</span> <span class="kr">then</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Oh boy... this might be a link to some website&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysDropUrlEvent&quot;</span><span class="p">,</span> <span class="n">onDragAndDropUrl</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysExitEvent">sysExitEvent</span></h3>
+<p>Raised when Mudlet is shutting down the profile - a good event to hook onto for saving all of your data.
+</p>
+<h3><span class="mw-headline" id="sysGetHttpDone">sysGetHttpDone</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#getHTTP" title="Manual:Networking Functions">getHTTP()</a> request completes successfully. Arguments with the event are the URL that the request was sent to and the response body (if it's less than 10k characters).
+</p><p>This event is also raised when a post/put/delete request redirects to a <i>GET</i>.
+</p><p>See also <a href="#sysGetHttpError">sysGetHttpError</a>.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.10</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysGetHttpError">sysGetHttpError</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#getHTTP" title="Manual:Networking Functions">getHTTP()</a> request fails. Arguments are the error message and the URL that the request was sent to.
+</p><p>See also <a href="#sysGetHttpDone">sysGetHttpDone</a>.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.10</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysInstall">sysInstall</span></h3>
+<p>Raised right after a module or package is installed by any means. This can be used to display post-installation information or setup things.
+</p><p>Event handlers receive the name of the installed package or module as additional argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b> Installed modules will raise this event handler each time the synced profile is opened. <a href="#sysInstallModule">sysInstallModule</a> and <a href="#sysInstallPackage">sysInstallPackage</a> are not raised by opening profiles.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">myScriptInstalled</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+  <span class="c1">-- stop if what got installed isn&#39;t my thing</span>
+  <span class="kr">if</span> <span class="n">name</span> <span class="o">~=</span> <span class="s2">&quot;my script name here&quot;</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
+
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hey, thanks for installing my thing!&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysInstallPackage&quot;</span><span class="p">,</span> <span class="n">myScriptInstalled</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysInstallModule">sysInstallModule</span></h3>
+<p>Raised right after a module is installed through the module dialog. This can be used to display post-installation information or setup things.
+</p><p>See also <a href="#sysLuaInstallModule">sysLuaInstallModule</a> for when a module is installed via Lua.
+</p><p>Event handlers receive the name of the installed module as well as the file name as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysInstallPackage">sysInstallPackage</span></h3>
+<p>Raised right after a package is installed by any means. This can be used to display post-installation information or setup things.
+</p><p>Event handlers receive the name of the installed package as well as the file name as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysIrcMessage">sysIrcMessage</span></h3>
+<p>Raised when the IRC client receives an IRC message.  The sender's name, channel name, and their message are passed as arguments to this event.  
+</p><p>Starting with Mudlet 3.3, this event changes slightly to provide more information from IRC network messages.  Data such as status codes, command responses, or error messages sent by the IRC Server may be formatted as plain text by the client and posted to lua via this event. 
+</p>
+<ul><li>sender: may be the nick name of an IRC user or the name of the IRC server host, as retrievable by  <a href="/w/Manual:Networking_Functions#getIrcConnectedHost" title="Manual:Networking Functions">getIrcConnectedHost()</a></li>
+<li>channel: may not always contain a channel name, but will be the name of the target/recipient of a message or action. In some networks the name may be that of a service (like <i>"Auth"</i> for example)</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onIrcMessage</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s1">&#39;(%s) %s says, &quot;%s&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">sender</span><span class="p">,</span> <span class="n">message</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysIrcMessage&quot;</span><span class="p">,</span> <span class="n">onIrcMessage</span><span class="p">)</span>
+</pre></div>
+<p>To send a message, see <a href="/w/Manual:Networking_Functions#sendIrc" title="Manual:Networking Functions">sendIrc()</a>.
+</p>
+<h3><span class="mw-headline" id="sysLabelDeleted">sysLabelDeleted</span></h3>
+<p>Raised when a label is successfully deleted via <a href="/w/Manual:Lua_Functions#deleteLabel" title="Manual:Lua Functions">deleteLabel()</a> or Geyser's <code>Label:delete()</code> method. The event provides the name of the deleted label as an argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This event is raised after the label has been marked for deletion but before Qt's event loop has completed the deletion. The label should be considered gone for practical purposes.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysLabelDeleted"</li>
+<li><i>labelName</i>: The name of the label that was deleted</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Register an event handler for label deletion</span>
+<span class="kr">function</span> <span class="nf">onLabelDeleted</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">labelName</span><span class="p">)</span>
+  <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;Label &#39;{labelName}&#39; has been deleted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  
+  <span class="c1">-- Clean up any references or related data</span>
+  <span class="kr">if</span> <span class="n">myLabelReferences</span><span class="p">[</span><span class="n">labelName</span><span class="p">]</span> <span class="kr">then</span>
+    <span class="n">myLabelReferences</span><span class="p">[</span><span class="n">labelName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysLabelDeleted&quot;</span><span class="p">,</span> <span class="n">onLabelDeleted</span><span class="p">)</span>
+
+<span class="c1">-- Now when you delete a label, the handler will be called</span>
+<span class="n">createLabel</span><span class="p">(</span><span class="s2">&quot;tempLabel&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">deleteLabel</span><span class="p">(</span><span class="s2">&quot;tempLabel&quot;</span><span class="p">)</span>
+<span class="c1">-- Output: Label &#39;tempLabel&#39; has been deleted.</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysLoadEvent">sysLoadEvent</span></h3>
+<p>Raised after Mudlet is done loading the profile, after all of the scripts, packages, and modules are installed. Note that when it does so, it also compiles and runs all scripts - which could be a good idea to initialize everything at once, but beware - scripts are also run when saved. Hence, hooking only on the sysLoadEvent would prevent multiple re-loads as you’re editing the script.
+</p><p>In <b>4.20.0</b> an extra boolean argument was provided which indicates whether the event is from loading a new profile (<i>true</i>) or after a call of the <i>resetProfile()</i> function (<i>false</i>).
+</p>
+<h3><span class="mw-headline" id="sysLuaInstallModule">sysLuaInstallModule</span></h3>
+<p>Raised right after a module is installed through the Lua installModule() command. This can be used to display post-installation information or setup things.
+</p><p>Event handlers receive the name of the installed module as well as the file name as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysLuaUninstallModule">sysLuaUninstallModule</span></h3>
+<p>Raised right before a module is removed through the lua uninstallModule command. This can be used to display post-removal information or for cleanup.
+</p><p>Event handlers receive the name of the removed module as additional argument.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysManualLocationSetEvent">sysManualLocationSetEvent</span></h3>
+<p>Raised whenever the "set location" command (on the 2D mapper context menu) is used to reposition the current "player room".  It provides the room ID of the new room ID that the player has been moved to.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.0</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysMapAreaChanged">sysMapAreaChanged</span></h3>
+<p>Raised whenever the area being viewed in the mapper changes, it returns two additional arguments being the areaID numbers being changed to and the previously viewed area.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.17.0</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysMapDownloadEvent">sysMapDownloadEvent</span></h3>
+<p>Raised whenever an <a href="/w/Standards:MMP" title="Standards:MMP">MMP map</a> is downloaded and loaded in.
+</p>
+<h3><span class="mw-headline" id="sysMapperButtonAction">sysMapperButtonAction</span></h3>
+<p>Raised when the player presses any of the built-in map buttons - the main toolbar icon, the Toolbox menu entry or its keyboard shortcut, or a detached window's toolbar button - while <code>setConfig("mapperButton", "scripted")</code> is active (see <a href="/w/Configuration_Options" title="Configuration Options">Configuration Options</a>). The event carries no arguments beyond its name. Use it to route the button press to your own map window's show/hide logic instead of the built-in mapper.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">5.1</span><span class="version-label-plus">+</span></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">setConfig</span><span class="p">(</span><span class="s2">&quot;mapperButton&quot;</span><span class="p">,</span> <span class="s2">&quot;scripted&quot;</span><span class="p">)</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMapperButtonAction&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">myMapWindow</span><span class="p">.</span><span class="n">hidden</span> <span class="kr">then</span>
+    <span class="n">myMapWindow</span><span class="p">:</span><span class="n">show</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="n">myMapWindow</span><span class="p">:</span><span class="n">hide</span><span class="p">()</span>
+  <span class="kr">end</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysMapWindowMousePressEvent">sysMapWindowMousePressEvent</span></h3>
+<p>Raised when the mouse is left-clicked on the mapper window.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysMiniConsoleDeleted">sysMiniConsoleDeleted</span></h3>
+<p>Raised when a miniconsole is successfully deleted via <a href="/w/Manual:UI_Functions#deleteMiniConsole" title="Manual:UI Functions">deleteMiniConsole()</a> or Geyser's <code>MiniConsole:delete()</code> method. The event provides the name of the deleted miniconsole as an argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This event is raised after the miniconsole has been marked for deletion but before Qt's event loop has completed the deletion. The miniconsole should be considered gone for practical purposes.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysMiniConsoleDeleted"</li>
+<li><i>miniConsoleName</i>: The name of the miniconsole that was deleted</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Register an event handler for miniconsole deletion</span>
+<span class="kr">function</span> <span class="nf">onMiniConsoleDeleted</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">miniConsoleName</span><span class="p">)</span>
+  <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;MiniConsole &#39;{miniConsoleName}&#39; has been deleted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  
+  <span class="c1">-- Stop any timers or processes that were sending data to this console</span>
+  <span class="kr">if</span> <span class="n">chatTimers</span><span class="p">[</span><span class="n">miniConsoleName</span><span class="p">]</span> <span class="kr">then</span>
+    <span class="n">killTimer</span><span class="p">(</span><span class="n">chatTimers</span><span class="p">[</span><span class="n">miniConsoleName</span><span class="p">])</span>
+    <span class="n">chatTimers</span><span class="p">[</span><span class="n">miniConsoleName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMiniConsoleDeleted&quot;</span><span class="p">,</span> <span class="n">onMiniConsoleDeleted</span><span class="p">)</span>
+
+<span class="c1">-- Now when you delete a miniconsole, the handler will be called</span>
+<span class="n">createMiniConsole</span><span class="p">(</span><span class="s2">&quot;chatWindow&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">deleteMiniConsole</span><span class="p">(</span><span class="s2">&quot;chatWindow&quot;</span><span class="p">)</span>
+<span class="c1">-- Output: MiniConsole &#39;chatWindow&#39; has been deleted.</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysMediaFinished">sysMediaFinished</span></h3>
+<p>Raised when media finishes playing. This can be used in a music player for example to start the next song.
+</p><p>Event handlers receive the media file name and the file path as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.15</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysMMCPChatMessage">sysMMCPChatMessage</span></h3>
+<p>Raised for every <a href="/w/Manual:Supported_Protocols#MMCP" title="Manual:Supported Protocols">MMCP chat</a> message shown to you, so you can route chat into a miniconsole of your own instead of the main window.
+</p><p>Your own outgoing chat raises the event too. Messages you send with <a href="/w/Manual:Networking_Functions#mmcp.chatAll" title="Manual:Networking Functions">mmcp.chatAll()</a> or <a href="/w/Manual:Networking_Functions#mmcp.emoteAll" title="Manual:Networking Functions">mmcp.emoteAll()</a>, and any status message from the chat system itself, arrive with a peer name of "System"; a message you send with <a href="/w/Manual:Networking_Functions#mmcp.chatTo" title="Manual:Networking Functions">mmcp.chatTo()</a> arrives under the name of the peer you addressed.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  The message still carries the ANSI colour codes it was displayed with, so pass it to <a href="/w/Manual:Display_Functions#decho" class="mw-redirect" title="Manual:Display Functions">decho()</a> or <a href="/w/Manual:Display_Functions#cecho" class="mw-redirect" title="Manual:Display Functions">cecho()</a> rather than <a href="/w/Manual:Display_Functions#echo" class="mw-redirect" title="Manual:Display Functions">echo()</a> if you want it to look the same.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.21</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysMMCPChatMessage"</li>
+<li><i>peerName</i>: The chat name of the peer the message is from, or "System" for your own broadcasts and for chat system messages</li>
+<li><i>message</i>: The message as it was displayed, including its colour codes</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- put chat in its own window instead of the main one</span>
+<span class="kr">function</span> <span class="nf">onChatMessage</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">peerName</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span> <span class="n">chatWindowMade</span> <span class="kr">then</span>
+    <span class="n">createMiniConsole</span><span class="p">(</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">chatWindowMade</span> <span class="o">=</span> <span class="kc">true</span>
+  <span class="kr">end</span>
+  <span class="n">decho</span><span class="p">(</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span> <span class="n">message</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMMCPChatMessage&quot;</span><span class="p">,</span> <span class="n">onChatMessage</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysMMCPIncomingSnoopMessage">sysMMCPIncomingSnoopMessage</span></h3>
+<p>Raised when a peer you are snooping with <a href="/w/Manual:Networking_Functions#mmcp.snoop" title="Manual:Networking Functions">mmcp.snoop()</a> sends you a line of what their game is sending them.
+</p><p>The line is also printed to your main window unless you turn off <i>Show snoop data in main console</i> in Settings, Chat. Turning that off and handling this event is how you put a snoop into a window of its own.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.21</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysMMCPIncomingSnoopMessage"</li>
+<li><i>peerName</i>: The chat name of the peer being snooped</li>
+<li><i>message</i>: The snooped line, including any colour codes the peer's game sent</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onSnoop</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">peerName</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="ow">not</span> <span class="n">snoopWindows</span><span class="p">[</span><span class="n">peerName</span><span class="p">]</span> <span class="kr">then</span>
+    <span class="n">createMiniConsole</span><span class="p">(</span><span class="n">peerName</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="n">snoopWindows</span><span class="p">[</span><span class="n">peerName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span>
+  <span class="kr">end</span>
+  <span class="n">decho</span><span class="p">(</span><span class="n">peerName</span><span class="p">,</span> <span class="n">message</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">snoopWindows</span> <span class="o">=</span> <span class="n">snoopWindows</span> <span class="ow">or</span> <span class="p">{}</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMMCPIncomingSnoopMessage&quot;</span><span class="p">,</span> <span class="n">onSnoop</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysMMCPPeerUpdateEvent">sysMMCPPeerUpdateEvent</span></h3>
+<p>Raised whenever an <a href="/w/Manual:Supported_Protocols#MMCP" title="Manual:Supported Protocols">MMCP chat</a> peer joins or leaves, so you can keep a list of who is reachable up to date.
+</p><p>The event does not say which of the two happened. Call <a href="/w/Manual:Networking_Functions#mmcp.getClientList" title="Manual:Networking Functions">mmcp.getClientList()</a> when it fires - the peer list has already been updated by then, so the peer is either in it or not.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.21</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysMMCPPeerUpdateEvent"</li>
+<li><i>peerName</i>: The chat name of the peer that joined or left</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onPeerUpdate</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">peerName</span><span class="p">)</span>
+  <span class="kd">local</span> <span class="n">stillHere</span> <span class="o">=</span> <span class="kc">false</span>
+  <span class="kr">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">peer</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">mmcp</span><span class="p">.</span><span class="n">getClientList</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{})</span> <span class="kr">do</span>
+    <span class="kr">if</span> <span class="n">peer</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">peerName</span> <span class="kr">then</span> <span class="n">stillHere</span> <span class="o">=</span> <span class="kc">true</span> <span class="kr">end</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">stillHere</span> <span class="kr">then</span>
+    <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;{peerName} joined the chat.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;red&gt;{peerName} left the chat.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMMCPPeerUpdateEvent&quot;</span><span class="p">,</span> <span class="n">onPeerUpdate</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysMMCPSideChannelMessage">sysMMCPSideChannelMessage</span></h3>
+<p>Raised when a peer sends you data with <a href="/w/Manual:Networking_Functions#mmcp.sendSideChannel" title="Manual:Networking Functions">mmcp.sendSideChannel()</a>. Nothing is printed to the screen - this event is the only way to see it, which is what makes side channels useful for scripts that share data between clients.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.21</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysMMCPSideChannelMessage"</li>
+<li><i>peerName</i>: The chat name of the peer that sent the data</li>
+<li><i>channel</i>: The channel name the sender chose</li>
+<li><i>message</i>: Everything after the first comma of what the sender passed</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- show the health of everyone in the group, as they report it</span>
+<span class="kr">function</span> <span class="nf">onSideChannel</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">peerName</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">channel</span> <span class="o">~=</span> <span class="s2">&quot;stats&quot;</span> <span class="kr">then</span> <span class="kr">return</span> <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">hp</span><span class="p">,</span> <span class="n">maxhp</span> <span class="o">=</span> <span class="n">message</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;(%d+)|(%d+)&quot;</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">hp</span> <span class="kr">then</span>
+    <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;cyan&gt;{peerName}&lt;white&gt; is at {hp}/{maxhp} health.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysMMCPSideChannelMessage&quot;</span><span class="p">,</span> <span class="n">onSideChannel</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysPathChanged">sysPathChanged</span></h3>
+<p>Raised whenever file or directory added through <a href="/w/Manual:Lua_Functions#addFileWatch" title="Manual:Lua Functions">addFileWatch()</a> is modified.
+</p><p>For directories this event is emitted when the directory at a specified path is modified (e.g., when a file is added or deleted) or removed from disk. Note that if there are several changes during a short period of time, some of the changes might not emit this signal. However, the last change in the sequence of changes will always generate this signal.
+</p><p>For files this event is emitted when the file at the specified path is modified, renamed or removed from disk.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.12</span><span class="version-label-plus">+</span></div>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="n">herbs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kd">local</span> <span class="n">herbsPath</span> <span class="o">=</span> <span class="n">getMudletHomeDir</span><span class="p">()</span> <span class="o">..</span> <span class="s2">&quot;/herbs.lua&quot;</span>
+<span class="kr">function</span> <span class="nf">herbsChangedHandler</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">path</span> <span class="o">==</span> <span class="n">herbsPath</span> <span class="kr">then</span>
+    <span class="n">table</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">herbsPath</span><span class="p">,</span> <span class="n">herbs</span><span class="p">)</span>
+    <span class="n">removeFileWatch</span><span class="p">(</span><span class="n">herbsPath</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">addFileWatch</span><span class="p">(</span><span class="n">herbsPath</span><span class="p">)</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysPathChanged&quot;</span><span class="p">,</span> <span class="n">herbsChangedHandler</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysPostHttpDone">sysPostHttpDone</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#postHTTP" title="Manual:Networking Functions">postHTTP()</a> request completes successfully. Arguments with the event are the URL that the request was sent to and the response body (if it's less than 10k characters).
+</p><p>See also <a href="#sysPostHttpError">sysPostHttpError</a>.
+</p>
+<h3><span class="mw-headline" id="sysPostHttpError">sysPostHttpError</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#postHTTP" title="Manual:Networking Functions">postHTTP()</a> request fails. Arguments are the error message and the URL that the request was sent to.
+</p><p>See also <a href="#sysPostHttpDone">sysPostHttpDone</a>.
+</p>
+<h3><span class="mw-headline" id="sysProfileFocusChangeEvent">sysProfileFocusChangeEvent</span></h3>
+<dl><dd>Raised whenever a profile becomes or stops being the foreground one when multi-playing, whether multi-view (show all profiles side-by-side) is active or not. The event comes with a second <i>boolean</i> argument which is <i>true</i> if the profile is now the one that has the focus, i.e. will receive keystrokes entered from the keyboard, or <i>false</i> if the focus has just switched from it to another profile.</dd></dl>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.17.0</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysProtocolDisabled">sysProtocolDisabled</span></h3>
+<p>Raised whenever a communications protocol is disabled, with the protocol name passed as an argument. Current values Mudlet will use for this are: GMCP, MSDP, ATCP, MXP, and channel102.
+</p>
+<h3><span class="mw-headline" id="sysProtocolEnabled">sysProtocolEnabled</span></h3>
+<p>Raised whenever a communications protocol is enabled, with the protocol name passed as an argument. Current values Mudlet will use for this are: GMCP, MSDP, ATCP, MXP, and channel102.
+</p><p>This is where a package should subscribe to the data it wants. <a href="#sysConnectionEvent">sysConnectionEvent</a> is raised before negotiation, so nothing is available yet at that point.
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onProtocolEnabled</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">protocol</span> <span class="o">==</span> <span class="s2">&quot;GMCP&quot;</span> <span class="kr">then</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;GMCP enabled! Now we can use GMCP data.&quot;</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">protocol</span> <span class="o">==</span> <span class="s2">&quot;MSDP&quot;</span> <span class="kr">then</span>
+    <span class="n">sendMSDP</span><span class="p">(</span><span class="s2">&quot;REPORT&quot;</span><span class="p">,</span> <span class="s2">&quot;HEALTH&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysPutHttpDone">sysPutHttpDone</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#putHTTP" title="Manual:Networking Functions">putHTTP()</a> request completes successfully. Arguments with the event are the URL that the request was sent to and the response body (if it's less than 10k characters).
+</p><p>See also <a href="#sysPutHttpError">sysPutHttpError</a>.
+</p>
+<h3><span class="mw-headline" id="sysPutHttpError">sysPutHttpError</span></h3>
+<p>Raised whenever a <a href="/w/Manual:Networking_Functions#putHTTP" title="Manual:Networking Functions">putHTTP()</a> request fails. Arguments are the error message and the URL that the request was sent to.
+</p><p>See also <a href="#sysPutHttpDone">sysPutHttpDone</a>.
+</p>
+<h3><span class="mw-headline" id="sysScrollBoxDeleted">sysScrollBoxDeleted</span></h3>
+<p>Raised when a scrollbox is successfully deleted via <a href="/w/Manual:UI_Functions#deleteScrollBox" title="Manual:UI Functions">deleteScrollBox()</a> or Geyser's <code>ScrollBox:delete()</code> method. The event provides the name of the deleted scrollbox as an argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  This event is raised after the scrollbox has been marked for deletion but before Qt's event loop has completed the deletion. The scrollbox should be considered gone for practical purposes.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysScrollBoxDeleted"</li>
+<li><i>scrollBoxName</i>: The name of the scrollbox that was deleted</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="c1">-- Register an event handler for scrollbox deletion</span>
+<span class="kr">function</span> <span class="nf">onScrollBoxDeleted</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">scrollBoxName</span><span class="p">)</span>
+  <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;ScrollBox &#39;{scrollBoxName}&#39; has been deleted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  
+  <span class="c1">-- Clean up any content tables or buffers</span>
+  <span class="kr">if</span> <span class="n">scrollBoxContent</span><span class="p">[</span><span class="n">scrollBoxName</span><span class="p">]</span> <span class="kr">then</span>
+    <span class="n">scrollBoxContent</span><span class="p">[</span><span class="n">scrollBoxName</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysScrollBoxDeleted&quot;</span><span class="p">,</span> <span class="n">onScrollBoxDeleted</span><span class="p">)</span>
+
+<span class="c1">-- Now when you delete a scrollbox, the handler will be called</span>
+<span class="n">createScrollBox</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">deleteScrollBox</span><span class="p">(</span><span class="s2">&quot;messageBox&quot;</span><span class="p">)</span>
+<span class="c1">-- Output: ScrollBox &#39;messageBox&#39; has been deleted.</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysServerGuiInstalled">sysServerGuiInstalled</span></h3>
+<p>Raised right after a GUI package supplied by the game (via the GMCP or ATCP <code>Client.GUI</code> mechanism) has finished installing. A version upgrade raises it again once the new version is in place.
+</p><p>Event handlers receive the name of the installed package as an additional argument.
+</p><p>Mudlet's pre-installed starter UI uses this event to quietly stand aside when a game brings its own interface.
+</p><p>It is also raised - with no package name argument - when a game declines the built-in starter UI with <code>Client.GUI {"baseui": false}</code> over GMCP (see <a href="/w/Manual:GMCP_Extensions#Declining_the_starter_UI" title="Manual:GMCP Extensions">Declining the starter UI</a>). Handlers that read the package name should be ready for it to be absent.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">5.0</span><span class="version-label-plus">+</span></div>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">gameUiInstalled</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">packageName</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">packageName</span> <span class="kr">then</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The game installed its own UI package: &quot;</span> <span class="o">..</span> <span class="n">packageName</span><span class="p">)</span>
+  <span class="kr">else</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The game declined the built-in starter UI.&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysServerGuiInstalled&quot;</span><span class="p">,</span> <span class="n">gameUiInstalled</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysSettingChanged">sysSettingChanged</span></h3>
+<p>This event is raised when a Preferences or Mudlet setting has changed.  The first argument contains the setting that was changed, further arguments detail the change.
+</p><p>Currently implemented sysSettingChanged events are;
+</p>
+<ul><li>"main window font" - raised when the main window/console font has changed via API or Preferences window. Returns two additional arguments, the font family and the font size. e.g. {"main window font", "Times New Roman", 12 }</li></ul>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.20</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysSoundFinished">sysSoundFinished</span></h3>
+<p>This event is obsolete in Mudlet 4.15. Please replace this with <a href="/w/Manual:Event_Engine#sysMediaFinished" title="Manual:Event Engine">sysMediaFinished()</a>
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysSpeedwalkFinished">sysSpeedwalkFinished</span></h3>
+<p>Raised when a speedwalk finishes, either one started by speedwalk() or the generic mapping script
+</p>
+<h3><span class="mw-headline" id="sysSpeedwalkPaused">sysSpeedwalkPaused</span></h3>
+<p>Raised when a speedwalk is paused, either via pauseSpeedwalk() or the generic mapping script.
+</p>
+<h3><span class="mw-headline" id="sysSpeedwalkResumed">sysSpeedwalkResumed</span></h3>
+<p>Raised when a speedwalk is resumed after pausing, whether it's the generic mapping script or the resumeSpeedwalk() function
+</p>
+<h3><span class="mw-headline" id="sysSpeedwalkStarted">sysSpeedwalkStarted</span></h3>
+<p>Raised when a speedwalk is started, either by the speedwalk() function or the generic mapping script
+</p>
+<h3><span class="mw-headline" id="sysSpeedwalkStopped">sysSpeedwalkStopped</span></h3>
+<p>Raised when a speedwalk is stopped prematurely by stopSpeedwalk() or the generic mapping script
+</p>
+<h3><span class="mw-headline" id="sysSyncInstallModule">sysSyncInstallModule</span></h3>
+<p>Raised right after a module is installed through the "sync" mechanism. This can be used to display post-installation information or setup things.
+</p><p>Event handlers receive the name of the installed module as well as the file name as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysSyncUninstallModule">sysSyncUninstallModule</span></h3>
+<p>Raised right before a module is removed through the "sync" mechanism. This can be used to display post-removal information or for cleanup.
+</p><p>Event handlers receive the name of the removed module as additional argument.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysTelnetEvent">sysTelnetEvent</span></h3>
+<p>Raised whenever an unsupported telnet option is encountered, allowing you to handle it yourself. The arguments that get passed with the event are type, telnet option, and the message. 
+</p>
+<h3><span class="mw-headline" id="sysTextEditDeleted">sysTextEditDeleted</span></h3>
+<p>Raised when a text edit is deleted with <a href="/w/Manual:UI_Functions#deleteTextEdit" title="Manual:UI Functions">deleteTextEdit()</a> or Geyser's <code>TextEdit:type_delete()</code> method, which calls it. The name of the deleted text edit comes through as an argument.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b>  Like the other deletion events, this fires once the text edit has been marked for deletion rather than after Qt has finished tearing it down. Treat it as gone.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.21</span><span class="version-label-plus">+</span></div>
+<dl><dt>Event arguments</dt></dl>
+<ul><li><i>event</i>: The event name: "sysTextEditDeleted"</li>
+<li><i>textEditName</i>: The name of the text edit that was deleted</li></ul>
+<dl><dt>Example</dt></dl>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onTextEditDeleted</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+  <span class="n">cecho</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&lt;green&gt;Text edit &#39;{name}&#39; has been deleted.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+  <span class="c1">-- forget any draft we were keeping for it</span>
+  <span class="n">drafts</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="kr">end</span>
+
+<span class="n">registerAnonymousEventHandler</span><span class="p">(</span><span class="s2">&quot;sysTextEditDeleted&quot;</span><span class="p">,</span> <span class="n">onTextEditDeleted</span><span class="p">)</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysUninstall">sysUninstall</span></h3>
+<p>Raised right before a module or package is uninstalled by any means. This can be used to display post-removal information or for cleanup.
+</p><p>Event handlers receive the name of the removed package or module as additional argument.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysUninstallModule">sysUninstallModule</span></h3>
+<p>Raised right before a module is removed through the module dialog. This can be used to display post-removal information or for cleanup.
+</p><p>Event handlers receive the name of the removed module as additional argument.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysUninstallPackage">sysUninstallPackage</span></h3>
+<p>Raised right before a package is removed by any means. This can be used to display post-removal information or for cleanup.
+</p><p>Event handlers receive the name of the removed package as additional argument.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">3.1</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysUnzipDone">sysUnzipDone</span></h3>
+<p>Raised when a zip file is successfully unzipped using unzipAsync()
+</p><p>Event handlers receive the zip file name and the unzip path as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.6</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysUnzipError">sysUnzipError</span></h3>
+<p>Raised when a zip file fails to unzip using unzipAsync()
+</p><p>Event handlers receive the zip file name and the unzip path as additional arguments.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number">4.6</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysUserWindowResizeEvent">sysUserWindowResizeEvent</span></h3>
+<p>Raised when a userwindow is resized, with the new height and width coordinates and the windowname passed to the event. A common usecase for this event is to move/resize your UI elements according to the new dimensions.
+</p><p>See alsoː <a href="#sysWindowResizeEvent">sysWindowResizeEvent</a>
+</p><p>Example
+</p><p>This sample code will echo whenever a resize happened with the new dimensions:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">resizeEvent</span><span class="p">(</span> <span class="n">event</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">windowname</span> <span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;RESIZE EVENT: event=&quot;</span><span class="o">..</span><span class="n">event</span><span class="o">..</span><span class="s2">&quot; x=&quot;</span><span class="o">..</span><span class="n">x</span><span class="o">..</span><span class="s2">&quot; y=&quot;</span><span class="o">..</span><span class="n">y</span><span class="o">..</span><span class="s2">&quot; windowname=&quot;</span><span class="o">..</span><span class="n">windowname</span><span class="o">..</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysWindowMousePressEvent">sysWindowMousePressEvent</span></h3>
+<p>Raised when a mouse button is pressed down anywhere on the main window (note that a click is composed of a mouse press and mouse release). The button number, the x,y coordinates of the click and the windowname are reported.
+</p><p><img alt="Note" src="/images/6/60/Bulbgraph.png" decoding="async" title="Note" width="18" height="22" /> <b>Note:</b> Windowname reported in Mudlet 4.9+
+</p><p>See alsoː <a href="#sysWindowMouseReleaseEvent">sysWindowMouseReleaseEvent</a>
+</p><p>Example
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">onClickHandler</span><span class="p">(</span> <span class="n">event</span><span class="p">,</span> <span class="n">button</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">windowname</span> <span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;CLICK event:&quot;</span><span class="o">..</span><span class="n">event</span><span class="o">..</span><span class="s2">&quot; button=&quot;</span><span class="o">..</span><span class="n">button</span><span class="o">..</span><span class="s2">&quot; x=&quot;</span><span class="o">..</span><span class="n">x</span><span class="o">..</span><span class="s2">&quot; y=&quot;</span><span class="o">..</span><span class="n">y</span><span class="o">..</span><span class="s2">&quot; windowname=&quot;</span><span class="o">..</span><span class="n">windowname</span><span class="o">..</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h3><span class="mw-headline" id="sysWindowMouseReleaseEvent">sysWindowMouseReleaseEvent</span></h3>
+<p>Raised when a mouse button is released after being pressed down anywhere on the main window (note that a click is composed of a mouse press and mouse release).
+</p><p>See <a href="#sysWindowMousePressEvent">sysWindowMousePressEvent</a> for example use.
+</p>
+<h3><span class="mw-headline" id="sysWindowOverflowEvent">sysWindowOverflowEvent</span></h3>
+<p>Raised when the content in a mini-console/user window that has been set to be <b>non-scrolling</b> (see: <a href="/index.php?title=EnableScrolling&amp;action=edit&amp;redlink=1" class="new" title="EnableScrolling (page does not exist)">enableScrolling(...)</a> and <a href="/index.php?title=DisableScrolling&amp;action=edit&amp;redlink=1" class="new" title="DisableScrolling (page does not exist)">disableScrolling(...)</a>) overflows - i.e. fills the visible window and overflows off the bottom. Returns two additional arguments being the window's name as a string and the number of lines that have gone past that which can be shown on the current size of the window.
+</p>
+<div class="version-block"><span class="version-image"><img alt="Mudlet Version" src="/images/thumb/9/97/MudletIcon_256px.png/18px-MudletIcon_256px.png" decoding="async" title="Mudlet Version" width="18" height="18" srcset="/images/thumb/9/97/MudletIcon_256px.png/27px-MudletIcon_256px.png 1.5x, /images/thumb/9/97/MudletIcon_256px.png/36px-MudletIcon_256px.png 2x" /></span><span class="version-label">Available in Mudlet</span><span class="version-number"> 4.18.0</span><span class="version-label-plus">+</span></div>
+<h3><span class="mw-headline" id="sysWindowResizeEvent">sysWindowResizeEvent</span></h3>
+<p>Raised when the main window is resized, or when one of the borders is resized, with the new height and width coordinates passed to the event. A common usecase for this event is to move/resize your UI elements according to the new dimensions.
+</p><p>See alsoː <a href="#sysUserWindowResizeEvent">sysUserWindowResizeEvent</a>
+</p><p>Example
+</p><p>This sample code will echo whenever a resize happened with the new dimensions:
+</p>
+<div class="mw-highlight mw-highlight-lang-lua mw-content-ltr" dir="ltr"><pre><span></span><span class="kr">function</span> <span class="nf">resizeEvent</span><span class="p">(</span> <span class="n">event</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="p">)</span>
+  <span class="n">echo</span><span class="p">(</span><span class="s2">&quot;RESIZE EVENT: event=&quot;</span><span class="o">..</span><span class="n">event</span><span class="o">..</span><span class="s2">&quot; x=&quot;</span><span class="o">..</span><span class="n">x</span><span class="o">..</span><span class="s2">&quot; y=&quot;</span><span class="o">..</span><span class="n">y</span><span class="o">..</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kr">end</span>
+</pre></div>
+<h3><span class="mw-headline" id="ttsPitchChanged">ttsPitchChanged</span></h3>
+<p>Raised when text-to-speech function <a href="/w/Manual:Lua_Functions#ttsSetPitch" title="Manual:Lua Functions">ttsSetPitch(...)</a> has been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsRateChanged">ttsRateChanged</span></h3>
+<p>Raised when text-to-speech function <a href="/w/Manual:Lua_Functions#ttsSetRate" title="Manual:Lua Functions">ttsSetRate(...)</a> has been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsSpeechError">ttsSpeechError</span></h3>
+<p>Raised when a text-to-speech function encountered an error while changing states (eg. from <a href="/w/Manual:Lua_Functions#ttsStop" title="Manual:Lua Functions">stopped</a> to <a href="/w/Manual:Lua_Functions#ttsPlay" title="Manual:Lua Functions">playing</a> to <a href="/w/Manual:Lua_Functions#ttsPause" title="Manual:Lua Functions">pausing</a>).  Usually indicated when the operating system TTS engine is not working correctly.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsSpeechPaused">ttsSpeechPaused</span></h3>
+<p>Raised when text-to-speech function <a href="/w/Manual:Lua_Functions#ttsSetPitch" title="Manual:Lua Functions">ttsPause(...)</a> has been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsSpeechQueued">ttsSpeechQueued</span></h3>
+<p>Raised when text-to-speech function <a href="/w/Manual:Lua_Functions#ttsQueue" title="Manual:Lua Functions">ttsQueue(...)</a> has been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsSpeechReady">ttsSpeechReady</span></h3>
+<p>Raised when the text-to-speech engine is ready to beginning processing text.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsSpeechStarted">ttsSpeechStarted</span></h3>
+<p>Raised when text-to-speech functions <a href="/w/Manual:Lua_Functions#ttsSpeak" title="Manual:Lua Functions">ttsSpeak(...)</a> or <a href="/w/Manual:Lua_Functions#ttsResume" title="Manual:Lua Functions">ttsResume(...)</a> have been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsVoiceChanged">ttsVoiceChanged</span></h3>
+<p>Raised when text-to-speech functions <a href="/w/Manual:Lua_Functions#ttsSetVoiceByIndex" title="Manual:Lua Functions">ttsSetVoiceByIndex(...)</a> or <a href="/w/Manual:Lua_Functions#ttsSetVoiceByName" title="Manual:Lua Functions">ttsSetVoiceByName(...)</a> have been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<h3><span class="mw-headline" id="ttsVolumeChanged">ttsVolumeChanged</span></h3>
+<p>Raised when text-to-speech function <a href="/w/Manual:Lua_Functions#ttsSetVolume" title="Manual:Lua Functions">ttsSetVolume(...)</a> has been called.
+</p><p>See also: <a href="/w/Manual:Text-to-Speech" title="Manual:Text-to-Speech">Manual:Text-to-Speech</a>
+</p>
+<!-- 
+NewPP limit report
+Cached time: 20261101083511
+Cache expiry: 86400
+Dynamic content: false
+Complications: []
+CPU time usage: 0.175 seconds
+Real time usage: 1.894 seconds
+Preprocessor visited node count: 1019/1000000
+Post‐expand include size: 11176/2097152 bytes
+Template argument size: 150/2097152 bytes
+Highest expansion depth: 4/40
+Expensive parser function count: 0/100
+Unstrip recursion depth: 0/20
+Unstrip post‐expand size: 53690/5000000 bytes
+-->
+<!--
+Transclusion expansion time report (%,ms,calls,template)
+100.00% 1701.590      1 -total
+  0.16%    2.757     40 Template:MudletVersion
+  0.10%    1.691      1 Template:TOC_right
+  0.08%    1.363     13 Template:Note
+-->
+
+<!-- Saved in parser cache with key wikidb:pcache:idhash:193-0!canonical and timestamp 20261101083510 and revision id 23450
+ -->
+</div></div><div class="printfooter">Retrieved from "<a dir="ltr" href="https://wiki.mudlet.org/index.php?title=Manual:Event_Engine&amp;oldid=23450">https://wiki.mudlet.org/index.php?title=Manual:Event_Engine&amp;oldid=23450</a>"</div>
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/w/Special:Categories" title="Special:Categories">Category</a>: <ul><li><a href="/w/Category:Mudlet_Manual" title="Category:Mudlet Manual">Mudlet Manual</a></li></ul></div></div>
+	</div>
+</div>
+
+<div id="mw-navigation">
+	<h2>Navigation menu</h2>
+	<div id="mw-head">
+		<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-personal" class="vector-menu" aria-labelledby="p-personal-label" role="navigation" 
+	 >
+	<h3 id="p-personal-label">
+		<span>Personal tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="pt-uls" class="active"><a href="#" class="uls-trigger">English</a></li><li id="pt-createaccount"><a href="/index.php?title=Special:CreateAccount&amp;returnto=Manual%3AEvent+Engine" title="You are encouraged to create an account and log in; however, it is not mandatory">Create account</a></li><li id="pt-login"><a href="/index.php?title=Special:UserLogin&amp;returnto=Manual%3AEvent+Engine" title="You are encouraged to log in; however, it is not mandatory [o]" accesskey="o">Log in</a></li></ul>
+		
+	</div>
+</nav>
+
+
+		<div id="left-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-namespaces" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-namespaces-label" role="navigation" 
+	 >
+	<h3 id="p-namespaces-label">
+		<span>Namespaces</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-nstab-manual" class="selected"><a href="/w/Manual:Event_Engine">Manual</a></li><li id="ca-talk" class="new"><a href="/index.php?title=Manual_talk:Event_Engine&amp;action=edit&amp;redlink=1" rel="discussion" title="Discussion about the content page (page does not exist) [t]" accesskey="t">Discussion</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-variants" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-variants-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-variants-label" />
+	<h3 id="p-variants-label">
+		<span>Variants</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+		</div>
+		<div id="right-navigation">
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-views" class="vector-menu vector-menu-tabs vectorTabs" aria-labelledby="p-views-label" role="navigation" 
+	 >
+	<h3 id="p-views-label">
+		<span>Views</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="ca-view" class="collapsible selected"><a href="/w/Manual:Event_Engine">Read</a></li><li id="ca-viewsource" class="collapsible"><a href="/index.php?title=Manual:Event_Engine&amp;action=edit" title="This page is protected.&#10;You can view its source [e]" accesskey="e">View source</a></li><li id="ca-history" class="collapsible"><a href="/index.php?title=Manual:Event_Engine&amp;action=history" title="Past revisions of this page [h]" accesskey="h">View history</a></li></ul>
+		
+	</div>
+</nav>
+
+
+			<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-cactions" class="vector-menu-empty emptyPortlet vector-menu vector-menu-dropdown vectorMenu" aria-labelledby="p-cactions-label" role="navigation" 
+	 >
+	<input type="checkbox" class="vector-menu-checkbox vectorMenuCheckbox" aria-labelledby="p-cactions-label" />
+	<h3 id="p-cactions-label">
+		<span>More</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="menu vector-menu-content-list"></ul>
+		
+	</div>
+</nav>
+
+
+			<div id="p-search" role="search">
+	<h3 >
+		<label for="searchInput">Search</label>
+	</h3>
+	<form action="/index.php" id="searchform">
+		<div id="simpleSearch">
+			<input type="search" name="search" placeholder="Search Mudlet" title="Search Mudlet [f]" accesskey="f" id="searchInput"/>
+			<input type="hidden" name="title" value="Special:Search">
+			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton"/>
+			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if it exists" id="searchButton" class="searchButton"/>
+		</div>
+	</form>
+</div>
+
+		</div>
+	</div>
+	
+<div id="mw-panel">
+	<div id="p-logo" role="banner">
+		<a  title="Visit the main page" class="mw-wiki-logo" href="/w/Main_Page"></a>
+	</div>
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-navigation" class="vector-menu vector-menu-portal portal portal-first" aria-labelledby="p-navigation-label" role="navigation" 
+	 >
+	<h3 id="p-navigation-label">
+		<span>Navigation</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="n-Wiki-home"><a href="/w/Main_Page">Wiki home</a></li><li id="n-Mudlet-home"><a href="http://mudlet.org" rel="nofollow">Mudlet home</a></li><li id="n-Mudlet-forums"><a href="http://forums.mudlet.org" rel="nofollow">Mudlet forums</a></li><li id="n-recentchanges"><a href="/w/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li><li id="n-randompage"><a href="/w/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li><li id="n-help"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/Help:Contents" title="The place to find out">Help</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	<!-- Please do not use role attribute as CSS selector, it is deprecated. -->
+<nav id="p-tb" class="vector-menu vector-menu-portal portal" aria-labelledby="p-tb-label" role="navigation" 
+	 >
+	<h3 id="p-tb-label">
+		<span>Tools</span>
+	</h3>
+	<!-- Please do not use the .body class, it is deprecated. -->
+	<div class="body vector-menu-content">
+		<!-- Please do not use the .menu class, it is deprecated. -->
+		<ul class="vector-menu-content-list"><li id="t-whatlinkshere"><a href="/w/Special:WhatLinksHere/Manual:Event_Engine" title="A list of all wiki pages that link here [j]" accesskey="j">What links here</a></li><li id="t-recentchangeslinked"><a href="/w/Special:RecentChangesLinked/Manual:Event_Engine" rel="nofollow" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li><li id="t-specialpages"><a href="/w/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li><li id="t-print"><a href="javascript:print();" rel="alternate" title="Printable version of this page [p]" accesskey="p">Printable version</a></li><li id="t-permalink"><a href="/index.php?title=Manual:Event_Engine&amp;oldid=23450" title="Permanent link to this revision of the page">Permanent link</a></li><li id="t-info"><a href="/index.php?title=Manual:Event_Engine&amp;action=info" title="More information about this page">Page information</a></li></ul>
+		
+	</div>
+</nav>
+
+
+	
+</div>
+
+</div>
+
+<footer id="footer" class="mw-footer" role="contentinfo" >
+	<ul id="footer-info" >
+		<li id="footer-info-lastmod"> This page was last edited on 1 November 2026, at 07:58.</li>
+	</ul>
+	<ul id="footer-places" >
+		<li id="footer-places-privacy"><a href="https://www.mudlet.org/terms-of-service/" title="Mudlet.org Terms of Service and Privacy Policy">Terms &amp; Privacy</a></li>
+		<li id="footer-places-about"><a href="https://www.mudlet.org/about/" title="About Mudlet">About Mudlet</a></li>
+	</ul>
+	<ul id="footer-icons" class="noprint">
+		<li id="footer-poweredbyico"><a href="https://www.mediawiki.org/"><img src="/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" srcset="/resources/assets/poweredby_mediawiki_132x47.png 1.5x, /resources/assets/poweredby_mediawiki_176x62.png 2x" width="88" height="31" loading="lazy"/></a></li>
+	</ul>
+	<div style="clear: both;"></div>
+</footer>
+
+
+
+<script>(RLQ=window.RLQ||[]).push(function(){mw.config.set({"wgPageParseReport":{"limitreport":{"cputime":"0.175","walltime":"1.894","ppvisitednodes":{"value":1019,"limit":1000000},"postexpandincludesize":{"value":11176,"limit":2097152},"templateargumentsize":{"value":150,"limit":2097152},"expansiondepth":{"value":4,"limit":40},"expensivefunctioncount":{"value":0,"limit":100},"unstrip-depth":{"value":0,"limit":20},"unstrip-size":{"value":53690,"limit":5000000},"timingprofile":["100.00% 1701.590      1 -total","  0.16%    2.757     40 Template:MudletVersion","  0.10%    1.691      1 Template:TOC_right","  0.08%    1.363     13 Template:Note"]},"cachereport":{"timestamp":"20261101083511","ttl":86400,"transientcontent":false}}});mw.config.set({"wgBackendResponseTime":1944});});</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a565f1ccae0d0546',t:'MTc5Mzk4NzQ2OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a565f1ccae0d0546',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body><!-- Cached/compressed 20261101083511 -->
+</html>

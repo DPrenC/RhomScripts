@@ -1,0 +1,557 @@
+Mudlet: Basic_Essentials
+
+Fuente oficial: https://wiki.mudlet.org/w/Manual:Basic_Essentials
+Copia consultable; véase manifest.json para fecha, hash y atribución.
+
+# Basic Essentials
+
+These functions are generic functions used in normal scripting. These deal with mainly everyday things, like sending stuff and echoing to the screen.
+
+## debugc
+
+debugc(content)
+
+Again this will not send anything to anywhere. It will however print not to the main window, but only to the errors view. You need to open that window to see the message.
+
+See also: 
+Errors View
+
+Note
+ 
+Note:
+  Do not use this to display information to end-users. It will be hard to find. It is mainly useful for developing/debugging. Does not echo to the debug window
+
+debugc
+(
+" Trigger successful!"
+)
+
+-- Text will be shown in errors view, not to main window.
+
+## display
+
+display(content)
+
+This is much like echo, in that is will show text at your screen, not send anything to anywhere. However, it also works with other objects than just text, like a number, table, function, or even many arguments at once. This function is useful to easily take a look at the values of a lua table, for example. If a value is a string of letters, it'll be in quotes, and if it's a number, it won't be quoted.
+
+Note
+ 
+Note:
+  Do not use this to display information to end-users. It may be hard to read. It is mainly useful for developing/debugging.
+
+myTable
+ 
+=
+ 
+{}
+ 
+-- create an empty lua table
+
+myTable
+.
+foo
+ 
+=
+ 
+"Hello there"
+ 
+-- add a text
+
+myTable
+.
+bar
+ 
+=
+ 
+23
+ 
+-- add a number
+
+myTable
+.
+ubar
+ 
+=
+ 
+function
+ 
+()
+ 
+echo
+(
+"OK"
+)
+ 
+end
+ 
+-- add more stuff
+
+display
+(
+ 
+myTable
+ 
+)
+ 
+-- take a look inside the table
+
+## echo
+
+echo([miniconsoleName or labelName], text)
+
+This function appends text at the end of the current line.
+
+Parameters
+
+miniconsoleName:
+ (optional) the miniconsole to echo to, or:
+
+labelName:
+ (optional) the label to echo to.
+
+text:
+ text you'd like to see printed. You can use \n in an echo to insert a new line. If you're echoing this to a label, you can also use styling to color, center, increase/decrease size of text and various other formatting options 
+as listed here
+.
+
+See also: 
+moveCursor()
+, 
+insertText()
+, 
+cecho()
+, 
+decho()
+, 
+hecho()
+
+Technical Detail
+
+As of Mudlet 4.8+, a single line is capped to 10,000 characters (this is when ~200 at most will fit on one line on your screen).
+
+Example
+
+-- a miniconsole example
+
+-- first, determine the size of your screen
+
+local
+ 
+windowWidth
+,
+ 
+windowHeight
+ 
+=
+ 
+getMainWindowSize
+()
+
+-- create the miniconsole
+
+createMiniConsole
+(
+"sys"
+,
+ 
+windowWidth
+-
+650
+,
+0
+,
+650
+,
+300
+)
+
+setBackgroundColor
+(
+"sys"
+,
+255
+,
+69
+,
+0
+,
+255
+)
+
+setMiniConsoleFontSize
+(
+"sys"
+,
+ 
+8
+)
+
+-- wrap lines in window "sys" at 40 characters per line - somewhere halfway, as an example
+
+setWindowWrap
+(
+"sys"
+,
+ 
+40
+)
+
+echo
+(
+"sys"
+,
+"Hello world!
+\n
+"
+)
+
+cecho
+(
+"sys"
+,
+ 
+"<:OrangeRed>This is random spam with the same background
+\n
+"
+)
+
+cecho
+(
+"sys"
+,
+ 
+"<blue:OrangeRed>and this is with a blue foreground. "
+)
+
+cecho
+(
+"sys"
+,
+ 
+"<bisque:BlueViolet>Lastly, this is with both a foreground and a background.
+\n
+"
+)
+
+-- a label example
+
+-- This example creates a transparent overlay message box to show a big warning message "You are under attack!" in the middle 
+
+-- of the screen. Because the background color has a transparency level of 150 (0-255, with 0 being completely transparent 
+
+-- and 255 opaque) the background text can still be read through.
+
+local
+ 
+width
+,
+ 
+height
+ 
+=
+ 
+getMainWindowSize
+()
+
+createLabel
+(
+"messageBox"
+,(
+width
+/
+2
+)
+-
+300
+,(
+height
+/
+2
+)
+-
+100
+,
+250
+,
+150
+,
+1
+)
+
+resizeWindow
+(
+"messageBox"
+,
+500
+,
+70
+)
+
+moveWindow
+(
+"messageBox"
+,
+ 
+(
+width
+/
+2
+)
+-
+300
+,(
+height
+/
+2
+)
+-
+100
+ 
+)
+
+setBackgroundColor
+(
+"messageBox"
+,
+ 
+255
+,
+ 
+204
+,
+ 
+0
+,
+ 
+200
+)
+
+echo
+(
+"messageBox"
+,
+ 
+[[<p style="font-size:35px"><b><center><font color="red">You are under attack!</font></center></b></p>]]
+)
+
+## printDebug
+
+printDebug(msg, [showStackTrace])
+
+Prints a debug message in green to the error console in the script editor only. Does not echo to the debug window or the main console. Includes stack trace if showStackTrace is included and not nil or false.
+
+See also
+
+printError
+, 
+debugc
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Technical Note
+
+Note
+ 
+Note:
+  This will not be echoed to the main console even if the option to echo Lua errors to the main console is turned on. Does not echo to the debug window. As such you can use it for debugging information without fear it will be shown unless someone goes looking for errors.
+
+Parameters
+
+msg:
+
+string to echo to the error console
+
+showStackTrace:
+
+(optional) boolean true if you want to include the stack trace, leave off if you do not.
+
+Example
+
+-- print a debug message to the error console for troubleshooting purposes, when you don't want to echo the information to the main screen.
+
+-- the only difference between this and debugc is this includes information on the script/alias/trigger/etc and line it was called from, whereas debugc does not.
+
+printDebug
+(
+"Switching to chaos mode"
+)
+
+-- Want to record that something occurred, and include stacktrace so you can see what path the code was taking, but you don't want to halt execution or have it show up in main screen or in scary red.
+
+printDebug
+(
+"Something unexpected occurred but we can recover from it. Still, we want to be able to notice and troubleshoot it with extra information."
+,
+ 
+true
+)
+
+## printError
+
+printError(msg, [showStackTrace], [haltExecution])
+
+Prints an error message in red to the error console in the script editor. Can optionally include stacktrace information and halt execution.
+
+See also
+
+printDebug
+, 
+debugc
+
+Mudlet Version
+Available in Mudlet
+4.14
++
+
+Technical Note
+
+Note
+ 
+Note:
+  This WILL be echoed to the main console if the option to echo Lua errors to the main console is turned on. You should not use this for idle debugging information, but actual errors that may put big red error lines in the main window.
+
+Parameters
+
+msg:
+
+string to echo to the error console
+
+showStackTrace:
+
+(optional) true if you want to include the stack trace, leave off if you do not.
+
+haltExecution:
+
+(optional) true if you want to halt execution. You must pass a value for showStackTrace in order to halt execution.
+
+Example
+
+-- print an error message but do not include extra stack information or halt execution.
+
+-- this is similar to debugc except it include more information on the place it was called from
+
+-- and will show up in red and echo to the main console if the option for errors to echo there is selected.
+
+printError
+(
+"Your maxhp is below your currenthp and our game doesn't allow for that. HAX?!"
+)
+
+-- Something bad happened, for sure, but your script can recover.
+
+-- Make sure this is something important enough it might make it to the main window as a big red error.
+
+-- but we are not halting execution, since we can carry on in some capacity
+
+printError
+(
+"gmcp values for this thing went missing, will carry on using defaults but you should tell somebody about this."
+,
+ 
+true
+)
+
+-- print an error message to the error console for troubleshooting purposes. 
+
+-- Prints stack trace for troubleshooting and halts execution (because you cannot continue without the configuration, presumably)
+
+-- similar to using error(msg) but includes the stacktrace information.
+
+printError
+(
+"Our entire configuration seems to have gone missing!"
+,
+ 
+true
+,
+ 
+true
+)
+
+## send
+
+send(command, showOnScreen)
+
+This sends "command" directly to the network layer, skipping the alias matching. The optional second argument of type boolean (print) determines if the outgoing command is to be echoed on the screen.
+
+See also: 
+sendAll()
+, 
+speedwalk()
+
+Note
+ 
+Note:
+  If you want your command to be checked as if it's an alias, use 
+expandAlias()
+ instead - send() will ignore them.
+
+Note
+ 
+Note:
+  The game server can choose not to show commands sent on screen (for example, if you're typing in a password).
+
+send
+(
+"Hello Jane"
+)
+ 
+--echos the command on the screen
+
+send
+(
+"Hello Jane"
+,
+ 
+true
+)
+ 
+--echos the command on the screen
+
+send
+(
+"Hello Jane"
+,
+ 
+false
+)
+ 
+--does not echo the command on the screen
+
+-- use a variable in the send:
+
+send
+(
+"kick "
+..
+target
+)
+
+-- to send directions:
+
+speedwalk
+(
+"s;s;w;w;w;w;w;w;w;"
+)
+
+-- to send many things:
+
+sendAll
+(
+"hi"
+,
+ 
+"open door e"
+,
+ 
+"e"
+,
+ 
+"get item"
+,
+ 
+"sit"
+)

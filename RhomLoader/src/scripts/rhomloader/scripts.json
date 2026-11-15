@@ -1,0 +1,7 @@
+[
+  {
+    "name": "code",
+    "isActive": "yes",
+    "eventHandlerList": ["sysInstall"]
+  }
+]
