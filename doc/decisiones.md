@@ -31,7 +31,7 @@ Al arrancar, `sonidos.lua` construye en memoria un catálogo a partir de `rhomsc
 
 Los grupos que carecen de un ajuste propio aplican un factor de grupo del 100 % y siguen sujetos al volumen general. Al definir un grupo nuevo, indicar en la ficha de migración si ese comportamiento basta o si el plan necesita un ajuste específico.
 
-El paneo, la repetición, las secuencias, las políticas de simultaneidad y la selección de variantes quedan pendientes. Una futura agrupación de variantes deberá declararse de forma que se pueda distinguir de archivos numerados que representan claves separadas. Cualquier prioridad de lector de pantalla se decidirá por tipo de mensaje. Mientras tanto se mantiene `announce(texto)` estándar.
+El paneo, la repetición, las secuencias, las políticas de simultaneidad y la selección de variantes quedan pendientes. Una futura agrupación de variantes deberá declararse de forma que se pueda distinguir de archivos numerados que representan claves separadas. La prioridad del lector de pantalla se decide por tipo de mensaje. Las consultas de ficha por teclado solicitan interrupción y los demás anuncios usan el procesamiento predeterminado de Mudlet. [Atajos de información](usuario/teclado.md#información-del-personaje)
 
 ## 4. Actualizaciones previstas
 

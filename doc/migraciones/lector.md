@@ -6,7 +6,7 @@ Origen: scripts_vipmud/start.set, FCopiar (24–28), Control-1…9 (58–66) y C
 
 Entrada: pulsaciones de lectura/copia y comandos leerlinea N/copiarlinea N. Sin conexión ni comandos enviados al servidor. El dominio consulta el búfer principal directamente; historial.lua permanece archivado y no se registra su trigger global.
 
-Lectura: announce(texto), saltando blancos al contar. Copia: setClipboardText(texto) una vez, announce(texto), solicitud de ui.portapapeles, announce("Copiado"), en ese orden y con el procesamiento estándar. El catálogo reproduce una vez el primer recurso; sus opciones futuras no se aplican todavía. Una API ausente o fallida no se oculta.
+La lectura llama a `announce(texto)` y salta blancos al contar. La copia de línea llama a `lector.copiar(texto)`, que escribe en el portapapeles una vez, anuncia el texto y «Copiado» con el procesamiento estándar y solicita `ui.portapapeles`. Los errores de las APIs se propagan. [Contrato de copia](../contratos-mudlet.md#copia-de-texto-al-portapapeles)
 
 Estado: no mantiene caché ni captura permanente. keys conserva los identificadores de sus 18 pulsaciones para ayuda, listado y recarga; aliases conserva los dos comandos.
 

@@ -119,7 +119,7 @@ function suite.run(case, init_path, mock)
 
   case("Oficial preferencias: API ausente se propaga y permite reintento", function()
     defaults()
-    config.set("oficial_depuracion", true)
+    config.set("oficial_discord", not config.get("oficial_discord"))
     assert(config.save())
     local original = RL_salvar_opciones
     RL_salvar_opciones = nil
@@ -137,7 +137,7 @@ function suite.run(case, init_path, mock)
     RL_salvar_opciones = original
     assert(retried, retry_message)
     equal(retries, 1)
-    equal(RL_vars.opciones.depuracion, true)
+    equal(RL_vars.opciones.no_discord, not config.get("oficial_discord"))
     defaults()
   end)
 

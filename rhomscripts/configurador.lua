@@ -25,6 +25,9 @@ end
 
 function Sesion:get(id)
   opcion(id)
+  if id == "oficial_depuracion" and not self.debug_editado then
+    self.valores[id] = configuracion.get(id)
+  end
   return self.valores[id]
 end
 
@@ -34,7 +37,7 @@ end
 function Sesion:cambiar(id, delta)
   local entrada = opcion(id)
   assert(delta == -1 or delta == 1, "La dirección debe ser -1 o 1")
-  local anterior = self.valores[id]
+  local anterior = self:get(id)
   local siguiente
   if entrada.tipo == "booleano" then
     siguiente = not anterior
@@ -47,25 +50,31 @@ function Sesion:cambiar(id, delta)
   end
   if anterior == siguiente then return false, true end
   self.valores[id] = siguiente
+  if id == "oficial_depuracion" then self.debug_editado = true end
   return true, false
 end
 
 function Sesion:reset()
   local cambio = false
   for _, entrada in ipairs(configuracion.opciones) do
-    if self.valores[entrada.id] ~= entrada.defecto then cambio = true end
+    if self:get(entrada.id) ~= entrada.defecto then cambio = true end
     self.valores[entrada.id] = entrada.defecto
   end
+  self.debug_editado = true
   return cambio
 end
 
 function Sesion:guardar()
+  -- Una preferencia externa modificada mientras el menú estaba abierto solo
+  -- se sustituye si el usuario editó expresamente este campo (o Restablecer).
+  local modo_debug = self:get("oficial_depuracion")
   self.etapa = "escritura"
   local correcto, mensaje = configuracion.guardar_valores(self.valores)
   if not correcto then return nil, mensaje, self.etapa end
   -- A partir de aquí Cancelar no revierte el archivo ni efectos oficiales.
   self.guardado = true
   self.etapa = "aplicacion"
+  configuracion.set("oficial_depuracion", modo_debug)
   audio.aplicar_volumenes()
   -- La retención pertenece al dominio y se aplica tras confirmar la escritura.
   local comunicaciones = RhomScripts and RhomScripts.modules and RhomScripts.modules.comunicaciones

@@ -3,6 +3,7 @@
 local root = RHOM_WX_ROOT
 assert(getMudletHomeDir() == RHOM_WX_PROFILE, "Perfil ajeno al ensayo")
 RhomScripts = { root = root .. "/rhomscripts", modules = {} }
+RhomScripts.modules.debug = assert(loadfile(RhomScripts.root .. "/debug.lua"))()
 package.path = RhomScripts.root .. "/?.lua;" .. package.path
 local results, timers, finished = {}, {}, false
 local ticks = 0

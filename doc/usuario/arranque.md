@@ -1,14 +1,14 @@
 # Arranque y monitor de estado
 
-`arranque.lua` reúne la preparación antes contenida en `comprobaciones.lua` y la aplicación de preferencias de `oficial.lua`. `init.lua` conserva la secuencia de carga de módulos y comunica su comienzo, éxito o error. La configuración oficial no conecta al juego.
+`arranque.lua` reúne la preparación antes contenida en `comprobaciones.lua` y la aplicación de preferencias de `oficial.lua`. `init.lua` conserva la secuencia de carga y limpieza; `debug.lua` reúne los estados y la presentación. La configuración oficial no conecta al juego. Con debug desactivado, la carga normal presenta únicamente «Cargando…» y «Carga correcta.»; los avisos y errores siguen comunicándose. [Modo compartido y comandos de diagnóstico](debug.md).
 
 ## Consulta
 
-El alias breve `estado`, registrado en `aliases.lua`, muestra y anuncia el mismo resumen una vez cargados los módulos.
+`rhomscripts estado` muestra y anuncia el resumen. Su declaración pertenece a debug y la instala el registrador central de aliases.
 
-El comando `rhomestado` imprime y anuncia un resumen ordenado de los diez componentes. Se registra antes de cargar los módulos funcionales, de modo que puede consultarse durante la espera oficial o tras un fallo posterior. Se retira y vuelve a registrar al recargar. No abre ventanas ni reproduce sonidos.
+El resumen ordena los diez componentes y añade los avisos registrados. Los comandos se preparan antes de la espera oficial, de modo que pueden consultarse durante esa espera o tras un fallo posterior. Se retiran y vuelven a registrar al recargar. No abren ventanas ni reproducen sonidos. `rhomscripts estado gmcp` filtra el componente y lo presenta como informe textual.
 
-Desde Lua: `RhomScripts.soporte.arranque.estado.consultar()` devuelve una copia completa del registro. `estado.consultar("gmcp")` devuelve una copia del componente GMCP. Cada entrada contiene `codigo`, `detalle`, `actualizado` (segundos Unix) y `causa`. Modificar las copias no modifica el registro. El estado es de sesión y no se guarda en disco; una recarga lo reconstruye con la información disponible.
+Desde Lua: `RhomScripts.modules.debug.estado.consultar()` devuelve una copia completa del registro. `RhomScripts.soporte.arranque.estado` conserva la misma API como fachada del registro único. `estado.consultar("gmcp")` devuelve una copia del componente GMCP. Cada entrada contiene `codigo`, `detalle`, `actualizado` (segundos Unix) y `causa`. Modificar las copias no modifica el registro. El estado es de sesión y no se guarda en disco; una recarga lo reconstruye con la información disponible.
 
 Componentes, en orden de lectura:
 
@@ -32,8 +32,8 @@ Estado:
 
 Monitorización:
 
-- `monitorizacion.iniciar()`: registra observadores y el alias, y toma el estado inicial. Llamarlo de nuevo mientras está activo no duplica recursos.
-- `monitorizacion.detener()`: retira exclusivamente sus observadores y alias; conserva el último registro para consulta programática.
+- `monitorizacion.iniciar()`: registra observadores y toma el estado inicial. Llamarlo de nuevo mientras está activo no duplica recursos. Los aliases de consulta se preparan por separado desde debug.
+- `monitorizacion.detener()`: retira exclusivamente sus observadores; conserva el último registro para consulta programática.
 
 Preparación:
 
@@ -46,7 +46,7 @@ Preferencias oficiales:
 - `vigilar()`: observa las señales oficiales para reaplicar las preferencias guardadas; no utiliza los cambios de un borrador abierto.
 - `cancelar_configuracion()`: retira esos observadores y la reaplicación diferida.
 
-Los registros del monitor y de las preferencias tienen responsabilidades distintas. La recarga cancela ambos y la preparación pendiente antes de crear la nueva instancia. Ante un fallo de carga se cancela la preparación y la reaplicación de preferencias; el monitor y su alias permanecen para poder consultar el error.
+Los observadores del monitor y de las preferencias tienen responsabilidades distintas. La recarga cancela ambos y la preparación pendiente antes de crear la nueva instancia. Ante un fallo de carga se cancela la preparación y la reaplicación de preferencias; el registro y los aliases de diagnóstico ya preparados se conservan para poder consultar el error.
 
 ## Notificaciones y evidencias
 

@@ -154,8 +154,17 @@ def check_behavior(runtime_type):
         found = regex(pattern).search(text)
         if found is None:
             return None
-        values = {index + 1: value or '' for index, value in enumerate([found.group(0), *found.groups()])}
-        values.update({name: value or '' for name, value in found.groupdict().items()})
+        def capture(group):
+            try:
+                return found.group(group) or ''
+            except pcre2._cy.LibraryError as error:
+                # PCRE2 reports an unmatched optional capture as UNSET; Mudlet
+                # exposes the corresponding matches field as an empty string.
+                if str(error) != 'requested value is not set':
+                    raise
+                return ''
+        values = {index + 1: capture(index) for index in range(found.re.groups + 1)}
+        values.update({name: capture(name) for name in found.re.groupindex})
         return runtime.table_from(values)
     runtime.globals().validateRegex = validate_regex
     runtime.globals().matchRegex = match_regex

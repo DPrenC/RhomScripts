@@ -18,6 +18,7 @@
 ## Fuentes y contratos
 
 - [Contratos de APIs de Mudlet](contratos-mudlet.md)
+- [Plantilla anonimizada de los datos GMCP de Reinos de Leyenda](gmcp-reinos.md)
 - [Copias oficiales de Mudlet con procedencia y hashes](mudlet/README.md)
 - [Referencia del lenguaje VIPMud](doc_vipmud.txt)
 - Manuales históricos de Mudlet. [Funciones de Lua](Manual_Lua%20Functions%20-%20Mudlet.html), [funciones diversas](Manual_Miscellaneous%20Functions%20-%20Mudlet.html) y [funciones de objetos](Manual_Mudlet%20Object%20Functions%20-%20Mudlet.html).

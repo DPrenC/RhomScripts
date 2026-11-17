@@ -5,7 +5,7 @@ local root = RHOM_TEST_ROOT
 assert(getMudletHomeDir() == RHOM_TEST_PROFILE, "El perfil real no está en la carpeta aislada prevista")
 local results = {}
 local originals = {}
-local live = { keys = {}, aliases = {}, triggers = {} }
+local live = { keys = {}, aliases = {}, triggers = {}, ficha = {} }
 -- El portapapeles es global al escritorio, no al perfil aislado. No tocarlo por defecto.
 local saved_clipboard
 if RHOM_TEST_CLIPBOARD then saved_clipboard = getClipboardText() end
@@ -19,16 +19,17 @@ local function case(name, action)
   results[#results + 1] = name
 end
 
-local function track(create_name, kill_name, collection)
+local function track(create_name, kill_name, collection, filter)
   originals[create_name] = _G[create_name]
   originals[kill_name] = _G[kill_name]
   _G[create_name] = function(...)
     local id = originals[create_name](...)
     assert(type(id) == "number", create_name .. " no devolvió identificador")
-    collection[id] = true
+    if not filter or filter == select(1, ...) then collection[id] = true end
     return id
   end
   _G[kill_name] = function(id)
+    if filter and not collection[id] then return originals[kill_name](id) end
     local result = originals[kill_name](id)
     assert(result, kill_name .. " no eliminó " .. tostring(id))
     collection[id] = nil
@@ -53,6 +54,7 @@ local function run()
   track("tempKey", "killKey", live.keys)
   track("tempAlias", "killAlias", live.aliases)
   track("tempRegexTrigger", "killTrigger", live.triggers)
+  track("registerAnonymousEventHandler", "killAnonymousEventHandler", live.ficha, "gmcp.Char")
   RhomScriptsBasePath = root .. "/rhomscripts"
   dofile(root .. "/rhomscripts/init.lua")
   assert(RhomScripts.initialized)
@@ -112,16 +114,18 @@ local function run()
   end)
 
   case("Carga inicial con APIs reales", function()
-    equal(count(live.keys), 33)
-    equal(count(live.aliases), 5)
+    equal(count(live.keys), 39)
+    equal(count(live.aliases), 3)
     equal(count(live.triggers), 2)
     equal(RhomScripts.modules.comunicaciones.cantidad_triggers(), 2)
-    local expected, total = { configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true }, 0
+    local expected, total = {
+      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true,
+    }, 0
     for name in pairs(RhomScripts.modules) do
       assert(expected[name], "Módulo no migrado conectado: " .. name)
       total = total + 1
     end
-    equal(total, 5)
+    equal(total, 7)
     assert(package.loaded.config == nil and package.loaded.modes == nil)
     local old_config = io.open(RHOM_TEST_PROFILE .. "/rl_config.lua", "rb")
     if old_config then old_config:close() end
@@ -143,6 +147,8 @@ local function run()
 
   dofile(root .. "/scripts/tests/oficial_configuracion.lua").run(case, root .. "/rhomscripts/init.lua")
 
+  dofile(root .. "/scripts/tests/depuracion.lua").run(case, root .. "/rhomscripts/init.lua")
+
   dofile(root .. "/scripts/tests/lector.lua").real(case)
   -- Eventos de red simulados; handlers registrados y retirados mediante APIs reales.
   dofile(root .. "/scripts/tests/estado_arranque.lua").run(case, root .. "/rhomscripts/arranque.lua")
@@ -155,7 +161,7 @@ local function run()
 
   if RHOM_TEST_CLIPBOARD then
     case("Prueba optativa del portapapeles de texto", function()
-      setClipboardText("RhomScripts copia real")
+      RhomScripts.modules.lector.copiar("RhomScripts copia real")
       equal(getClipboardText(), "RhomScripts copia real")
     end)
   end
@@ -195,7 +201,9 @@ local function run()
     equal(received.pan, nil)
     equal(received.loops, nil)
     equal(received.priority, nil)
-    assert(#getPlayingSounds({key = key}) > 0, "La clave no llegó al motor de audio real")
+    equal(received.key, key)
+    -- La observación del motor se realiza tras procesar Qt en execute_suite;
+    -- ui.boton_1 dura 0.1306 s y este lote aún contiene paradas de la misma clave.
     audio.stop(key)
     equal(audio.reproducir("ui.no_existe"), nil)
   end)
@@ -331,9 +339,7 @@ local function reload_from_modal()
   equal(configurador.sesion, nil)
 end
 
-local function execute_suite()
-  local ok, err = xpcall(run, debug.traceback)
-  if not ok then finish(false, err); return end
+local function execute_audio_checks()
   -- Mantener un sonido de prueba activo mientras Qt procesa eventos, para
   -- comprobar la parada asíncrona con el motor nativo.
   local loop_key = "rhom:integration-loop"
@@ -369,14 +375,44 @@ local function execute_suite()
         assert(configurador ~= state.old and configurador.vista and configurador.arbol)
         assert(not configurador.ventana:IsShown() and not configurador.sesion)
         equal(RhomScripts.modules.configuracion.get("volumen_general"), state.confirmed)
-        equal(count(live.keys), 33)
-        equal(count(live.aliases), 5)
+        equal(count(live.keys), 39)
+        equal(count(live.aliases), 3)
         equal(count(live.triggers), 2)
         killAnonymousEventHandler(state.handler)
         state.handler = nil
         results[#results + 1] = "Recarga desde diálogo real espera retorno modal, descarta sesión y prepara una única nueva instancia"
+        -- La negociación de prueba afecta al perfil aislado. Ejecutarla tras
+        -- las comprobaciones asíncronas de audio y de la ventana modal.
+        dofile(root .. "/scripts/tests/ficha.lua").run(
+          case, root .. "/rhomscripts/init.lua", function() return live.ficha end, true)
       end, debug.traceback)
       finish(stopped, stop_error)
+    end)
+  end)
+end
+
+-- Las solicitudes se verifican arriba; la reproducción nativa requiere devolver
+-- el control a Qt. Usar ui.carga_ok (1.2718 s), en vez del botón de 0.1306 s,
+-- permite observar una reproducción de catálogo real antes de solicitar su parada.
+local function execute_suite()
+  local ok, err = xpcall(run, debug.traceback)
+  if not ok then finish(false, err); return end
+  RhomScripts.soporte.audio.stop_tag()
+  tempTimer(0.1, function()
+    local requested, catalog_key = xpcall(function()
+      return assert(RhomScripts.soporte.audio.reproducir("ui.carga_ok", { volumen = 1 }))
+    end, debug.traceback)
+    if not requested then finish(false, catalog_key); return end
+    tempTimer(0.1, function()
+      local observed, message = xpcall(function()
+        equal(catalog_key, "rhom:catalogo:ui.carga_ok")
+        assert(#getPlayingSounds({ key = catalog_key }) > 0,
+          "La clave de catálogo no llegó al motor real tras procesar eventos Qt")
+        RhomScripts.soporte.audio.stop(catalog_key)
+        results[#results + 1] = "Audio real: clave de catálogo observada en el motor tras procesar Qt"
+      end, debug.traceback)
+      if not observed then finish(false, message); return end
+      execute_audio_checks()
     end)
   end)
 end
@@ -389,6 +425,7 @@ local function start_official()
   end
   RhomScripts = RhomScripts or {}
   RhomScripts.root = root .. "/rhomscripts"
+  RhomScripts.modules = { debug = assert(loadfile(RhomScripts.root .. "/debug.lua"))() }
   local control = dofile(root .. "/rhomscripts/arranque.lua").nuevo()
   RhomScripts.arranque_oficial = control
   control:iniciar(function()

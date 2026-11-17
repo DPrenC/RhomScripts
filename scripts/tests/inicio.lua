@@ -1,5 +1,5 @@
 -- Casos compartidos: doble local y APIs reales de Mudlet, siempre desconectado.
--- luacheck: globals require raiseEvent
+-- luacheck: globals require raiseEvent tempKey killKey echo RL_fijar_opcion
 local suite = {}
 
 function suite.run(init_path, missing_root, case)
@@ -7,6 +7,7 @@ function suite.run(init_path, missing_root, case)
     options = options or {}
     local original_require = require
     local original_play = playSoundFile
+    local original_key, original_kill, original_echo = tempKey, killKey, echo
     local original_raise, ready = raiseEvent, 0
     raiseEvent = function(event, ...)
       if event == "rhomscripts.ready" then ready = ready + 1 end
@@ -20,6 +21,24 @@ function suite.run(init_path, missing_root, case)
       if name == options.fail_module then error("Fallo de módulo provocado: " .. name) end
       local module = original_require(name)
       if name == "comunicaciones" then communications = module end
+      if name == "keys" and options.fail_key_cleanup then
+        local attempts = 0
+        tempKey = function(...)
+          attempts = attempts + 1
+          if attempts == 2 then error("Registro segundo atajo denegado", 0) end
+          return original_key(...)
+        end
+        killKey = function() return false end
+      end
+      if name == "keys" and options.fail_late_output then
+        local register_keys = module.registrar
+        module.registrar = function()
+          register_keys()
+          echo = nil
+          error("Fallo tardío original", 0)
+        end
+      end
+
       if name == "ui" and options.fail_ventanas then
         module.preparar = function() error("Fallo de preparación de ventanas provocado") end
       end
@@ -52,6 +71,7 @@ function suite.run(init_path, missing_root, case)
     local ok, message = pcall(dofile, init_path)
     require = original_require
     playSoundFile = original_play
+    tempKey, killKey, echo = original_key, original_kill, original_echo
     raiseEvent = original_raise
     return ok, message, calls, native_calls, ready, communications, native_volume
   end
@@ -129,6 +149,40 @@ function suite.run(init_path, missing_root, case)
     local ok, message = load({ missing_api = true })
     assert(not ok and tostring(message):find("playSoundFile", 1, true))
     assert(not RhomScripts.initialized)
+  end)
+
+  case("Inicio: registro fallido conserva atajo no retirado y estado consultable", function()
+    local ok, message = load({ fail_key_cleanup = true })
+    assert(not ok and tostring(message):find("Registro segundo atajo denegado", 1, true))
+    local diagnostic = RhomScripts.modules.debug
+    local bindings = diagnostic.consultar("keys")
+    assert(#bindings == 1 and type(bindings[1].id) == "number", "El recurso no retirado quedó oculto")
+    local found = false
+    for _, component in ipairs(diagnostic.consultar("estado", "keys")) do
+      if component.modulo == "keys" and component.estado == "error" then found = true end
+    end
+    assert(found, "La consulta de estado no incluyó el fallo del módulo")
+    RhomScripts.modules.keys.desregistrar()
+    assert(#diagnostic.consultar("keys") == 0, "El inventario conservó un atajo ya retirado")
+    dofile(init_path)
+  end)
+
+  case("Inicio: salida ausente tras registrar recursos limpia antes de presentar error", function()
+    local previous_mode = RL_vars.opciones.depuracion == true
+    assert(RL_fijar_opcion("depuracion", true))
+    local ok, message, _, _, ready, communications = load({ fail_late_output = true })
+    assert(RL_fijar_opcion("depuracion", previous_mode))
+    assert(not ok and tostring(message):find("Fallo tardío original", 1, true), "Se perdió el fallo original: " .. tostring(message))
+    assert(tostring(message):find("Error adicional al presentar el fallo:", 1, true),
+      "No se añadió el fallo de presentación: " .. tostring(message))
+    assert(ready == 0 and not RhomScripts.initialized and not RhomScripts.loading)
+    assert(#RhomScripts.modules.debug.consultar("keys") == 0, "Quedaron teclas por fallar echo")
+    assert(#RhomScripts.modules.debug.consultar("triggers") == 0, "Quedaron triggers por fallar echo")
+    assert(communications and not communications.iniciado, "Quedaron manejadores de comunicaciones")
+    for _, alias in ipairs(RhomScripts.soporte.aliases.consultar()) do
+      assert(alias.modulo == "debug", "Quedó un alias funcional tras fallar echo")
+    end
+    dofile(init_path)
   end)
 
   -- Dejar una instancia nueva sin instrumentación para el resto de pruebas.

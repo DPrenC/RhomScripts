@@ -26,14 +26,13 @@ function lector.decir(text)
   speak(text)
 end
 
-function lector.copiar(text, aviso)
-  assert(type(text) == "string", "El texto para copiar debe ser una cadena")
-  local value = text
-  setClipboardText(value)
-  speak(value)
+function lector.copiar(texto)
+  assert(type(texto) == "string", "El texto para copiar debe ser una cadena")
+  setClipboardText(texto)
+  announce(texto)
+  announce("Copiado")
   audio.reproducir("ui.portapapeles")
-  speak(aviso or "Copiado")
-  return value
+  return texto
 end
 
 -- Índices relativos entre líneas con contenido, sin caché.
@@ -76,8 +75,7 @@ function lector.copiar_linea(numero)
     speak(mensaje)
     return nil, mensaje
   end
-  lector.copiar(text)
-  return text
+  return lector.copiar(text)
 end
 
 -- Compatibilidad temporal con llamadas ya existentes en modulos antiguos Lua.

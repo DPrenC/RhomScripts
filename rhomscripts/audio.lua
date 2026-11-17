@@ -32,7 +32,7 @@ end
 function audio.iniciar(root)
   audio.aplicar_volumenes()
   local resumen = sonidos.cargar_catalogo(root)
-  echo(resumen.mensaje .. "\n")
+  RhomScripts.modules.debug.catalogo(resumen)
   return resumen
 end
 

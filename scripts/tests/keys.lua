@@ -139,18 +139,14 @@ function suite.run(path, case)
       assert(success, err)
     end)
     case("Teclas: español conserva etiquetas y detecta colisiones por símbolo efectivo", function()
-      local original_print, output = print, {}
-      print = function(text) output[#output + 1] = text end
-      local success, err = pcall(keys.listar_teclas)
-      print = original_print
-      assert(success, err)
+      local inventory = keys.consultar()
       for index = 1, 9 do
         local found = false
-        for _, text in ipairs(output) do
-          if text:find("Ctrl+Shift+" .. index .. ":", 1, true)
-              and text:find("lector.copiar_linea_" .. index, 1, true) then found = true end
+        for _, entry_info in ipairs(inventory) do
+          if entry_info.combinacion == "Ctrl+Shift+" .. index
+              and entry_info.nombre == "lector.copiar_linea_" .. index then found = true end
         end
-        assert(found, "listkeys perdió la combinación numérica " .. index)
+        assert(found, "El inventario perdió la combinación numérica " .. index)
         local before = count()
         assert(not pcall(keys.registrar_modulo, "colision", {
           entry("colision.simbolo_" .. index, copia_es[index], { control, shift }),
@@ -164,6 +160,18 @@ function suite.run(path, case)
         entry("colision.numero", mudlet.key["1"], { shift, control }),
       }))
       equal(count(), before)
+    end)
+    case("Teclas: Alt+Mayús con 1, 2 y 0 usa los símbolos del teclado español", function()
+      local alt = mudlet.keymodifier.Alt
+      local codigos = { ["1"] = 33, ["2"] = 34, ["0"] = 61 }
+      for _, indice in ipairs({ "1", "2", "0" }) do
+        local nombre = "prueba.alt_mayus_" .. indice
+        keys.registrar_modulo("prueba", { entry(nombre, mudlet.key[indice], { alt, shift }) })
+        local antes = calls
+        press(alt + shift, codigos[indice])
+        equal(calls, antes + 1)
+        assert(not pcall(press, alt + shift, mudlet.key[indice]))
+      end
     end)
     case("Teclas: Mayús+coma y Mayús+punto usan los símbolos del teclado español", function()
       local punctuation = {
@@ -181,13 +189,12 @@ function suite.run(path, case)
           entry("colision." .. binding.nombre, binding.codigo, { control, shift }),
         }))
       end
-      local original_print, output = print, {}
-      print = function(line) output[#output + 1] = line end
-      local success, err = pcall(keys.listar_teclas)
-      print = original_print
-      assert(success, err)
       for _, binding in ipairs(punctuation) do
-        assert(table.concat(output):find("Ctrl+Shift+" .. binding.nombre .. ":", 1, true))
+        local found = false
+        for _, registered in ipairs(keys.consultar()) do
+          if registered.combinacion == "Ctrl+Shift+" .. binding.nombre then found = true end
+        end
+        assert(found, "El inventario perdió la combinación de puntuación")
       end
     end)
     case("Teclas: colisiones de nombre y combinación se rechazan sin registrar el lote", function()

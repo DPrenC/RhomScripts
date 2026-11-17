@@ -3,11 +3,6 @@ local keys = {}
 local registros = {}
 local ayuda = false
 
-keys.aliases = {{
-  pattern = "^listkeys$", action = function() keys.listar_teclas() end,
-  name = "listkeys", desc = "Lista las pulsaciones registradas"
-}}
-
 function keys.ayuda_activa() return ayuda end
 
 function keys.establecer_ayuda(activa)
@@ -78,8 +73,10 @@ local function normalizar(modulo, entrada)
   etiquetas[#etiquetas + 1] = nombre_tecla
   -- Qt entrega el símbolo de Mayús para estas teclas en el teclado español
   -- de España. Mantener la combinación declarada para ayuda y listkeys.
-  if vistos[mudlet.keymodifier.Control] and vistos[mudlet.keymodifier.Shift] then
-    local simbolos_es = {
+  local control, alt = vistos[mudlet.keymodifier.Control], vistos[mudlet.keymodifier.Alt]
+  if vistos[mudlet.keymodifier.Shift] and (control or alt) then
+    local numeros_es = {
+      [mudlet.key["0"]] = mudlet.key.Equal,
       [mudlet.key["1"]] = mudlet.key.Exclam,
       [mudlet.key["2"]] = mudlet.key.QuoteDbl,
       [mudlet.key["3"]] = mudlet.key.periodcentered,
@@ -89,10 +86,12 @@ local function normalizar(modulo, entrada)
       [mudlet.key["7"]] = mudlet.key.Slash,
       [mudlet.key["8"]] = mudlet.key.ParenLeft,
       [mudlet.key["9"]] = mudlet.key.ParenRight,
-      [mudlet.key.Comma] = mudlet.key.Semicolon,
-      [mudlet.key.Period] = mudlet.key.Colon,
     }
-    tecla = simbolos_es[tecla] or tecla
+    if control then
+      numeros_es[mudlet.key.Comma] = mudlet.key.Semicolon
+      numeros_es[mudlet.key.Period] = mudlet.key.Colon
+    end
+    tecla = numeros_es[tecla] or tecla
   end
   return { modulo = modulo, nombre = entrada.nombre, funcion = entrada.funcion,
     descripcion = entrada.descripcion, grupo = entrada.grupo, tecla = tecla, modificadores = suma,
@@ -195,12 +194,18 @@ function keys.registrar()
   return instalar(preparados)
 end
 
-function keys.listar_teclas()
-  print("Pulsaciones registradas: " .. #registros)
+function keys.consultar()
+  local resultado = {}
   for _, registro in ipairs(registros) do
-    print(registro.combinacion .. ": " .. registro.descripcion .. ". Función: " .. registro.nombre
-      .. ". Grupo: " .. registro.grupo .. ". Módulo: " .. registro.modulo)
+    resultado[#resultado + 1] = { modulo = registro.modulo, nombre = registro.nombre,
+      descripcion = registro.descripcion, grupo = registro.grupo, combinacion = registro.combinacion,
+      tecla = registro.tecla, modificadores = registro.modificadores, id = registro.id, estado = "registrado" }
   end
+  return resultado
+end
+
+function keys.listar_teclas()
+  return RhomScripts.modules.debug.mostrar("keys")
 end
 
 return keys

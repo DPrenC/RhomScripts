@@ -2,7 +2,8 @@
 -- Prueba nativa aislada: no instala paquetes del juego ni toca portapapeles.
 local root, result_path = RHOM_WX_ROOT, RHOM_WX_RESULT
 assert(getMudletHomeDir() == RHOM_WX_PROFILE, "El perfil no está en la carpeta aislada prevista")
-RhomScripts = { root = root .. "/rhomscripts" }
+RhomScripts = { root = root .. "/rhomscripts", modules = {} }
+RhomScripts.modules.debug = assert(loadfile(RhomScripts.root .. "/debug.lua"))()
 package.path = RhomScripts.root .. "/?.lua;" .. package.path
 
 local results, timers = {}, {}

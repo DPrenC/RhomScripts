@@ -44,7 +44,7 @@ function suite.run(mock, case)
       equal(mock.clipboard, "primera")
       equal(mock.announcements[#mock.announcements], "Copiado")
     end)
-    case("Lector: copia una sola vez y solicita texto, sonido y Copiado en ese orden", function()
+    case("Lector: copia común escribe, anuncia el texto y Copiado, y solicita el sonido", function()
       local audio = RhomScripts.soporte.audio
       local original_clipboard, original_announce, original_audio = setClipboardText, announce, audio.reproducir
       local calls = {}
@@ -60,14 +60,21 @@ function suite.run(mock, case)
         calls[#calls + 1] = "sonido:" .. key
         return original_audio(key, options)
       end
-      local success, err = pcall(lector.copiar_linea, 2)
+      local success, err = pcall(function()
+        equal(lector.copiar(" texto común "), " texto común ")
+        equal(lector.copiar_linea(2), "  segunda con espacios  ")
+      end)
       setClipboardText, announce, audio.reproducir = original_clipboard, original_announce, original_audio
       assert(success, err)
-      equal(#calls, 4)
-      equal(calls[1], "portapapeles:  segunda con espacios  ")
-      equal(calls[2], "voz:  segunda con espacios  ")
-      equal(calls[3], "sonido:ui.portapapeles")
-      equal(calls[4], "voz:Copiado")
+      equal(#calls, 8)
+      equal(calls[1], "portapapeles: texto común ")
+      equal(calls[2], "voz: texto común ")
+      equal(calls[3], "voz:Copiado")
+      equal(calls[4], "sonido:ui.portapapeles")
+      equal(calls[5], "portapapeles:  segunda con espacios  ")
+      equal(calls[6], "voz:  segunda con espacios  ")
+      equal(calls[7], "voz:Copiado")
+      equal(calls[8], "sonido:ui.portapapeles")
       equal(mock.clipboard, "  segunda con espacios  ")
     end)
     case("Lector: nueve códigos españoles ejecutan copia y solicitan su sonido", function()
@@ -109,12 +116,13 @@ function suite.run(mock, case)
       mock.alias("copiarlinea 3")
       equal(mock.clipboard, "primera")
     end)
-    case("Lector: APIs ausentes propagan error sin aviso de copia correcta", function()
+    case("Lector: las APIs ausentes de lectura y copia propagan error", function()
       for _, test in ipairs({
         { "getLastLineNumber", function() lector.buscar_linea(1) end },
         { "getLines", function() lector.buscar_linea(1) end },
         { "setClipboardText", function() lector.copiar_linea(1) end },
         { "announce", function() lector.leer_linea(1) end },
+        { "announce", function() lector.copiar_linea(1) end },
         { "playSoundFile", function() lector.copiar_linea(1) end },
       }) do
         local original = _G[test[1]]
@@ -144,19 +152,26 @@ function suite.real(case)
     equal(lector.buscar_linea(2), "Lector real 1")
     equal(lector.buscar_linea(getLastLineNumber("main") + 2), nil)
   end)
-  case("Lector real: sonido de copia desde el catálogo sin tocar portapapeles", function()
+  case("Lector real: función común copia y reproduce el sonido de interfaz", function()
     local audio = RhomScripts.soporte.audio
-    local original_play, received = playSoundFile, nil
+    local original_play, original_clipboard = playSoundFile, setClipboardText
+    local received, copied
+    setClipboardText = function(texto) copied = texto end
     playSoundFile = function(settings)
-      received = settings.name
+      received = settings
       return original_play(settings)
     end
-    local success, key = pcall(audio.reproducir, "ui.portapapeles")
-    playSoundFile = original_play
-    assert(success, key)
-    assert(key, "No está disponible el sonido de copia")
-    equal(received, RhomScripts.soporte.sonidos.catalogo.sonidos["ui.portapapeles"].archivos[1])
-    audio.stop(key)
+    local texto = " Lector real "
+    local success, resultado = pcall(lector.copiar, texto)
+    playSoundFile, setClipboardText = original_play, original_clipboard
+    assert(success, resultado)
+    equal(resultado, texto)
+    equal(copied, texto)
+    assert(received, "No se solicitó el sonido de copia")
+    local sonido = RhomScripts.soporte.sonidos.catalogo.sonidos["ui.portapapeles"]
+    equal(sonido.grupo, "ui")
+    equal(received.name, sonido.archivos[1])
+    audio.stop(received.key)
   end)
   case("Lector real: texto recibido con feedTriggers", function()
     assert(feedTriggers("Lector recibido alfa\nLector recibido beta\n"))

@@ -26,11 +26,22 @@ function captura.nueva()
     return #registros
   end
 
+  function instancia.consultar()
+    local resultado = {}
+    for _, registro in ipairs(registros) do
+      resultado[#resultado + 1] = { modulo = "comunicaciones", nombre = registro.nombre,
+        descripcion = "Captura mensajes de " .. registro.nombre, patron = patrones[registro.nombre],
+        accion = "comunicaciones.historiales." .. registro.nombre .. ".recibir_texto",
+        id = registro.id, estado = iniciada and "registrado" or "inactivo" }
+    end
+    return resultado
+  end
+
   function instancia.detener()
     iniciada = false
     local errores = {}
     for i = #registros, 1, -1 do
-      local id = registros[i]
+      local id = registros[i].id
       local correcto, resultado = pcall(function()
         assert(killTrigger(id), "No se pudo retirar el trigger de comunicaciones " .. id)
       end)
@@ -53,7 +64,7 @@ function captura.nueva()
           if iniciada then recibir(historial, matches[1]) end
         end)
         assert(type(id) == "number" and id > 0, fallo or "No se pudo registrar el trigger de " .. historial)
-        registros[#registros + 1] = id
+        registros[#registros + 1] = { id = id, nombre = historial }
       end
     end)
     if not correcto then

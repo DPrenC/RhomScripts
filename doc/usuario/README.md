@@ -4,11 +4,11 @@
 
 Documentación inicial. El paquete público separado y sus actualizadores están diseñados y pendientes de implementación. No existe todavía aquí un manual de instalación de esa distribución.
 
-El arranque está limitado temporalmente a `configuracion`, `configurador`, `lector`, `comunicaciones` y `keys`. Los [historiales de comunicaciones](comunicaciones.md) reciben los canales oficiales mediante GMCP y capturan Room y telepatía mediante dos triggers propios. El [lector de líneas](lector.md) permite leer y copiar con Ctrl+1…9 y Ctrl+Shift+1…9, además de los comandos `leerlinea N` y `copiarlinea N`. Ctrl+Shift+C abre el configurador, Ctrl+Shift+H alterna la ayuda y `listkeys` enumera sus pulsaciones. Los comandos y triggers de los módulos pendientes siguen desconectados, incluidas las demostraciones `pruebawx` y `pruebacffi`. Sus archivos se conservan en la carpeta raíz `rhomscripts old` para futuras migraciones.
+El arranque carga `debug`, `configuracion`, `configurador`, `ficha`, `lector`, `comunicaciones` y `keys`. El [diagnóstico centralizado](debug.md) reúne estados, mensajes e inventarios. Los [historiales de comunicaciones](comunicaciones.md) reciben los canales oficiales mediante GMCP y capturan Room y telepatía mediante dos triggers propios. El [lector de líneas](lector.md) permite leer y copiar con Ctrl+1…9 y Ctrl+Shift+1…9, además de los comandos `leerlinea N` y `copiarlinea N`. Ctrl+Shift+C abre el configurador, Ctrl+Shift+H alterna la ayuda y `rhomscripts keys` enumera sus pulsaciones. Los comandos y triggers de los módulos pendientes siguen desconectados, incluidas las demostraciones `pruebawx` y `pruebacffi`. Sus archivos se conservan en la carpeta raíz `rhomscripts old` para futuras migraciones.
 
-Audio, interfaz nativa, integración oficial y registro de comandos son dependencias internas. `RhomScripts.modules` contiene solo los cinco sistemas activos; `RhomScripts.soporte` conserva arranque, audio, UI y registro de comandos para retirarlos al recargar. El paquete oficial sigue funcionando según sus preferencias: la desconexión de los módulos propios no desactiva sus servicios.
+Audio, interfaz nativa, integración oficial y registro de comandos son dependencias internas. `RhomScripts.modules` contiene los siete sistemas activos, incluido debug. `RhomScripts.soporte` conserva arranque, audio, UI y registro de comandos para retirarlos al recargar. El paquete oficial sigue funcionando según sus preferencias.
 
-La única configuración del arranque es `config.json`. Ya no se carga `config.lua` ni se lee o escribe `rl_config.lua`, ni se inicializa `modes`. Se conservan ese archivo de configuración y sus consumidores pendientes en el fuente; tampoco se elimina ningún archivo personal antiguo del perfil.
+Las preferencias propias del arranque se guardan en `config.json`; el modo debug se comparte directamente con el paquete oficial y utiliza su persistencia. Ya no se carga `config.lua` ni se lee o escribe `rl_config.lua`, ni se inicializa `modes`. Se conservan ese archivo de configuración y sus consumidores pendientes en el fuente; tampoco se elimina ningún archivo personal antiguo del perfil.
 
 ## Arranque con el paquete oficial de Reinos
 
@@ -16,11 +16,23 @@ Antes de cargar los módulos, `init.lua` utiliza `arranque.lua` para preparar wx
 
 El arranque espera la inicialización local del paquete, sin esperar GMCP. Escucha `rlmud_opciones_inicializadas` y deja terminar la pila de eventos oficial antes de continuar; si ya estaba inicializado, comprueba su estado local existente. «Activo» significa opciones locales preparadas, no negociación con el servidor ni descargas de mapa o sonidos completadas. Esas tareas continúan a cargo del paquete oficial.
 
-Muestra y anuncia mensajes breves: paquete instalado o no instalado, activo y carga correcta de RhomScripts. Si falla la descarga, la instalación o la inicialización, informa del error y no continúa la carga. La espera máxima es de 60 segundos. Para reintentar después de resolver el problema, usar `rl` con RhomLoader o volver a cargar `init.lua`.
+Con debug desactivado muestra y anuncia únicamente los hitos propios de inicio y carga correcta; los detalles de paquete, esperas y registros se conservan para consulta y se muestran automáticamente con debug activado. Si falla la descarga, la instalación o la inicialización, informa del error y no continúa la carga. La espera máxima es de 60 segundos. Para reintentar después de resolver el problema, usar `rl` con RhomLoader o volver a cargar `init.lua`.
 
 `RhomScripts.loading` identifica una carga pendiente; `RhomScripts.initialized` solo pasa a verdadero al completar los módulos. `RhomScripts.arranque_oficial.estado` distingue pendiente, esperando, activo, error o cancelado. La recarga retira nuestros manejadores y temporizadores anteriores; una descarga antigua no inicia otra carga. Pueden quedar ZIP temporales de intentos interrumpidos en el perfil, con prefijo `rhomscripts-oficial-`.
 
-El inicializador lee primero el JSON de RhomScripts, carga las bibliotecas nativas, espera al paquete oficial y aplica las preferencias guardadas antes de cargar los módulos funcionales. Conserva la misma instancia de configuración para el menú. No exige conectar al juego: las opciones que necesitan GMCP quedan pendientes. Comunicaciones consume los eventos GMCP de canales; los módulos archivados de estadísticas siguen desconectados.
+El inicializador activa la captura de ficha al comenzar, carga la configuración y espera al paquete oficial antes de aplicar preferencias e iniciar los módulos con interfaz. Conserva la misma instancia de configuración para el menú. Las opciones que necesitan GMCP quedan pendientes hasta que llegue la información. Comunicaciones consume los eventos GMCP de canales.
+
+## Consulta de la ficha GMCP
+
+La ficha guarda en memoria los paquetes que Mudlet recibe en `gmcp.Char`. Empieza a recoger datos al cargar los scripts. Una recarga conserva la copia ya recibida. Una conexión nueva, la desconexión, la despedida GMCP o la desactivación del protocolo vacían esa copia.
+
+Desde la entrada de Mudlet se puede consultar la clase con `lua display(RhomScripts.modules.ficha.obtener("clase"))`. También están disponibles `vida_actual` y `vida_maxima`, y se admiten rutas de cualquier campo recibido, como `Stats.fue` o `Ficha.nivel_oficio`. Si un campo todavía no está disponible, la consulta devuelve `nil`. Los scripts pueden leer una copia completa con `RhomScripts.modules.ficha.datos()`. [Plantilla de datos GMCP de Reinos](../gmcp-reinos.md)
+
+Las consultas `nombre`, `clase`, `oficio`, `sexo` y `raza` devuelven los valores de `Char.Ficha`. `sexo` devuelve el código original de `Ficha.genero`.
+
+Alt+1 lee la vida, Alt+2 la energía y los escudos y Alt+0 la experiencia y los puntos de oficio. Con Mayús, esas mismas combinaciones copian y leen los datos con sus prefijos, anuncian «Copiado» y reproducen el sonido de portapapeles. [Atajos de información del personaje](teclado.md#información-del-personaje)
+
+Si llegan por separado la vida actual y la máxima, la ficha conserva el último valor recibido de cada una durante la sesión. Alt+1 dice «sin datos» en la posición de cada valor pendiente. Para los demás bloques, la ficha refleja el contenido que entrega Mudlet. Tras un reinicio de GMCP, ese contenido puede incluir bloques antiguos junto a los recién recibidos. [Diseño y límites de la captura](../planes/ficha-gmcp.md)
 
 ## Organización interna
 
@@ -28,7 +40,7 @@ El inicializador lee primero el JSON de RhomScripts, carga las bibliotecas nativ
 
 `ui.lua` reúne ventanas, árbol reutilizable, navegación, sonidos de interacción, registro de ventanas preparadas y operaciones de Windows en `ui.nativo`. No carga bibliotecas: utiliza las ya preparadas. Valida los identificadores, propietarios y asociaciones al utilizarlos, porque esas condiciones pueden cambiar después del inicio. El árbol recibe del dominio su nombre accesible y el texto raíz.
 
-`configurador.lua` conserva borrador y acciones de edición; `configuracion.lua`, preferencias y persistencia; `audio.lua`, catálogo y reproducción. `arranque.lua` aplica y vigila preferencias durante la sesión y mantiene el [monitor de estado](arranque.md), incluido Guardar y eventos posteriores a la conexión. Las listas y otros controles futuros se incorporarán a UI cuando se implementen; no están disponibles todavía.
+`configurador.lua` conserva borrador y acciones de edición; `configuracion.lua`, preferencias y persistencia; `audio.lua`, catálogo y reproducción. `arranque.lua` aplica y vigila preferencias y mantiene el [monitor de señales](arranque.md), incluido Guardar y eventos posteriores a la conexión; `debug.lua` almacena el estado único y presenta mensajes e informes. Las listas y otros controles futuros se incorporarán a UI cuando se implementen; no están disponibles todavía.
 
 ## Ventanas construidas al arrancar
 
@@ -54,7 +66,7 @@ Ctrl+Shift+C abre el configurador. Entrar en «Paquete oficial RLMud_Config» pe
 - Descargar mapa automáticamente cuando falta: activado. Es la política para las siguientes comprobaciones del paquete; no inicia ni cancela una descarga al guardar.
 - Tamaño de letra del panel: predeterminado del paquete. Cero representa ese ajuste dinámico; también se admiten de 8 a 50 puntos.
 - Recibir comunicaciones GMCP: activado. Es independiente de mostrar la interfaz.
-- Depuración del paquete y depuración MSP: desactivadas.
+- Depuración MSP: desactivada. El modo general compartido se configura en Interfaz y conserva el valor oficial; la depuración MSP necesita que ese modo esté activo.
 
 Derecha entra en el ajuste de una opción. Dentro del ajuste, arriba y abajo aumentan o disminuyen los números; en booleanos, ambas flechas alternan entre Activado y Desactivado; izquierda termina el ajuste y conserva la opción seleccionada. La fuente cambia de uno en uno, saltando entre predeterminado y ocho puntos. Modificar o restablecer cambia el borrador y aplica provisionalmente los volúmenes. Escape descarta el borrador y restaura los volúmenes confirmados sin leer el JSON ni ejecutar acciones oficiales.
 
@@ -74,13 +86,13 @@ Mientras se ajusta, arriba y abajo aumentan o disminuyen los números. En boolea
 
 Tab recorre Árbol, Guardar y Cancelar; Mayús+Tab realiza el recorrido inverso. El botón Guardar escribe y aplica las preferencias, y cierra cuando tiene éxito. Cancelar, Escape y la X cierran descartando la edición pendiente. Tab permanece dentro del diálogo. La asociación no añade un atajo para alternar con el juego. Las flechas de la ventana las atienden sus controles nativos.
 
-La edición utiliza un borrador: cambiar opciones no modifica la configuración confirmada. Cancelar no lee el JSON, de modo que un error de lectura no impide cerrar. Si ya se había guardado el archivo y falló una aplicación oficial, cancelar descarta únicamente los cambios posteriores; no deshace el archivo ni las acciones oficiales ya ejecutadas.
+En Interfaz se encuentran Ventanas flotantes y [Modo debug compartido](debug.md). La edición utiliza un borrador: cambiar opciones no modifica la configuración confirmada. Cancelar no lee el JSON, de modo que un error de lectura no impide cerrar. Si ya se había guardado el archivo y falló una aplicación oficial, cancelar descarta únicamente los cambios posteriores; no deshace el archivo ni las acciones oficiales ya ejecutadas.
 
 «Restablecer predeterminados» requiere confirmación dentro del diálogo. Restablece el borrador; hay que pulsar Guardar para conservarlo. Escape también sale desde esa confirmación.
 
 Los volúmenes general, de interfaz, de comunicaciones y de combate tienen valor predeterminado 80, y el de ambiente 70. Se ajustan de 5 en 5 entre 0 y 100. El reproductor por clave aplica el borrador desde el sonido de la propia pulsación y a las reproducciones que se soliciten después. Cero omite la reproducción. Cancelar, Escape, cerrar con la X o recargar descartan los ajustes pendientes y recuperan los últimos volúmenes confirmados.
 
-La configuración utiliza `config.json`, formato 2, en la carpeta del perfil de Mudlet. Los archivos válidos de formato 1 se migran conservando sus preferencias y añadiendo las nuevas con su valor predeterminado. Los archivos de formato 2 anteriores al volumen de comunicaciones incorporan ese ajuste conservando los valores existentes. Si falta el archivo, se crea. Si su contenido es incorrecto, se anuncia y se sustituye por valores predeterminados. Un error de lectura impide sobrescribir el archivo hasta una carga correcta.
+La configuración utiliza `config.json`, formato 2, en la carpeta del perfil de Mudlet. Los archivos válidos de formato 1 se migran conservando sus preferencias y añadiendo las nuevas con su valor predeterminado. En ambos formatos se retira la antigua copia `oficial_depuracion` sin aplicarla: la autoridad y persistencia del modo debug pertenecen al paquete oficial. Los archivos de formato 2 anteriores al volumen de comunicaciones incorporan ese ajuste conservando los valores existentes. Si falta el archivo, se crea. Si su contenido es incorrecto, se anuncia y se sustituye por valores predeterminados. Un error de lectura impide sobrescribir el archivo hasta una carga correcta.
 
 Guardar escribe primero el JSON y después aplica las preferencias oficiales. Si falla la escritura, el borrador y la ventana permanecen disponibles para reintentar sin aplicar acciones oficiales. Si la escritura termina pero falla la aplicación, se informa de que las preferencias ya están guardadas y se permite reintentar; no hay restauración automática de acciones ya realizadas.
 

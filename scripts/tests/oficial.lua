@@ -5,15 +5,14 @@ local suite = {}
 function suite.run(mock, case)
   require("arranque").cancelar_configuracion()
   local comprobaciones = require("arranque")
-  -- Las recargas fallidas pueden retirar el dominio de comunicaciones completo.
-  -- Contar solo eventos ajenos a ese dominio al verificar el cargador oficial.
+  -- Contar los eventos de espera del cargador oficial. Un fallo de arranque
+  -- también retira manejadores de otros módulos y del vigilante de preferencias.
+  local startup_events = { rlmud_opciones_inicializadas = true, sysInstallPackage = true,
+    sysDownloadDone = true, sysDownloadError = true }
   local function startup_handlers()
     local count = 0
     for _, handler in pairs(mock.handlers) do
-      if not handler.event:match("^gmcp%.Comm%.")
-        and handler.event ~= "sysConnectionEvent" and handler.event ~= "sysDisconnectionEvent" then
-        count = count + 1
-      end
+      if startup_events[handler.event] then count = count + 1 end
     end
     return count
   end
@@ -39,8 +38,7 @@ function suite.run(mock, case)
     control:iniciar(function() calls = calls + 1 end, rethrow)
     assert(calls == 1 and control.estado == "activo")
     assert(#mock.downloads == downloads)
-    assert(mock.announcements[first] == "Paquete oficial: instalado.")
-    assert(mock.announcements[first + 1] == "Paquete oficial: activo (inicialización local).")
+    assert(#mock.announcements == first - 1, "Debug apagado anunció detalles oficiales")
     clean(control)
   end)
 

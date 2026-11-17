@@ -13,6 +13,7 @@ globals = {
   "enableKey",
   "disableKey",
   "RL_salvar_opciones",
+  "RL_fijar_opcion",
   "RL_gui_reinicializar",
   "RL_gui_fijar_tamanyo_fuente_consola",
   "RL_macros_activar",

@@ -148,7 +148,8 @@ end
 
 local function run()
   assert(getMudletHomeDir() == RHOM_WX_PROFILE, "El perfil no corresponde al proceso aislado")
-  RhomScripts = { root = root .. "/rhomscripts" }
+  RhomScripts = { root = root .. "/rhomscripts", modules = {} }
+  RhomScripts.modules.debug = assert(loadfile(RhomScripts.root .. "/debug.lua"))()
   package.path = RhomScripts.root .. "/?.lua;" .. root .. "/rhomscripts old/?.lua;" .. package.path
   config = require("configuracion")
   assert(config.load())

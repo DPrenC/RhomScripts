@@ -1,4 +1,4 @@
--- Infraestructura activa: cinco módulos migrados y dependencias de soporte.
+-- Infraestructura activa: seis módulos y dependencias de soporte.
 -- luacheck: globals print
 local suite = {}
 local function equal(actual, expected)
@@ -11,24 +11,26 @@ function suite.run(mock)
     passed[#passed + 1] = name
   end
   local function active_modules()
-    local expected = { configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true }
+    local expected = {
+      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true,
+    }
     local count = 0
     for name in pairs(RhomScripts.modules) do
       assert(expected[name], "Módulo no migrado conectado: " .. name)
       count = count + 1
     end
-    equal(count, 5)
+    equal(count, 7)
     equal(mock.count(mock.triggers), 2)
     equal(RhomScripts.modules.comunicaciones.cantidad_triggers(), 2)
-    equal(mock.count(mock.keys), 33)
-    equal(mock.count(mock.aliases), 5)
+    equal(mock.count(mock.keys), 39)
+    equal(mock.count(mock.aliases), 3)
     assert(not package.loaded.historial)
     assert(package.loaded.config == nil and package.loaded.modes == nil)
     assert(mock.persisted[getMudletHomeDir() .. "/rl_config.lua"] == nil)
   end
-  case("Arranque: cinco módulos, treinta y tres teclas, cinco comandos y dos triggers", function()
+  case("Arranque: siete módulos, treinta y nueve teclas, tres comandos y dos triggers", function()
     active_modules()
-    assert(table.concat(mock.output):find("33 atajos de teclado, 4 aliases de módulos y rhomestado, 2 triggers", 1, true))
+    assert(table.concat(mock.output):find("Carga correcta", 1, true))
   end)
   case("Arranque solicita preparación de ventanas antes de completar", function()
     assert(mock.ui_preparations and mock.ui_preparations > 0)
@@ -60,13 +62,21 @@ function suite.run(mock)
   dofile("scripts/tests/oficial_configuracion.lua").run(case, "rhomscripts/init.lua", mock)
   dofile("scripts/tests/keys.lua").run("rhomscripts/keys.lua", case)
   dofile("scripts/tests/lector.lua").run(mock, case)
+  dofile("scripts/tests/depuracion.lua").run(case, "rhomscripts/init.lua", mock)
   dofile("scripts/tests/estado_arranque.lua").run(case, "rhomscripts/arranque.lua")
   dofile("scripts/tests/comunicaciones.lua").run(case, "rhomscripts/comunicaciones.lua")
-  case("Estado: estado imprime y anuncia el mismo resumen sin reproducir audio", function()
+  dofile("scripts/tests/ficha.lua").run(case, "rhomscripts/init.lua", function()
+    local handlers = {}
+    for id, handler in pairs(mock.handlers) do
+      if handler.event == "gmcp.Char" then handlers[id] = true end
+    end
+    return handlers
+  end, false)
+  case("Estado: rhomscripts estado imprime y anuncia el mismo resumen sin reproducir audio", function()
     local monitor = RhomScripts.soporte.arranque
     local expected = monitor.estado.resumen()
     local sounds, announcements = mock.count(mock.sounds), #mock.announcements
-    mock.alias("estado")
+    mock.alias("rhomscripts estado")
     equal(mock.output[#mock.output], expected .. "\n")
     equal(#mock.announcements, announcements + 1)
     equal(mock.announcements[#mock.announcements], expected)
@@ -122,17 +132,17 @@ function suite.run(mock)
     equal(mock.count(mock.sounds), 0)
   end)
 
-  case("Listkeys sigue disponible y describe la ayuda", function()
-    local original, output = print, {}
-    print = function(text) output[#output + 1] = text end
-    local ok, message = pcall(mock.alias, "listkeys")
-    print = original
+  case("Rhomscripts keys describe la ayuda", function()
+    local original, output = echo, {}
+    echo = function(text) output[#output + 1] = text end
+    local ok, message = pcall(mock.alias, "rhomscripts keys")
+    echo = original
     assert(ok, message)
     local found = false
     for _, text in ipairs(output) do
       if text:find("keys.alternar_ayuda", 1, true) then found = true end
     end
-    assert(found, "listkeys no describe la pulsación de ayuda")
+    assert(found, "rhomscripts keys no describe la pulsación de ayuda")
   end)
   case("Ausencia de APIs activas se propaga", function()
     local tests = {
@@ -141,7 +151,7 @@ function suite.run(mock)
       { "stopSounds", function() RhomScripts.soporte.audio.stop_tag() end },
       { "getMudletHomeDir", function() RhomScripts.modules.configuracion.path() end },
       { "tempKey", function() RhomScripts.modules.keys.registrar() end },
-      { "tempAlias", function() RhomScripts.soporte.aliases.registrar() end },
+      { "tempAlias", function() RhomScripts.soporte.aliases.registrar_modulo("ausente", {{ name = "prueba", desc = "API ausente", pattern = "^prueba$", action = function() end }}) end },
     }
     for _, test in ipairs(tests) do
       local original = _G[test[1]]
@@ -192,7 +202,7 @@ function suite.run(mock)
     assert(not ok and tostring(message):find("Fallo de limpieza de ventana provocado", 1, true))
     assert(tostring(message):find("Errores adicionales de limpieza", 1, true))
     equal(mock.count(mock.keys), 0)
-    equal(mock.count(mock.aliases), 0)
+    equal(mock.count(mock.aliases), 1) -- Consultas de diagnóstico conservadas tras fallo.
     equal(mock.count(mock.triggers), 0)
     assert(not RhomScripts.initialized and not RhomScripts.loading)
     for index = before + 1, #mock.events do

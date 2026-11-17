@@ -9,6 +9,7 @@ local telepatia = historial.nuevo({ titulo = "Historial de telepatía", tecla = 
   ayuda = "Flechas: mensajes. Alt+F3: último. Ctrl+F3: silencio. Escape: salir." })
 comunicaciones.historiales = { room = room, telepatia = telepatia }
 comunicaciones.cantidad_triggers = captura.cantidad
+comunicaciones.consultar_triggers = captura.consultar
 local handlers = {}
 local preparar_canales, reiniciar_canales, destruir_canales =
   comunicaciones.preparar, comunicaciones.reiniciar, comunicaciones.destruir

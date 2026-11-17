@@ -30,6 +30,20 @@ Las macros activadas sin ficha quedan pendientes y su grupo deshabilitado hasta 
 
 El JSON propio de formato 2 se guarda antes de ejecutar las acciones oficiales. Un fallo posterior añade contexto, conserva el menú abierto y se relanza. Un guardado oficial pendiente se reintenta aunque la tabla en memoria ya coincida con el objetivo. El formato 1 válido se migra conservando los cuatro volúmenes. Las preferencias iniciales son las oficiales y todo sigue activable para pruebas. El alias `configurarficha` deja de enviar las tres desactivaciones de consentimiento remoto, sin sustituirlas por activaciones ni equiparar permiso GUI del servidor con GUI local.
 
+## Debug compartido y presentación, 17 de noviembre de 2026
+
+La opción `RL_vars.opciones.depuracion == true` es la única autoridad del modo debug. El XML del [ZIP oficial](https://mudlet.reinosdeleyenda.es/RLMud_Config.zip), descargado de nuevo el 17 de noviembre con SHA-256 idéntico al indicado arriba, acredita que `RL_debug(a, txt)` consulta `RL_dame_opcion("depuracion")` y solo muestra contenido si es `true`. La depuración MSP llama a `RL_debug` además de comprobar su filtro específico. No se modifican esas funciones ni se intercepta la salida general.
+
+`RL_fijar_opcion(opcion, valor)` modifica la tabla oficial, llama a `RL_salvar_opciones(true)` y devuelve `true` tras guardar; en caso de fallo retorna sin éxito. Emite `rlmud_fijar_opcion_` seguido de la opción, con el valor como argumento. `RL_borrar_opcion(opcion)` guarda la retirada, devuelve el resultado y emite el evento equivalente de borrado. El configurador usa el setter de depuración y comprueba el retorno; conserva un guardado pendiente si la escritura falla después del cambio en memoria. La fuente no especifica una versión mínima de estas funciones oficiales.
+
+`oficial_depuracion` se conserva como identificador virtual del configurador, en Interfaz, con `persistente = false`. Su valor se consulta directamente en el paquete oficial; no se guarda ni se reaplica desde `config.json`. La migración de formatos 1 y 2 retira exclusivamente la copia histórica de esa opción sin aplicarla al paquete. Inicializar o restablecer la configuración persistente no cambia el modo oficial. La persistencia corresponde al propio paquete.
+
+El módulo del proyecto se carga con `assert(loadfile(root .. "/debug.lua"))()`, función estándar de Lua 5.1 que devuelve el bloque compilado o `nil` y un error. Se expone en `RhomScripts.modules.debug` sin sustituir `_G.debug` ni `package.loaded.debug`, reservados a la biblioteca estándar. Los errores de compilación o ejecución se propagan. [Manual oficial de Lua 5.1, loadfile](https://www.lua.org/manual/5.1/manual.html#pdf-loadfile).
+
+`cecho([window], text)` presenta los hitos con etiquetas de color, negrita y restauración del formato; no se utiliza un retorno de éxito. El texto completo se expresa también en palabras y se anuncia mediante `announce(texto)` estándar. Los errores externos se imprimen con `echo`, sin interpretarlos como etiquetas de color. No consta una versión mínima general en la sección consultada de [cecho](https://wiki.mudlet.org/w/Manual:Lua_Functions#cecho); su copia está en [Lua_Functions.txt](mudlet/Lua_Functions.txt). Los informes son bloques de texto, no columnas alineadas.
+
+El estado se guarda una sola vez en debug y `arranque.estado` delega al mismo registro; se conserva el evento público `rhomscripts.estado.cambiado`. Los inventarios consultan copias de los registros efectivos de cada propietario. El historial es un búfer de 500 mensajes en memoria que se reinicia al recargar. [Manual de debug](usuario/debug.md), [plan](planes/debug.md) y [validación](validacion.md#debug-centralizado).
+
 ## Perfil y persistencia
 
 `getMudletHomeDir()` ya devuelve el directorio del perfil actual. No añadir `/profiles/nombre` otra vez. Configuración anterior de modos: `getMudletHomeDir() .. "/rl_config.lua"`. Las preferencias nuevas de `configuracion.lua` se guardan por separado en `getMudletHomeDir() .. "/config.json"`; no se migra ni se modifica todavía `modes.lua`.
@@ -44,7 +58,11 @@ Fuentes: [perfil](https://wiki.mudlet.org/w/Manual:File_System_Functions#getMudl
 
 `getLastLineNumber("main")` obtiene el índice de la última línea. `getLines("main", inicio, fin)` devuelve una tabla; el extremo final es exclusivo, verificado en Mudlet 5.1.1. Para una línea se usa `(índice, índice + 1)`.
 
-`announce(texto[, procesamiento])` anuncia texto mediante la accesibilidad de Mudlet; documentado desde 4.17. Se usa con lector de pantalla externo, sin SAPI ni compatibilidad con SAPI. Se conserva announce(texto) estándar; la cola o interrupción según el mensaje se diseñará después. `setClipboardText(texto)` y `getClipboardText()` permiten probar copia y restauración.
+`announce(texto[, procesamiento])` anuncia texto mediante la accesibilidad de Mudlet. Está documentado desde 4.17 y se usa con lector de pantalla externo, sin SAPI. Los atajos de ficha usan `importantmostrecent` para solicitar interrupción en Windows. Las demás llamadas usan `announce(texto)`. `setClipboardText(texto)` y `getClipboardText()` permiten probar copia y restauración. [API announce de Mudlet](https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions#announce)
+
+### Copia de texto al portapapeles
+
+Toda función de RhomScripts que copie texto al portapapeles debe llamar a `require("lector").copiar(texto)` y pasar solo la cadena. El lector escribe el texto exacto mediante `setClipboardText(texto)`, anuncia el contenido y «Copiado» mediante dos llamadas estándar a `announce`, solicita `ui.portapapeles` con el volumen del grupo Interfaz y devuelve el texto. Cada módulo prepara la cadena que entrega al lector. Los módulos archivados deben ajustarse a este contrato si se reactivan. [API setClipboardText de Mudlet](https://wiki.mudlet.org/w/Manual:Lua_Functions#setClipboardText)
 
 Fuentes: [getLines](https://wiki.mudlet.org/w/Manual:Text_Window_Functions#getLines), [getLastLineNumber](https://wiki.mudlet.org/w/Manual:Text_Window_Functions#getLastLineNumber) y [announce](https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions#announce). Copia conjunta en [Lua_Functions.txt](mudlet/Lua_Functions.txt).
 

@@ -1,18 +1,12 @@
--- Entrada de configuración, configurador, lector, comunicaciones y teclas.
+-- Entrada de configuración, configurador, ficha, lector, comunicaciones y teclas.
 -- Audio, catálogo de sonidos, paquete oficial y registro de comandos son dependencias de soporte.
+local depuracion
 local startup_audio
 local failure_reported = false
-local version = "1.0, 07/02/2026"
 
 local function failure(message)
   RhomScripts.initialized = false
   RhomScripts.loading = false
-  local arranque = RhomScripts.soporte and RhomScripts.soporte.arranque
-  if arranque then arranque.estado.actualizar("scripts", "error", tostring(message), "carga") end
-  if RhomScripts.recarga_timer then killTimer(RhomScripts.recarga_timer); RhomScripts.recarga_timer = nil end
-  if RhomScripts.arranque_oficial then RhomScripts.arranque_oficial:cancelar() end
-  if RhomScripts.oficial_configuracion then RhomScripts.oficial_configuracion.cancelar_configuracion() end
-  if RhomScripts.soporte and RhomScripts.soporte.arranque then RhomScripts.soporte.arranque.cancelar_configuracion() end
   if failure_reported then error(message, 0) end
   failure_reported = true
   local errores = {}
@@ -20,27 +14,48 @@ local function failure(message)
     local correcto, mensaje = pcall(accion)
     if not correcto then errores[#errores + 1] = tostring(mensaje) end
   end
+  if RhomScripts.recarga_timer then
+    limpiar(function() killTimer(RhomScripts.recarga_timer); RhomScripts.recarga_timer = nil end)
+  end
+  if RhomScripts.arranque_oficial then limpiar(function() RhomScripts.arranque_oficial:cancelar() end) end
+  if RhomScripts.oficial_configuracion then limpiar(RhomScripts.oficial_configuracion.cancelar_configuracion) end
   local modules, soporte = RhomScripts.modules, RhomScripts.soporte
+  if soporte and soporte.arranque then limpiar(soporte.arranque.cancelar_configuracion) end
   if modules then
+    if modules.ficha then limpiar(modules.ficha.detener) end
     if modules.comunicaciones then limpiar(modules.comunicaciones.destruir) end
     if modules.configurador then limpiar(modules.configurador.destruir) end
     if modules.keys then limpiar(modules.keys.desregistrar) end
   end
   if soporte then
     if soporte.ui then limpiar(soporte.ui.destruir) end
-    if soporte.aliases then limpiar(soporte.aliases.desregistrar) end
-  end
-  if #errores > 0 then message = tostring(message) .. "\nErrores adicionales de limpieza: " .. table.concat(errores, "\n") end
-  local text = "RhomScripts: error de carga. " .. tostring(message)
-  echo(text .. "\n")
-  announce(text)
-  if startup_audio then
-    local played, sound_error = pcall(startup_audio.reproducir, "ui.carga_erronea")
-    if not played then
-      error(tostring(message) .. "\nError adicional en el aviso sonoro: " .. tostring(sound_error), 0)
+    if soporte.aliases then
+      limpiar(function()
+        local propietarios = {}
+        for _, registro in ipairs(soporte.aliases.consultar()) do propietarios[registro.modulo] = true end
+        for nombre in pairs(propietarios) do
+          if nombre ~= "debug" then limpiar(function() soporte.aliases.desregistrar(nombre) end) end
+        end
+      end)
     end
   end
-  error(message, 0)
+  -- Completar la retirada antes de presentar: una API de salida también puede ser el fallo original.
+  local detalle = tostring(message)
+  if #errores > 0 then detalle = detalle .. "\nErrores adicionales de limpieza: " .. table.concat(errores, "\n") end
+  local correcto, error_aviso = pcall(function()
+    if depuracion then depuracion.fallar_carga(detalle)
+    else
+      local text = "RhomScripts: error de carga. " .. detalle
+      echo(text .. "\n")
+      announce(text)
+    end
+  end)
+  if not correcto then detalle = detalle .. "\nError adicional al presentar el fallo: " .. tostring(error_aviso) end
+  if startup_audio then
+    local played, sound_error = pcall(startup_audio.reproducir, "ui.carga_erronea")
+    if not played then detalle = detalle .. "\nError adicional en el aviso sonoro: " .. tostring(sound_error) end
+  end
+  error(detalle, 0)
 end
 
 local function protected(action)
@@ -78,7 +93,12 @@ local function initialize()
     error("Esta actualización requiere cerrar y reabrir el perfil una vez: los registradores antiguos no conservaban identificadores. No se ha iniciado una nueva carga.")
   end
   RhomScripts.registration_generation = 2
+  local datos_ficha
   if previous then
+    if previous.ficha then
+      datos_ficha = previous.ficha.datos()
+      previous.ficha.detener()
+    end
     if previous.comunicaciones then previous.comunicaciones.destruir() end
     -- Transición desde el arranque completo: retirar recursos sin volver a cargar dominios.
     if previous.prueba_cffi then previous.prueba_cffi.cerrar() end
@@ -95,7 +115,7 @@ local function initialize()
       if previous[name] then previous[name].desregistrar() end
     end
     if previous.audio then previous.audio.stop_tag() end
-    for name in pairs(previous) do package.loaded[name] = nil end
+    for name in pairs(previous) do if name ~= "debug" then package.loaded[name] = nil end end
   end
   if soporte then
     if soporte.ui then soporte.ui.destruir() end
@@ -125,45 +145,91 @@ local function initialize()
     package.path = module_path .. ";" .. package.path
   end
 
-  local arranque = require("arranque")
-  RhomScripts.soporte.arranque = arranque
+  depuracion = assert(loadfile(root .. "/debug.lua"))()
+  RhomScripts.modules.debug = depuracion
+  depuracion.iniciar_carga()
+  depuracion.planificar({
+    { nombre = "debug", tipo = "funcional" },
+    { nombre = "aliases", dependencias = { "debug" } },
+    { nombre = "arranque", dependencias = { "debug" } },
+    { nombre = "ficha", tipo = "funcional", dependencias = { "arranque" } },
+    { nombre = "configuracion", tipo = "funcional" },
+    { nombre = "sonidos" },
+    { nombre = "audio", dependencias = { "sonidos", "configuracion" } },
+    { nombre = "ui", dependencias = { "audio", "configuracion", "arranque" } },
+    { nombre = "configurador", tipo = "funcional", dependencias = { "ui" } },
+    { nombre = "lector", tipo = "funcional" },
+    { nombre = "comunicaciones_historial", dependencias = { "ui" } },
+    { nombre = "comunicaciones_captura" },
+    { nombre = "comunicaciones", tipo = "funcional", dependencias = { "comunicaciones_historial", "comunicaciones_captura" } },
+    { nombre = "keys", tipo = "funcional" },
+  })
+  depuracion.modulo("debug", "cargado")
+  local function cargar(nombre, destino, preparar)
+    depuracion.modulo(nombre, "iniciando")
+    local correcto, resultado = pcall(function()
+      local modulo = require(nombre)
+      destino[nombre] = modulo
+      if preparar then preparar(modulo) end
+      return modulo
+    end)
+    if not correcto then
+      depuracion.modulo(nombre, "error", tostring(resultado))
+      error(resultado, 0)
+    end
+    depuracion.modulo(nombre, "cargado")
+    return resultado
+  end
+  local aliases = cargar("aliases", RhomScripts.soporte, function(modulo)
+    depuracion.proveedor("alias", modulo.consultar)
+    modulo.registrar_modulo("debug", depuracion.aliases)
+  end)
+  local arranque = cargar("arranque", RhomScripts.soporte)
+  cargar("ficha", RhomScripts.modules, function(modulo) modulo.iniciar(datos_ficha) end)
   arranque.monitorizacion.iniciar()
-  arranque.estado.actualizar("scripts", "iniciando", "iniciando scripts", "carga")
-  local configuracion = require("configuracion")
-  assert(configuracion.load(), "No se pudo leer la configuración de RhomScripts")
-  RhomScripts.modules.configuracion = configuracion
+  arranque.estado.actualizar("scripts", "iniciando", depuracion.detalle("scripts_iniciando"), "carga")
+  local configuracion = cargar("configuracion", RhomScripts.modules, function(modulo)
+    assert(modulo.load(), "No se pudo leer la configuración de RhomScripts")
+  end)
 
   local function load_modules()
-    echo("RhomScriptsRL - inicializando configuración, lector, comunicaciones y teclado...\n")
-    startup_audio = require("audio")
-    RhomScripts.soporte.audio = startup_audio
-    RhomScripts.soporte.sonidos = require("sonidos")
-    startup_audio.iniciar()
-    RhomScripts.modules.configurador = require("configurador")
-    RhomScripts.modules.lector = require("lector")
-    RhomScripts.modules.comunicaciones = require("comunicaciones")
-    RhomScripts.modules.comunicaciones.iniciar()
-    RhomScripts.modules.keys = require("keys")
-    local ui = require("ui")
-    RhomScripts.soporte.ui = ui
-    ui.preparar()
-    local keys_result = RhomScripts.modules.keys.registrar()
-    -- Descubrir únicamente los comandos de los módulos activos.
-    local aliases = require("aliases")
-    RhomScripts.soporte.aliases = aliases
-    local aliases_result = aliases.registrar()
+    cargar("sonidos", RhomScripts.soporte, function(modulo)
+      depuracion.proveedor("sonidos", modulo.consultar)
+    end)
+    startup_audio = cargar("audio", RhomScripts.soporte, function(modulo)
+      startup_audio = modulo
+      modulo.iniciar()
+    end)
+    cargar("configurador", RhomScripts.modules)
+    cargar("lector", RhomScripts.modules)
+    cargar("comunicaciones", RhomScripts.modules, function(modulo)
+      depuracion.proveedor("triggers", modulo.consultar_triggers)
+      modulo.iniciar()
+    end)
+    -- Dependencias cargadas por sus dominios: se exponen sin duplicar instancias.
+    for _, nombre in ipairs({ "comunicaciones_historial", "comunicaciones_captura" }) do
+      RhomScripts.soporte[nombre] = package.loaded[nombre]
+      depuracion.modulo(nombre, "cargado")
+    end
+    cargar("ui", RhomScripts.soporte, function(modulo) modulo.preparar() end)
+    cargar("keys", RhomScripts.modules, function(modulo)
+      depuracion.proveedor("keys", modulo.consultar)
+      modulo.registrar()
+    end)
+    local correcto, aliases_result = pcall(aliases.registrar)
+    if not correcto then
+      depuracion.modulo("aliases", "error", tostring(aliases_result))
+      error(aliases_result, 0)
+    end
     assert(aliases_result.errors == 0, "No se pudieron registrar los comandos activos")
-    echo(string.format("5 módulos, %d atajos de teclado, %d aliases de módulos y rhomestado, %d triggers\n",
-      keys_result.success, aliases_result.success, RhomScripts.modules.comunicaciones.cantidad_triggers()))
     RhomScripts.init_time = os.time()
     RhomScripts.initialized = true
     RhomScripts.loading = false
-    arranque.estado.actualizar("scripts", "cargados", "scripts cargados correctamente", "carga")
+    arranque.estado.actualizar("scripts", "cargados", depuracion.detalle("scripts_cargados"), "carga")
     raiseEvent("rl.init.done")
-    raiseEvent("rhomscripts.ready", version)
+    raiseEvent("rhomscripts.ready", depuracion.version())
     startup_audio.reproducir("ui.carga_ok")
-    echo("RhomScriptsRL cargados correctamente\n")
-    announce("RhomScripts: carga correcta.")
+    depuracion.terminar_carga()
   end
 
   -- Dependencia de las preferencias oficiales del configurador, sin conectar al juego.
@@ -171,7 +237,7 @@ local function initialize()
   RhomScripts.arranque_oficial:iniciar(function()
     protected(function()
       local resultado = arranque.aplicar_configuracion(configuracion)
-      for _, mensaje in ipairs(resultado.pendientes) do echo(mensaje .. "\n") end
+      for _, mensaje in ipairs(resultado.pendientes) do depuracion.texto("arranque", mensaje) end
       arranque.vigilar()
       load_modules()
     end)

@@ -19,6 +19,9 @@ Registrar aquí los planes iniciados que requieren una decisión, un dato o una 
 
 ## Entregas cerradas
 
+- **Debug centralizado y arranque limpio.** Modo compartido, familia única `rhomscripts`, consulta de versión e historial de 500 mensajes implementados y validados con Mudlet 5.1.1 desconectado. [Plan y evidencia](debug.md).
+
+- **Primera fase de ficha GMCP del personaje.** Captura y consulta de `Char` con validación en Mudlet desconectado. [Plan de ficha GMCP](ficha-gmcp.md)
 - **Colaboración, perfiles y herramientas de desarrollo.** Cambios aplicados, con la suite local y Mudlet real verificados. [Ficha de colaboración y herramientas](colaboracion-y-herramientas.md).
 - **Primera fase de Room y telepatía.** Implementada y probada con perfil desconectado. La clasificación de emisores queda en la etapa posterior indicada arriba. [Ficha](../migraciones/historiales-room-telepatia.md) y [evidencia](../validacion.md#historiales-de-room-y-telepatía-12-de-noviembre-de-2026).
 

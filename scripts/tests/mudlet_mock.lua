@@ -124,6 +124,14 @@ function RL_salvar_opciones(silent)
   mock.official_calls.saved = mock.official_calls.saved + 1
   return true
 end
+function RL_fijar_opcion(option, value)
+  assert(RL_vars and RL_vars.opciones, "Opciones oficiales no preparadas")
+  RL_vars.opciones[option] = value
+  if not RL_salvar_opciones(true) then return nil end
+  raiseEvent("rlmud_fijar_opcion_" .. option, value)
+  return true
+end
+
 local function official_gui(reinitializing)
   mock.official_calls.gui = mock.official_calls.gui + 1
   local disabled = RL_vars.opciones.no_mostrar_interfaz

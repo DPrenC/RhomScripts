@@ -42,6 +42,68 @@ Por defecto no se lee ni modifica el portapapeles global del escritorio. La copi
 
 El proceso termina tras recoger resultados, sin cerrar otras instancias. Cada ejecución guarda result.txt, process.log y su paquete en su carpeta UUID, para evitar interferencias entre pruebas simultáneas. `.tools/mudlet-integration/latest.json` apunta a la última ejecución completada; el ejecutor muestra la ruta exacta. Solo se detiene el proceso creado para esta prueba.
 
+## Familia única y versión
+
+Comprobado el 17 de noviembre de 2026. `./scripts/validate.ps1 -Mudlet` pasó los diez controles locales, incluidos 138 casos en Lua 5.1 y 138 en LuaJIT 2.1.1760617492. La integración completada con `./.tools/venv/Scripts/python.exe scripts/run_mudlet_validation.py` pasó 125 casos en Mudlet 5.1.1, última estable contrastada por el ejecutor. Perfil aislado, sin conexión al juego ni modificación del portapapeles.
+
+Los comandos reales de la familia `rhomscripts` se ejecutaron mediante `expandAlias`, incluidos todos los informes, el filtro por módulo, `version` y el prefijo con mayúscula. El inventario contiene una sola declaración de diagnóstico y ningún nombre anterior; después de recargar quedan 39 teclas, 3 aliases (consultas y dos comandos del lector) y 2 triggers. La consulta muestra y anuncia `1.0, 17/11/2026`, igual al argumento emitido por `rhomscripts.ready`; ambos leen `debug.version()`.
+
+Las dos primeras integraciones pasaron estas consultas y se detuvieron después en una prueba heredada que preguntaba inmediatamente por una reproducción de 0,1306 segundos, antes de volver al bucle Qt. La prueba conserva ruta, volumen y parámetros reales; la observación del motor se trasladó al tramo asíncrono con `ui.carga_ok` (1,2718 segundos), usando `audio.reproducir` real y comprobando la clave exacta tras procesar Qt. Se conservan las comprobaciones posteriores de parada y recarga modal. No se modificó la reproducción productiva para obtener el resultado.
+
+Informe local: `.tools/validation/runs/tmp15ucf4q7/local.json`. Integración final completa: `.tools/mudlet-integration/runs/102f110a6cf1497884f81198817a72de/result.txt`. Sintaxis en ambos runtimes y Luacheck comprobados de nuevo sobre el ajuste de la prueba. Pendientes la pulsación física y la lectura percibida con lector externo. [Manual](usuario/debug.md#comandos) y [plan](planes/debug.md#simplificación-de-consultas-y-versión-17-de-noviembre-de-2026).
+
+## Debug centralizado
+
+Comprobado el 17 de noviembre de 2026 con `./scripts/validate.ps1 -Mudlet`: diez controles locales superados, 136 casos en Lua 5.1, 136 en LuaJIT 2.1.1760617492 y 122 casos en Mudlet 5.1.1. El ejecutor contrastó la última release estable oficial antes de abrir un perfil nuevo aislado y desconectado. Herramientas: Python 3.13.15, Lupa 2.6, enlace PCRE2 0.5.3 y Luacheck 1.2.0 sin avisos. Sintaxis comprobada en 36 archivos con ambos compiladores Lua.
+
+Se verificaron el modo oficial único y su persistencia mediante el setter real, el traslado al configurador, borrador y cancelación, cambios oficiales externos, migración de la antigua copia JSON, salida automática de dos hitos sin debug, mensajes ocultos consultables, búfer FIFO de 500 entradas, recarga sin mensajes anteriores, biblioteca estándar `debug` intacta e inventarios de recursos efectivos con copias independientes. Los comandos se ejecutaron mediante `expandAlias(command, false)` real sobre aliases registrados, con salida comprobada: ayuda, filtro por módulo y accesos directos. [API oficial de expansión](https://wiki.mudlet.org/w/Manual:Miscellaneous_Functions#expandAlias).
+
+Las regresiones provocaron fallos de registro y retirada: el identificador de una tecla que no pudo retirarse continuó visible y pudo limpiarse después; un fallo tardío con salida ausente conservó el error original, completó la retirada y añadió el fallo de presentación antes de relanzar. La revisión independiente detectó y permitió corregir el orden de proveedores, el filtro de estado modular y la limpieza anterior a la presentación. Los recuentos finales fueron 39 teclas, 10 aliases y 2 triggers.
+
+Las primeras ejecuciones reales detectaron dos supuestos de las pruebas locales: `cecho` real llama internamente varias veces a `echo`, y el error interno de esa cadena no tiene por qué nombrar literalmente `echo`. Se corrigió la instrumentación para contar llamadas superiores y exigir el contexto de error secundario, conservando las comprobaciones de error original y limpieza. La ejecución final indicada a continuación pasó completa.
+
+Informes locales finales: `.tools/validation/runs/tmpo4g91w9e/local.json` y `.tools/mudlet-integration/runs/16ae7e6a33ec4550ac659d87eb2ded87/result.txt`. El ZIP oficial probado conserva SHA-256 `b98d315642f784789485f6d536a5c83bdb8aa4557e827e4da4dd2c205dd201a4`. El empaquetado RhomLoader aislado y sus pruebas concurrentes pasaron; los paquetes y registros brutos permanecen ignorados, sin publicar ni modificar el índice de Git.
+
+No se conectó al juego ni se modificó el portapapeles. Se comprobaron llamadas reales de salida, lector externo y audio, pero no la lectura percibida, el aspecto visual ni las pulsaciones físicas. [Manual de debug](usuario/debug.md) y [ficha de implementación](planes/debug.md).
+
+## Función común de copia, 17 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó en Lua 5.1, LuaJIT y Mudlet 5.1.1. Las pruebas comprobaron que las copias de línea y ficha escriben una sola vez, anuncian el contenido exacto seguido de «Copiado» y solicitan después el sonido del grupo Interfaz. La integración usó `announce` y el motor de sonido reales en un perfil desconectado. Se instrumentó la escritura para conservar el portapapeles. Queda pendiente comprobar cómo se oyen ambos anuncios con el lector externo. [Contrato de copia](contratos-mudlet.md#copia-de-texto-al-portapapeles)
+
+Informes locales en `.tools/validation/runs/tmpvi2ux24e/local.json` y `.tools/mudlet-integration/runs/0494e74369884bfcb5fa80ae624e7853/result.txt`.
+
+## Identidad y copia de la ficha, 17 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó en Lua 5.1, LuaJIT y Mudlet 5.1.1. La prueba verificó las consultas de identidad tras recibir GMCP sintético, el registro de Alt+Mayús+1, Alt+Mayús+2 y Alt+Mayús+0, el texto enviado a la función de portapapeles instrumentada y la llamada de audio real con `ui.portapapeles`. El perfil estuvo desconectado y se conservó el portapapeles de Windows. Queda pendiente comprobar la pulsación física y el pegado desde el perfil de juego.
+
+Informes locales en `.tools/validation/runs/tmpkt_0kw32/local.json` y `.tools/mudlet-integration/runs/49ff90b6ea9f4227a39b341f27b94d9f/result.txt`.
+
+## Aviso de valores ausentes, 17 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó en Lua 5.1, LuaJIT y Mudlet 5.1.1. Con paquetes sintéticos se verificó que Alt+1, Alt+2 y Alt+0 conservan la posición de cada valor ausente, verbalizan el cero recibido y llaman una vez a `announce` con `importantmostrecent`. La prueba usó un perfil aislado y desconectado.
+
+Informes locales en `.tools/validation/runs/tmp2gvtw5p1/local.json` y `.tools/mudlet-integration/runs/21bc835a8d654396a7c0493f5b275c77/result.txt`.
+
+## Lectura de vida, 17 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó en Lua 5.1, LuaJIT y Mudlet 5.1.1. Con paquetes sintéticos se verificó que la ficha mantiene la máxima cuando recibe solo la actual, conserva el par al recargar y descarta la vida de la sesión anterior al renegociar GMCP. La función de Alt+1 llamó a `announce` con `1\120` después de una actualización que solo contenía la vida actual. La prueba se ejecutó en un perfil aislado y desconectado. La comprobación durante una partida y con pulsación física queda pendiente.
+
+Informes locales en `.tools/validation/runs/tmpu0u6a35j/local.json` y `.tools/mudlet-integration/runs/5df19cf8af424fe5b4bf31b0503271a6/result.txt`. [Contrato de la ficha](planes/ficha-gmcp.md#contrato)
+
+## Atajos de información, 17 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó en Lua 5.1, LuaJIT y Mudlet 5.1.1. La integración registró 36 atajos propios y verificó el texto exacto, el orden, la omisión de pares incompletos, la conservación de ceros y la llamada real a `announce` con `importantmostrecent`. Se usaron datos sintéticos en un perfil desconectado. La pulsación física y la interrupción percibida con lector externo quedan pendientes.
+
+Informes locales en `.tools/validation/runs/tmpk3epu6i3/local.json` y `.tools/mudlet-integration/runs/0538f5a3061b4bb3a47705fcca1ed046/result.txt`. [Guía de los atajos](usuario/teclado.md#información-del-personaje)
+
+## Ficha GMCP, 16 de noviembre de 2026
+
+`./scripts/validate.ps1 -Mudlet` pasó diez controles locales, con 117 casos en Lua 5.1 y 117 en LuaJIT 2.1.1760617492. La integración pasó 104 casos en Mudlet 5.1.1, última versión estable verificada al ejecutar. Siete casos corresponden a la ficha. [Contrato de captura](planes/ficha-gmcp.md#contrato)
+
+`feedTelnet` procesó paquetes sintéticos en un perfil aislado y desconectado. Se verificaron el evento padre con ruta exacta, paquetes nuevos y anidados, conservación de tipos, copias independientes, recarga, reinicio de sesión y fusión superficial de `Char.Status` tras renegociar. Las transiciones de conexión y despedida se simularon con eventos. Queda pendiente comprobar paquetes en partida.
+
+Informes locales en `.tools/validation/runs/tmp8j07no6u/local.json` y `.tools/mudlet-integration/runs/3f2fe8bf53f948c8a70a100983c31b3d/result.txt`.
+
 ## Arranque oficial, comprobado el 7 de noviembre de 2026
 
 Las pruebas locales del inicializador usan un doble explícito de paquetes, descargas, eventos y temporizadores: espera sin GMCP, paquete ya activo, instalación, errores, timeout, cancelación de una espera al recargar y ausencia de APIs. Las regresiones habituales usan estado oficial simulado y no certifican por sí solas el paquete real.

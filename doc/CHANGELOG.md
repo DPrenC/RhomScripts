@@ -2,6 +2,39 @@
 
 ## Sin publicar
 
+### Familia única de consultas y versión, 17 de noviembre de 2026
+
+- Las consultas se unifican en `rhomscripts`: estado, modulos, keys, alias, triggers, sonidos, mensajes y version. Se eliminan `rhomdebug`, `estado`, `rhomestado` y los accesos `list…`. `rhomscripts version` muestra y anuncia `1.0, 17/11/2026`, desde la misma fuente de debug que utiliza el evento de carga. [Comandos](usuario/debug.md#comandos) y [plan](planes/debug.md#simplificación-de-consultas-y-versión-17-de-noviembre-de-2026).
+
+### Debug centralizado y arranque limpio, 17 de noviembre de 2026
+
+- El modo debug es único para RhomScripts y el paquete oficial, y se configura en Interfaz. Con debug desactivado, el arranque normal presenta solo inicio y resultado; los errores y avisos siguen comunicándose. Las consultas `rhomdebug` y sus accesos directos reúnen estados, módulos, teclas, aliases, triggers y sonidos. Los últimos 500 mensajes técnicos se conservan en memoria hasta recargar. [Manual de debug](usuario/debug.md), [plan](planes/debug.md) y [validación](validacion.md#debug-centralizado).
+
+### Función común de copia de texto, 17 de noviembre de 2026
+
+- El lector y la ficha usan la misma función. Cada copia escribe el texto, anuncia el contenido y «Copiado», y solicita el sonido de Interfaz. [Contrato de copia](contratos-mudlet.md#copia-de-texto-al-portapapeles) y [validación](validacion.md#función-común-de-copia-17-de-noviembre-de-2026).
+
+### Identidad y copia de la ficha, 17 de noviembre de 2026
+
+- La ficha permite consultar nombre, clase, oficio, sexo y raza. Alt+Mayús+1, Alt+Mayús+2 y Alt+Mayús+0 copian las estadísticas con prefijos y reproducen el sonido de portapapeles. [Guía de teclado](usuario/teclado.md#información-del-personaje).
+
+### Aviso de valores ausentes en la ficha, 17 de noviembre de 2026
+
+- Alt+1, Alt+2 y Alt+0 dicen «sin datos» en la posición de cada valor ausente. Los ceros recibidos se verbalizan como cero. [Atajos de información](usuario/teclado.md#información-del-personaje).
+
+### Corrección de la lectura de vida, 17 de noviembre de 2026
+
+- Alt+1 sigue leyendo la vida cuando llega solo el valor actual y la ficha ya conoce la máxima de la sesión. [Consulta de la ficha GMCP](usuario/README.md#consulta-de-la-ficha-gmcp).
+
+### Atajos de información del personaje, 17 de noviembre de 2026
+
+- Alt+1 verbaliza la vida, Alt+2 la energía y el escudo y Alt+0 la experiencia y los puntos de oficio. Cada pulsación usa un solo anuncio con interrupción y lee los pares mínimo y máximo disponibles. [Atajos de información](usuario/teclado.md#información-del-personaje).
+
+### Ficha GMCP del personaje, 16 de noviembre de 2026
+
+- RhomScripts conserva los paquetes de personaje en memoria y permite consultar su estructura y campos como clase, vida actual y vida máxima desde Lua.
+- [Consulta de la ficha](usuario/README.md#consulta-de-la-ficha-gmcp), [plantilla anonimizada](gmcp-reinos.md) y [diseño de la captura](planes/ficha-gmcp.md).
+
 ### Colaboración y herramientas de desarrollo, 15 de noviembre de 2026
 
 - La guía de colaboración define responsables por archivo, traspasos y evidencia compartida. El generador de perfiles señala adaptadores retirados y prepara los perfiles de VS Code para el modo Copilot.

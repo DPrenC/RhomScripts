@@ -1,223 +1,122 @@
---------------------------------------------------------------------------------- MÓDULO: aliases
--- Descripción: Orquestador centralizado de aliases/comandos.
---              Descubre y registra automáticamente todos los aliases definidos
---              en los módulos del sistema. Cada módulo define sus aliases
---              y este módulo se encarga de registrarlos en Mudlet.
--- Autor: RhomScripts
--- Fecha: 2026
--- Versión: 2.0 - Sistema modular y escalable de gestión de aliases
--------------------------------------------------------------------------------
-
+-- Registro incremental de comandos; sus informes pertenecen al módulo debug.
 local aliases = {}
-local handles = {}
+local registros = {}
 
--- Conservar identificadores para retirar aliases antes de recargar.
+local function texto(valor)
+  return type(valor) == "string" and valor:find("%S") ~= nil
+end
 
--- ============================================================================
--- FUNCIONES INTERNAS DE REGISTRO BAJO NIVEL
--- ============================================================================
+local function copia(registro)
+  return { modulo = registro.modulo, nombre = registro.nombre,
+    descripcion = registro.descripcion, patron = registro.patron, uso = registro.uso,
+    accion = registro.accion, id = registro.id, estado = "registrado" }
+end
 
--------------------------------------------------------------------------------
--- FUNCIÓN: local function register_alias()
--- Descripción: Registra un alias en Mudlet
--- Parámetros:
---   - pattern: Patrón regex que activará el alias
---   - action: Función a ejecutar cuando se active el alias
---   - alias_name: Nombre descriptivo del alias
---   - alias_desc: Descripción de lo que hace el alias
---   - module_name: Nombre del módulo que define el alias
--- Retorno: true si se registró, false en caso contrario
--------------------------------------------------------------------------------
-local function register_alias(pattern, action, alias_name, alias_desc, module_name)
-  handles[#handles + 1] = tempAlias(pattern, function()
-    action()
+function aliases.consultar()
+  local resultado = {}
+  for _, registro in ipairs(registros) do resultado[#resultado + 1] = copia(registro) end
+  return resultado
+end
+
+-- El identificador solo se retira del inventario después de confirmar su baja.
+function aliases.desregistrar(modulo)
+  local errores = {}
+  for indice = #registros, 1, -1 do
+    local registro = registros[indice]
+    if modulo == nil or registro.modulo == modulo then
+      local correcto, mensaje = pcall(function()
+        assert(killAlias(registro.id), "No se pudo retirar el alias " .. registro.nombre)
+      end)
+      if correcto then table.remove(registros, indice)
+      else errores[#errores + 1] = tostring(mensaje) end
+    end
+  end
+  if #errores > 0 then error(table.concat(errores, "\n"), 0) end
+end
+
+function aliases.registrar_modulo(modulo, definiciones)
+  assert(texto(modulo), "Nombre de módulo de aliases inválido")
+  assert(type(definiciones) == "table", "Se esperaba una lista de aliases")
+  local preparados, nombres, patrones = {}, {}, {}
+  for _, registro in ipairs(registros) do
+    nombres[registro.nombre], patrones[registro.patron] = registro, registro
+  end
+  for _, entrada in ipairs(definiciones) do
+    assert(type(entrada) == "table" and texto(entrada.name), "Alias sin nombre en " .. modulo)
+    assert(texto(entrada.pattern), "Alias sin patrón: " .. entrada.name)
+    assert(type(entrada.action) == "function", "Alias sin acción: " .. entrada.name)
+    assert(texto(entrada.desc), "Alias sin descripción: " .. entrada.name)
+    local anterior = nombres[entrada.name]
+    if anterior then
+      assert(anterior.modulo == modulo and anterior.patron == entrada.pattern
+        and anterior.funcion == entrada.action, "Alias duplicado: " .. entrada.name)
+    else
+      assert(not patrones[entrada.pattern], "Patrón de alias duplicado: " .. entrada.name)
+      local registro = { modulo = modulo, nombre = entrada.name, descripcion = entrada.desc,
+        patron = entrada.pattern, uso = entrada.uso or entrada.name,
+        accion = entrada.accion or (modulo .. "." .. entrada.name), funcion = entrada.action }
+      preparados[#preparados + 1] = registro
+      nombres[registro.nombre], patrones[registro.patron] = registro, registro
+    end
+  end
+  local inicio = #registros
+  local correcto, mensaje = pcall(function()
+    for _, registro in ipairs(preparados) do
+      local id = tempAlias(registro.patron, registro.funcion)
+      assert(type(id) == "number" and id > 0, "Mudlet no registró el alias " .. registro.nombre)
+      registro.id = id
+      registros[#registros + 1] = registro
+    end
   end)
-
-  local debug = RhomScripts and RhomScripts.modules and RhomScripts.modules.debug
-  if debug then
-    debug.register_alias_from_module(module_name, alias_name, alias_desc)
+  if not correcto then
+    local errores = { tostring(mensaje) }
+    for indice = #registros, inicio + 1, -1 do
+      local registro = registros[indice]
+      local limpio, fallo = pcall(function()
+        assert(killAlias(registro.id), "No se pudo retirar el alias " .. registro.nombre)
+      end)
+      if limpio then table.remove(registros, indice)
+      else errores[#errores + 1] = tostring(fallo) end
+    end
+    error(table.concat(errores, "\n"), 0)
   end
-
-  return true
+  return { success = #preparados, errors = 0, total = #preparados }
 end
 
--- ============================================================================
--- FUNCIONES PÚBLICAS DEL ORQUESTADOR
--- ============================================================================
-
--------------------------------------------------------------------------------
--- FUNCIÓN: aliases.descubrir_aliases()
--- Descripción: Descubre todos los aliases definidos en los módulos cargados.
---              Itera sobre los módulos y recopila sus aliases.
--- Parámetros: Ninguno
--- Retorno: Tabla con estructura {module_name, alias_def} para cada alias
--------------------------------------------------------------------------------
 function aliases.descubrir_aliases()
-  local discovered = {}
-
-  -- Iterar sobre todos los módulos cargados
-  if not RhomScripts or not RhomScripts.modules then
-    print("Error: No se pueden acceder a los módulos cargados")
-    return discovered
-  end
-
-  for module_name, module in pairs(RhomScripts.modules) do
-    -- Verificar si el módulo tiene definidos aliases
-    if module and type(module.aliases) == "table" then
-      for _, alias_def in ipairs(module.aliases) do
-        table.insert(discovered, {
-          module = module_name,
-          alias = alias_def
-        })
+  assert(RhomScripts and RhomScripts.modules, "No hay módulos cargados")
+  local nombres, encontrados = {}, {}
+  for nombre in pairs(RhomScripts.modules) do nombres[#nombres + 1] = nombre end
+  table.sort(nombres)
+  for _, nombre in ipairs(nombres) do
+    local definiciones = RhomScripts.modules[nombre].aliases
+    if definiciones ~= nil then
+      assert(type(definiciones) == "table", "Aliases inválidos en " .. nombre)
+      for _, entrada in ipairs(definiciones) do
+        encontrados[#encontrados + 1] = { module = nombre, alias = entrada }
       end
     end
   end
-
-  return discovered
+  return encontrados
 end
 
--------------------------------------------------------------------------------
--- FUNCIÓN: aliases.registrar()
--- Descripción: Registra todos los aliases encontrados en los módulos.
---              Esta es la función principal que se llama desde init.lua
--- Parámetros: Ninguno
--- Retorno: tabla {success=count, errors=count, total=count}
--------------------------------------------------------------------------------
+-- Incorporar los módulos tardíos no sustituye los comandos tempranos de debug.
 function aliases.registrar()
-  aliases.desregistrar()
-
-  local discovered = aliases.descubrir_aliases()
-  local success_count = 0
-  local error_count = 0
-
-  -- Consulta breve del registro central; este módulo conserva su identificador.
-  if register_alias("^estado$", function()
-    RhomScripts.soporte.arranque.estado.mostrar()
-  end, "estado", "Muestra y anuncia el estado actual de los scripts", "aliases") then
-    success_count = success_count + 1
-  end
-
-  -- Registrar cada alias descubierto
-  for _, item in ipairs(discovered) do
-    local alias_def = item.alias
-    local module_name = item.module
-    local is_valid = true
-
-    -- Validar que el alias tenga los campos necesarios
-    if not alias_def.pattern then
-      print("Error: Alias del módulo '" .. module_name .. "' sin campo 'pattern'")
-      is_valid = false
-      error_count = error_count + 1
-    elseif not alias_def.action or type(alias_def.action) ~= "function" then
-      print("Error: Alias '" .. (alias_def.name or "desconocido") .. "' del módulo '" .. module_name .. "' sin función 'action' válida")
-      is_valid = false
-      error_count = error_count + 1
-    elseif not alias_def.name then
-      print("Error: Alias del módulo '" .. module_name .. "' sin campo 'name'")
-      is_valid = false
-      error_count = error_count + 1
+  local por_modulo, orden = {}, {}
+  for _, encontrado in ipairs(aliases.descubrir_aliases()) do
+    local nombre = encontrado.module
+    if not por_modulo[nombre] then
+      por_modulo[nombre] = {}
+      orden[#orden + 1] = nombre
     end
-
-    if is_valid then
-      if register_alias(alias_def.pattern, alias_def.action, alias_def.name, alias_def.desc, module_name) then
-        success_count = success_count + 1
-      end
-    end
+    por_modulo[nombre][#por_modulo[nombre] + 1] = encontrado.alias
   end
-
-  return { success = success_count, errors = error_count, total = success_count + error_count }
+  for _, nombre in ipairs(orden) do aliases.registrar_modulo(nombre, por_modulo[nombre]) end
+  return { success = #registros, errors = 0, total = #registros }
 end
 
--------------------------------------------------------------------------------
--- FUNCIÓN: aliases.desregistrar()
--- Descripción: Retira aliases de Mudlet y limpia su registro en debug.
--- Parámetros: Ninguno
--- Retorno: Ninguno
--------------------------------------------------------------------------------
-function aliases.desregistrar()
-  for _, id in ipairs(handles) do
-    killAlias(id)
-  end
-  handles = {}
-
-  -- Limpiar el registro en debug
-  local debug = RhomScripts and RhomScripts.modules and RhomScripts.modules.debug
-  if debug then
-    debug.clear_aliases()
-  end
-end
-
--------------------------------------------------------------------------------
--- FUNCIÓN: aliases.listar_aliases()
--- Descripción: Lista todos los aliases registrados y sus descripciones.
---              Recorre automáticamente todos los aliases registrados en el sistema.
--- Parámetros: Ninguno
--- Retorno: Ninguno
--------------------------------------------------------------------------------
 function aliases.listar_aliases()
-  local debug = RhomScripts and RhomScripts.modules and RhomScripts.modules.debug
-
-  if not debug or not debug.registered or not debug.registered.aliases_by_module then
-    print("No hay información de aliases registrados disponible")
-    return
-  end
-
-  local aliases_by_module = debug.registered.aliases_by_module
-  local total_aliases = 0
-
-  -- Ordenar módulos alfabéticamente para mejor presentación
-  local module_names = {}
-  for module_name, _ in pairs(aliases_by_module) do
-    table.insert(module_names, module_name)
-  end
-  table.sort(module_names)
-
-  print("═══════════════════════════════════════════════════════════════")
-  print("ALIASES REGISTRADOS")
-  print("═══════════════════════════════════════════════════════════════")
-
-  -- Recorrer cada módulo y sus aliases
-  for _, module_name in ipairs(module_names) do
-    local aliases_list = aliases_by_module[module_name]
-
-    if aliases_list and #aliases_list > 0 then
-      print("")
-      print("─── MÓDULO: " .. module_name:upper() .. " ─────────────────────────────")
-
-      -- Ordenar los aliases por nombre
-      local sorted_aliases = {}
-      for _, alias_info in ipairs(aliases_list) do
-        table.insert(sorted_aliases, alias_info)
-      end
-      table.sort(sorted_aliases, function(a, b) return a.name < b.name end)
-
-      -- Mostrar cada alias y su descripción
-      for _, alias_info in ipairs(sorted_aliases) do
-        print(string.format("  %s: %s", alias_info.name, alias_info.action))
-        total_aliases = total_aliases + 1
-      end
-    end
-  end
-
-  print("")
-  print("═══════════════════════════════════════════════════════════════")
-  print(string.format("TOTAL: %d aliases registrados", total_aliases))
-  print("═══════════════════════════════════════════════════════════════")
+  return RhomScripts.modules.debug.mostrar("alias")
 end
-
--- ============================================================================
--- DEFINICIÓN DE ALIASES DEL MÓDULO
--- ============================================================================
-
-aliases.aliases = {
-  {
-    pattern = "^listalias$",
-    action = function()
-      aliases.listar_aliases()
-    end,
-    name = "listalias",
-    desc = "Lista todos los aliases registrados en el sistema"
-  }
-}
 
 return aliases

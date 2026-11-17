@@ -89,20 +89,6 @@ local function comprobar_archivos(candidatos, resumen)
   return entradas
 end
 
-local function mensaje_catalogo(resumen)
-  if resumen.estado == "ausente" then
-    return "Carpeta de sonidos de RhomScripts ausente. Audio no disponible."
-  elseif resumen.estado == "invalido" then
-    return "No se pudo construir el catálogo de sonidos de RhomScripts. " .. resumen.incidencias[1]
-  elseif resumen.estado == "parcial" then
-    return string.format("Catálogo de sonidos parcial: %d de %d claves disponibles. %d archivos correctos y %d erróneos. %d incidencias.",
-      resumen.claves_disponibles, resumen.claves_total, resumen.archivos_correctos,
-      resumen.archivos_erroneos, #resumen.incidencias)
-  end
-  return string.format("Catálogo de sonidos de RhomScripts: %d claves y %d archivos verificados. Sin incidencias.",
-    resumen.claves_disponibles, resumen.archivos_correctos)
-end
-
 function sonidos.cargar_catalogo(raiz)
   sonidos.catalogo = nil
   sonidos.resumen_catalogo = nil
@@ -131,9 +117,30 @@ function sonidos.cargar_catalogo(raiz)
     resumen.estado = "invalido"
     incidencia(resumen, "La ruta de sonidos no es una carpeta: " .. resumen.raiz)
   end
-  resumen.mensaje = mensaje_catalogo(resumen)
+  resumen.mensaje = RhomScripts.modules.debug.formato_catalogo(resumen)
   sonidos.resumen_catalogo = resumen
   return resumen
+end
+
+-- Disponibilidad del catálogo, no confirmación de reproducción o decodificación.
+function sonidos.consultar()
+  local resultado = {}
+  local raiz = (RhomScripts.root .. "/sonidos/"):gsub("\\", "/")
+  for clave, entrada in pairs(sonidos.catalogo and sonidos.catalogo.sonidos or {}) do
+    local archivo = entrada.archivos[1]:gsub("\\", "/")
+    if archivo:sub(1, #raiz) == raiz then archivo = archivo:sub(#raiz + 1) end
+    resultado[#resultado + 1] = { modulo = "sonidos", nombre = clave, grupo = entrada.grupo,
+      archivo = archivo, estado = "archivo accesible en catálogo; reproducción sin comprobar" }
+  end
+  local resumen = sonidos.resumen_catalogo
+  for indice, mensaje in ipairs(resumen and resumen.incidencias or {}) do
+    resultado[#resultado + 1] = { modulo = "sonidos", nombre = "Incidencia " .. indice,
+      estado = "incidencia", detalle = mensaje }
+  end
+  if resumen and not sonidos.catalogo and #resultado == 0 then
+    resultado[1] = { modulo = "sonidos", nombre = "Catálogo", estado = resumen.estado, detalle = resumen.mensaje }
+  end
+  return resultado
 end
 
 return sonidos
