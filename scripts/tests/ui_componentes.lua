@@ -1,0 +1,182 @@
+-- Contratos comunes con wx real; ejecutar únicamente en el perfil aislado.
+local suite = {}
+local function equal(actual, esperado)
+  assert(actual == esperado, "Esperado " .. tostring(esperado) .. "; obtenido " .. tostring(actual))
+end
+function suite.real(case)
+  local ui = require("ui")
+  local audio = require("audio")
+  local reproducir, sonidos = audio.reproducir, {}
+  audio.reproducir = function(clave, opciones)
+    sonidos[#sonidos + 1] = clave
+    return reproducir(clave, opciones)
+  end
+  local vista = ui.nueva("Prueba aislada de componentes")
+  local eventos, acciones, activaciones = {}, {}, {}
+  local lista = ui.lista(vista, {
+    columnas = {{ titulo = "Elemento", ancho = 400 }}, pestanas = true, max_acciones = 2,
+    sonido = function(evento) eventos[#eventos + 1] = evento end,
+    activar = function(elemento) activaciones[#activaciones + 1] = elemento.id end,
+    acciones = function(elemento)
+      return {
+        { id = "uno", nombre = "Primera", ejecutar = function(item) acciones[#acciones + 1] = "uno:" .. item.id end },
+        { id = "dos", nombre = "Segunda", habilitada = elemento.id ~= 3,
+          ejecutar = function(item) acciones[#acciones + 1] = "dos:" .. item.id end },
+      }
+    end,
+  })
+  local wx = vista.wx
+  vista.dialogo:SetSizerAndFit(lista.sizer)
+  vista.cancelar = function() vista:ocultar() end
+  vista.tecla = function(evento) return lista:tecla(evento:GetKeyCode(), evento:GetModifiers()) end
+  lista:actualizar_pestanas({{ id = "a", nombre = "Primera" }, { id = "b", nombre = "Segunda" }})
+  local function elemento(id) return { id = id, textos = { "Elemento " .. id } } end
+  lista:actualizar({ elemento(1), elemento(2), elemento(3), elemento(4) }, { primero = true })
+  vista:preparar()
+  local detalle = ui.detalle(vista, { titulo = "Detalle aislado" })
+  local correcto, mensaje = xpcall(function()
+    case("UI común: preparación sin foco, sonido ni apertura y páginas nativas con contenido", function()
+      assert(not vista.dialogo:IsShown() and not detalle.vista.dialogo:IsShown())
+      equal(#eventos, 0)
+      equal(#sonidos, 0)
+      equal(lista.pestanyas:GetPageCount(), 2)
+      equal(lista.panel:GetParent():GetId(), lista.pestanyas:GetPage(0):GetId())
+      equal(lista:seleccionado().id, 1)
+      equal(#lista.botones, 2)
+    end)
+    local callback_error
+    vista.dialogo:CallAfter(function()
+      local ok, err = xpcall(function()
+        case("UI común: botones fijan elemento y Enter no activa la fila", function()
+          local n = #sonidos
+          lista:seleccionar(2)
+          lista.control:SetFocus()
+          assert(lista:tecla(wx.WXK_RIGHT, 0))
+          equal(wx.wxWindow.FindFocus():GetId(), lista.botones[1]:GetId())
+          assert(lista:tecla(wx.WXK_DOWN, 0))
+          equal(lista:seleccionado().id, 2)
+          equal(#sonidos, n)
+          assert(lista:tecla(wx.WXK_RETURN, 0))
+          equal(#sonidos, n + 1)
+          equal(sonidos[#sonidos], "ui.boton_1")
+          equal(acciones[1], "uno:2")
+          equal(#activaciones, 0)
+        end)
+        case("UI común: dos botones habilitados ejecutan acciones distintas y retroceden hasta la lista", function()
+          local n = #sonidos
+          local primero, segundo = lista.botones[1]:GetId(), lista.botones[2]:GetId()
+          assert(lista:tecla(wx.WXK_RIGHT, 0))
+          equal(wx.wxWindow.FindFocus():GetId(), segundo)
+          assert(lista:tecla(wx.WXK_UP, 0))
+          assert(lista:tecla(wx.WXK_DOWN, 0))
+          equal(lista:seleccionado().id, 2)
+          equal(#sonidos, n)
+          assert(lista:tecla(wx.WXK_RETURN, 0))
+          equal(#sonidos, n + 1)
+          equal(sonidos[#sonidos], "ui.boton_1")
+          equal(acciones[2], "dos:2")
+          equal(#acciones, 2)
+          equal(#activaciones, 0)
+          assert(lista:tecla(wx.WXK_LEFT, 0))
+          equal(wx.wxWindow.FindFocus():GetId(), primero)
+          assert(lista:tecla(wx.WXK_LEFT, 0))
+          equal(wx.wxWindow.FindFocus():GetId(), lista.control:GetId())
+          assert(lista:tecla(wx.WXK_RIGHT, 0))
+          equal(wx.wxWindow.FindFocus():GetId(), primero)
+          equal(lista.botones[2]:GetId(), segundo)
+          equal(#sonidos, n + 1)
+          equal(#eventos, 0)
+        end)
+        case("UI común: selección nativa usa clic_1 y el botón nativo usa boton_1 una vez", function()
+          lista.control:SetFocus()
+          local n = #sonidos
+          lista.control:SetItemState(0, wx.wxLIST_STATE_SELECTED + wx.wxLIST_STATE_FOCUSED,
+            wx.wxLIST_STATE_SELECTED + wx.wxLIST_STATE_FOCUSED)
+          equal(lista:seleccionado().id, 1)
+          equal(#sonidos, n + 1)
+          equal(sonidos[#sonidos], "ui.clic_1")
+          local evento = wx.wxCommandEvent(wx.wxEVT_COMMAND_BUTTON_CLICKED, lista.botones[1]:GetId())
+          evento:SetEventObject(lista.botones[1])
+          assert(lista.botones[1]:ProcessWindowEvent(evento))
+          evento:delete()
+          equal(#sonidos, n + 2)
+          equal(sonidos[#sonidos], "ui.boton_1")
+          lista:seleccionar(2)
+          lista.botones[1]:SetFocus()
+        end)
+        case("UI común: llegada al principio conserva identidad, foco y páginas", function()
+          local page = lista.pestanyas:GetPage(0):GetId()
+          local n = #eventos
+          lista:actualizar({ elemento(5), elemento(1), elemento(2), elemento(3), elemento(4) })
+          lista:actualizar_pestanas({{ id = "a", nombre = "Primera" }, { id = "b", nombre = "Segunda" }})
+          equal(lista:seleccionado().id, 2)
+          equal(wx.wxWindow.FindFocus():GetId(), lista.botones[1]:GetId())
+          equal(lista.pestanyas:GetPage(0):GetId(), page)
+          equal(lista.control:GetItemData(2), 2)
+          equal(#eventos, n)
+        end)
+        case("UI común: retirada múltiple selecciona siguiente por identidad y vuelve a lista", function()
+          lista:actualizar({ elemento(3), elemento(4) })
+          equal(lista:seleccionado().id, 3)
+          equal(wx.wxWindow.FindFocus():GetId(), lista.control:GetId())
+          equal(lista.control:GetItemCount(), 2)
+        end)
+        case("UI común: acciones deshabilitadas, vuelta y activación de elemento", function()
+          lista:tecla(wx.WXK_RIGHT, 0)
+          lista:tecla(wx.WXK_RIGHT, 0)
+          equal(wx.wxWindow.FindFocus():GetId(), lista.botones[1]:GetId())
+          lista:tecla(wx.WXK_LEFT, 0)
+          equal(wx.wxWindow.FindFocus():GetId(), lista.control:GetId())
+          lista:tecla(wx.WXK_RETURN, 0)
+          equal(activaciones[1], 3)
+        end)
+        case("UI común: páginas nativas conservan controles al cambiar y retirar", function()
+          local handle = lista.control:GetId()
+          local n = #sonidos
+          lista:cambiar_pestana(1)
+          equal(#sonidos, n + 1)
+          equal(sonidos[#sonidos], "ui.pestana")
+          lista:seleccionar_pestana("b")
+          equal(#sonidos, n + 1)
+          equal(lista.pestana, "b")
+          equal(lista.panel:GetParent():GetId(), lista.pestanyas:GetPage(1):GetId())
+          lista.opciones.sonido_pestana = "ui.seleccion_canal"
+          lista:cambiar_pestana(-1)
+          equal(#sonidos, n + 2)
+          equal(sonidos[#sonidos], "ui.seleccion_canal")
+          lista:seleccionar_pestana("a")
+          equal(#sonidos, n + 2)
+          lista.opciones.sonido_pestana = nil
+          lista:actualizar_pestanas({{ id = "a", nombre = "Primera actualizada" }})
+          equal(lista.pestana, "a")
+          equal(lista.control:GetId(), handle)
+          equal(lista.pestanyas:GetPageText(0), "Primera actualizada")
+        end)
+        case("UI común: detalle es instantánea de solo lectura y devuelve el foco", function()
+          detalle.vista.dialogo:CallAfter(function()
+            local verified, failure = xpcall(function()
+              equal(detalle.control:GetValue(), "Texto completo de prueba")
+              assert(not detalle.control:IsEditable())
+              lista:actualizar({ elemento(4) })
+              equal(detalle.control:GetValue(), "Texto completo de prueba")
+            end, debug.traceback)
+            detalle:cerrar()
+            if not verified then callback_error = failure end
+          end)
+          detalle:mostrar("Texto completo de prueba")
+          assert(not callback_error, callback_error)
+          equal(wx.wxWindow.FindFocus():GetId(), lista.control:GetId())
+        end)
+      end, debug.traceback)
+      if not ok then callback_error = err end
+      vista.cancelar()
+    end)
+    vista:mostrar()
+    assert(not callback_error, callback_error)
+  end, debug.traceback)
+  detalle:destruir()
+  vista:destruir()
+  audio.reproducir = reproducir
+  assert(correcto, mensaje)
+end
+return suite

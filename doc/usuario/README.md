@@ -1,12 +1,16 @@
 # Manual de usuario de RhomScripts
 
+La [navegación común de ventanas](componentes-interfaz.md) describe árboles, listas, pestañas y acciones de los elementos.
+
+La [lista de destinos del mapa](mapa.md) permite consultar los resultados de `irsala` y `sigilarsala` en una ventana nativa, activable desde Interfaz.
+
 ## Estado
 
 Documentación inicial. El paquete público separado y sus actualizadores están diseñados y pendientes de implementación. No existe todavía aquí un manual de instalación de esa distribución.
 
-El arranque carga `debug`, `configuracion`, `configurador`, `ficha`, `lector`, `comunicaciones` y `keys`. El [diagnóstico centralizado](debug.md) reúne estados, mensajes e inventarios. Los [historiales de comunicaciones](comunicaciones.md) reciben los canales oficiales mediante GMCP y capturan Room y telepatía mediante dos triggers propios. El [lector de líneas](lector.md) permite leer y copiar con Ctrl+1…9 y Ctrl+Shift+1…9, además de los comandos `leerlinea N` y `copiarlinea N`. Ctrl+Shift+C abre el configurador, Ctrl+Shift+H alterna la ayuda y `rhomscripts keys` enumera sus pulsaciones. Los comandos y triggers de los módulos pendientes siguen desconectados, incluidas las demostraciones `pruebawx` y `pruebacffi`. Sus archivos se conservan en la carpeta raíz `rhomscripts old` para futuras migraciones.
+El arranque carga `debug`, `configuracion`, `configurador`, `ficha`, `lector`, `comunicaciones`, `mapa` y `keys`. El [diagnóstico centralizado](debug.md) reúne estados, mensajes e inventarios. Los [historiales de comunicaciones](comunicaciones.md) reciben los canales oficiales mediante GMCP y capturan Room y telepatía mediante dos triggers propios. El [lector de líneas](lector.md) permite leer y copiar con Ctrl+1…9 y Ctrl+Shift+1…9, además de los comandos `leerlinea N` y `copiarlinea N`. Ctrl+Shift+C abre el configurador, Ctrl+Shift+H alterna la ayuda y `rhomscripts keys` enumera sus pulsaciones. Los comandos y triggers de los módulos pendientes siguen desconectados, incluidas las demostraciones `pruebawx` y `pruebacffi`. Sus archivos se conservan en la carpeta raíz `rhomscripts old` para futuras migraciones.
 
-Audio, interfaz nativa, integración oficial y registro de comandos son dependencias internas. `RhomScripts.modules` contiene los siete sistemas activos, incluido debug. `RhomScripts.soporte` conserva arranque, audio, UI y registro de comandos para retirarlos al recargar. El paquete oficial sigue funcionando según sus preferencias.
+Audio, interfaz nativa, integración oficial y registro de comandos son dependencias internas. `RhomScripts.modules` contiene los ocho sistemas activos, incluido debug. `RhomScripts.soporte` conserva arranque, audio, UI y registro de comandos para retirarlos al recargar. El paquete oficial sigue funcionando según sus preferencias.
 
 Las preferencias propias del arranque se guardan en `config.json`; el modo debug se comparte directamente con el paquete oficial y utiliza su persistencia. Ya no se carga `config.lua` ni se lee o escribe `rl_config.lua`, ni se inicializa `modes`. Se conservan ese archivo de configuración y sus consumidores pendientes en el fuente; tampoco se elimina ningún archivo personal antiguo del perfil.
 

@@ -14,7 +14,11 @@ Comunicaciones recibe los mismos eventos GMCP que el paquete oficial y mantiene 
 
 La pestaña global reúne los mensajes de los canales abiertos. Los avisos individuales de apertura y cierre actualizan las pestañas al llegar. En esos avisos se ignoran los identificadores genéricos `gremio`, `bando`, `ciu` y `clan`. La lista completa `Comm.Canales` reconcilia todas las pestañas con las claves recibidas. Cerrar la ventana no cierra canales. Una llegada no cambia de categoría ni mueve la selección. Alt+F1 consulta siempre el último mensaje retenido y puede diferir de la fila que esté leyendo en la lista.
 
-Los tres botones Responder, Responder en privado y Copiar se muestran deshabilitados: sus acciones se incorporarán en otra iteración.
+Enter o doble clic sobre un mensaje abre su detalle completo en un control de texto de solo lectura. Escape o X cierra el detalle y vuelve al historial. El texto abierto es una copia: las llegadas y los descartes posteriores no lo modifican.
+
+Derecha accede a las acciones disponibles del mensaje seleccionado y avanza entre ellas. Izquierda retrocede hasta volver a la lista. Arriba y Abajo no cambian de mensaje mientras el foco está en sus botones. Enter, Espacio o un clic activan el botón, sin abrir el detalle. Copiar utiliza la función común del lector: copia el texto y anuncia el contenido y «Copiado», con su sonido de portapapeles. Responder y Responder en privado permanecen deshabilitados hasta verificar los comandos y la identificación del autor.
+
+Las pestañas son nativas, visibles y seleccionables con clic, además de Tab y Mayús+Tab. No hay botones generales en estas ventanas. Cada apertura recupera la pestaña utilizada y empieza en su primer mensaje. Una llegada mientras está abierta conserva por identificador el mensaje seleccionado y el foco, incluso si está en una acción. Si el mensaje seleccionado desaparece por retención, se comunica y se vuelve a la lista con el siguiente mensaje disponible o el anterior.
 
 ## Voz y silencio
 
@@ -74,3 +78,5 @@ El lector confirma «canal X, silenciado» o «canal X, lectura activada», incl
 Los historiales nuevos reciben texto mediante triggers de Mudlet y reproducen Room o Telepatía por cada mensaje recibido, también con el historial oculto o con la lectura automática silenciada. La línea original permanece en la consola. Si Mudlet ya lee esa salida, puede oírse junto al aviso de RhomScripts.
 
 Las tres ventanas comparten navegación, sonidos de interacción y selección por mensaje. Cada ventana es independiente y se abre de forma modal. Al abrir, la lista empieza por el mensaje más reciente. Una llegada con la ventana abierta conserva la selección. Room y telepatía conservan hasta 500 mensajes cada uno, en memoria. La desconexión o la recarga vacían los historiales y restablecen el silencio. [Diseño de Room y telepatía](../migraciones/historiales-room-telepatia.md).
+
+El cambio de pestaña o categoría conserva el sonido de selección de canal (`ui.seleccion_canal`), tanto con ratón como con Tab y los atajos de categoría. Usa el componente común con su sonido sobrescrito, sin duplicar avisos.

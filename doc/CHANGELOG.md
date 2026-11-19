@@ -2,6 +2,56 @@
 
 ## Sin publicar
 
+### Sonido propio de las pestañas de comunicaciones, 19 de noviembre de 2026
+
+- Comunicaciones conserva el sonido de cambio de canal. El componente común admite sobrescribir la clave del sonido; el mapa mantiene `pestana`. Navegación y reproducción siguen compartidas, con un solo aviso por cambio. [Manual](usuario/componentes-interfaz.md) y [validación](validacion.md#sonido-propio-de-las-pestañas-de-comunicaciones-19-de-noviembre-de-2026).
+
+### Sonido compartido de pestañas, 19 de noviembre de 2026
+
+- Todas las ventanas con pestañas usan `pestana` al cambiar, mediante el componente común. Los cambios de categoría de canales y Room usan la misma función, sin duplicar sonidos. El WAV aportado se conserva como `UI/Pestana.wav`, con nombre ASCII. [Manual](usuario/componentes-interfaz.md) y [validación](validacion.md#sonido-compartido-de-pestañas-19-de-noviembre-de-2026).
+
+### Anuncio y refresco de pestañas del mapa, 19 de noviembre de 2026
+
+- Al cambiar de pestaña se anuncia «Resultados» o «Favoritos». Se reutilizan los textos de destinos mientras no cambian los datos y se evitan selecciones de pestaña y escrituras de etiquetas repetidas. Tab conserva el cambio sin sonido. [Manual](usuario/mapa.md) y [validación](validacion.md#anuncio-y-refresco-de-pestañas-del-mapa-19-de-noviembre-de-2026).
+
+### Acciones y navegación del mapa, 19 de noviembre de 2026
+
+- Tab cambia de pestaña sin sonido y el título refleja Resultados o Favoritos. El botón de Resultados alterna entre añadir y eliminar favoritos, conservando el foco; Favoritos mantiene Eliminar. La confirmación de eliminación se reduce a «Eliminado de favoritos.». [Manual](usuario/mapa.md) y [validación](validacion.md#acciones-y-navegación-del-mapa-19-de-noviembre-de-2026).
+
+### Favoritos del mapa por personaje, 19 de noviembre de 2026
+
+- El JSON separa los favoritos por el nombre de personaje obtenido de ficha. La lista cambia al identificarse, cambiar de personaje o desconectar. Añadir y eliminar actualizan solo los favoritos propios en disco. Sin nombre no se pueden guardar; el formato antiguo se convierte vacío. [Manual](usuario/mapa.md), [plan](planes/mapa.md#favoritos-por-personaje-19-de-noviembre-de-2026) y [validación](validacion.md#favoritos-del-mapa-por-personaje-19-de-noviembre-de-2026).
+
+### Sonidos propios del mapa, 19 de noviembre de 2026
+
+- El mapa usa `abrir_mapa` al abrir y `seleccionar_mapa` al confirmar un destino válido para viajar. Para salir se usa `plegar` provisionalmente. [Manual](usuario/mapa.md) y [validación](validacion.md#sonidos-propios-del-mapa-19-de-noviembre-de-2026).
+
+### Selector de interfaz del mapa, 19 de noviembre de 2026
+
+- En Interfaz, «Interfaz del mapa» sustituye a la opción de activación. Selector circular entre «Rhomscripts» (por defecto) y «Config oficial», con `boton_2` al cambiar. Las preferencias guardadas se conservan. [Manual](usuario/mapa.md) y [validación](validacion.md#selector-de-interfaz-del-mapa-19-de-noviembre-de-2026).
+
+### Sonido de los reguladores de volumen, 19 de noviembre de 2026
+
+- Los cinco reguladores de volumen reproducen `clic_2` al cambiar su valor. [Sonidos](usuario/sonidos.md) y [validación](validacion.md#sonido-de-los-reguladores-de-volumen-19-de-noviembre-de-2026).
+
+### Sonidos comunes de listas y botones, 19 de noviembre de 2026
+
+- Recorrer listas y árboles reproduce `clic_1`; pulsar botones reproduce `boton_1` en todas las ventanas. El movimiento entre botones y el paso entre lista y botones quedan en silencio. Los demás sonidos siguen definidos por cada módulo. [Navegación común](usuario/componentes-interfaz.md) y [validación](validacion.md#sonidos-comunes-de-listas-y-botones-19-de-noviembre-de-2026).
+
+### Componentes comunes de ventanas, 18 de noviembre de 2026
+
+- Listas, pestañas nativas visibles y acciones contextuales comparten componentes, con sonidos definidos por cada sistema. Derecha recorre las acciones del elemento e Izquierda vuelve a la lista; los árboles conservan Tab para sus botones. Reabrir recuerda la pestaña y selecciona su primer elemento; las actualizaciones conservan la selección por identidad.
+- Los historiales permiten abrir el detalle completo de un mensaje y copiarlo mediante su botón. Responder y responder en privado continúan indisponibles hasta verificar su contrato. [Uso de comunicaciones](usuario/comunicaciones.md).
+- El mapa permite añadir y eliminar favoritos persistentes. Una búsqueda sin coincidencias limpia Resultados y lo comunica sin abrir la ventana. La búsqueda continúa realizándose desde Mudlet. [Uso del mapa](usuario/mapa.md). [Plan y validación de la entrega](planes/componentes-interfaz.md).
+
+### Corrección de Enter en los destinos, 18 de noviembre de 2026
+
+- La lista atiende la activación nativa de la fila y la aceptación estándar del diálogo: Enter inicia el viaje aunque el evento no llegue al manejador general del teclado. Escape y Cancelar no viajan. La acción sigue siendo la del enlace oficial para el ID elegido. Se admite también la activación nativa con doble clic y Espacio en Windows. [Manual](usuario/mapa.md) y [seguimiento de la corrección](planes/mapa.md#revisión-de-enter).
+
+### Lista accesible de destinos del mapa, 17 de noviembre de 2026
+
+- La opción «Lista de destinos de RhomScripts», en Interfaz, sustituye la presentación de `irsala` y `sigilarsala` por una lista nativa sin duplicar los destinos en terminal. Enter viaja, Escape cierra y Ctrl+Mayús+M recupera la ventana. Incluye Resultados efímeros y consulta de Favoritos en JSON; los botones de gestión y la memoria de pestañas quedan diferidos. Desactivar restaura la función oficial sin editar sus archivos. [Manual](usuario/mapa.md) y [plan y validación](planes/mapa.md).
+
 ### Familia única de consultas y versión, 17 de noviembre de 2026
 
 - Las consultas se unifican en `rhomscripts`: estado, modulos, keys, alias, triggers, sonidos, mensajes y version. Se eliminan `rhomdebug`, `estado`, `rhomestado` y los accesos `list…`. `rhomscripts version` muestra y anuncia `1.0, 17/11/2026`, desde la misma fuente de debug que utiliza el evento de carga. [Comandos](usuario/debug.md#comandos) y [plan](planes/debug.md#simplificación-de-consultas-y-versión-17-de-noviembre-de-2026).

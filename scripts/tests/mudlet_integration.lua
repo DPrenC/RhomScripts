@@ -15,6 +15,9 @@ local function equal(actual, expected)
 end
 
 local function case(name, action)
+  local progress = assert(io.open(RHOM_TEST_RESULT .. ".progress", "a"))
+  assert(progress:write("START ", name, "\n"))
+  assert(progress:close())
   action()
   results[#results + 1] = name
 end
@@ -58,6 +61,8 @@ local function run()
   RhomScriptsBasePath = root .. "/rhomscripts"
   dofile(root .. "/rhomscripts/init.lua")
   assert(RhomScripts.initialized)
+
+  dofile(root .. "/scripts/tests/ui_componentes.lua").real(case)
 
   case("Preparación nativa real carga wx/cffi al inicio y reutiliza sus instancias", function()
     local comprobaciones = require("arranque")
@@ -114,18 +119,18 @@ local function run()
   end)
 
   case("Carga inicial con APIs reales", function()
-    equal(count(live.keys), 39)
+    equal(count(live.keys), 40)
     equal(count(live.aliases), 3)
     equal(count(live.triggers), 2)
     equal(RhomScripts.modules.comunicaciones.cantidad_triggers(), 2)
     local expected, total = {
-      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true,
+      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true, mapa = true,
     }, 0
     for name in pairs(RhomScripts.modules) do
       assert(expected[name], "Módulo no migrado conectado: " .. name)
       total = total + 1
     end
-    equal(total, 7)
+    equal(total, 8)
     assert(package.loaded.config == nil and package.loaded.modes == nil)
     local old_config = io.open(RHOM_TEST_PROFILE .. "/rl_config.lua", "rb")
     if old_config then old_config:close() end
@@ -339,6 +344,73 @@ local function reload_from_modal()
   equal(configurador.sesion, nil)
 end
 
+local function reload_from_detail(done)
+  local function progress(message)
+    local file = assert(io.open(RHOM_TEST_RESULT .. ".detail-progress", "a"))
+    assert(file:write(message .. "\n"))
+    assert(file:close())
+  end
+  progress("Preparando recarga anidada")
+  local history = RhomScripts.modules.comunicaciones.historiales.room
+  local ui = require("ui")
+  local detail = history.detalle
+  local runtime = package.loaded.rhom_nativo_runtime
+  local parent_hwnd = ui.nativo.handle(history.vista.dialogo)
+  local detail_hwnd = ui.nativo.handle(detail.vista.dialogo)
+  local returned, detail_returned, ready, callback_error = false, false, 0
+  local handler = registerAnonymousEventHandler("rhomscripts.ready", function()
+    ready = ready + 1
+    assert(returned and detail_returned, "Ready antes de retornar los dos diálogos")
+  end)
+  reload_cleanup = function() killAnonymousEventHandler(handler) end
+  history.recibir_texto("Mensaje sintético para recargar desde su detalle.")
+  history.vista.dialogo:CallAfter(function()
+    progress("Callback padre")
+    local ok, message = xpcall(function()
+      detail.vista.dialogo:CallAfter(function()
+        progress("Callback detalle")
+        local ok, message = xpcall(function()
+          assert(history.vista.mostrando and detail.vista.mostrando)
+          dofile(root .. "/rhomscripts/init.lua")
+          progress("Init diferido")
+          assert(RhomScripts.loading and RhomScripts.recarga_timer)
+          equal(runtime.user32.IsWindow(parent_hwnd), 1)
+          equal(runtime.user32.IsWindow(detail_hwnd), 1)
+          equal(ready, 0)
+        end, debug.traceback)
+        if not ok then callback_error = message; ui.ocultar() end
+      end)
+      history.abrir_detalle(history.componente:seleccionado())
+      progress("Retorno detalle")
+      detail_returned = true
+      assert(not detail.vista.mostrando)
+    end, debug.traceback)
+    if not ok then callback_error = message; ui.ocultar() end
+  end)
+  history.mostrar_historial()
+  progress("Retorno padre")
+  returned = true
+  tempTimer(0.2, function()
+    progress("Validacion diferida")
+    local ok, message = xpcall(function()
+      assert(not callback_error, callback_error)
+      assert(detail_returned and not ui.ocupada())
+      assert(RhomScripts.initialized and not RhomScripts.recarga_timer)
+      equal(ready, 1)
+      equal(runtime.user32.IsWindow(parent_hwnd), 0)
+      equal(runtime.user32.IsWindow(detail_hwnd), 0)
+      assert(RhomScripts.modules.comunicaciones.historiales.room ~= history)
+      equal(count(live.keys), 40)
+      equal(count(live.aliases), 3)
+      equal(count(live.triggers), 2)
+      results[#results + 1] = "Recarga desde detalle real retorna hijo y padre antes de destruir y emite ready una vez"
+    end, debug.traceback)
+    killAnonymousEventHandler(handler)
+    reload_cleanup = nil
+    done(ok, message)
+  end)
+end
+
 local function execute_audio_checks()
   -- Mantener un sonido de prueba activo mientras Qt procesa eventos, para
   -- comprobar la parada asíncrona con el motor nativo.
@@ -375,7 +447,7 @@ local function execute_audio_checks()
         assert(configurador ~= state.old and configurador.vista and configurador.arbol)
         assert(not configurador.ventana:IsShown() and not configurador.sesion)
         equal(RhomScripts.modules.configuracion.get("volumen_general"), state.confirmed)
-        equal(count(live.keys), 39)
+        equal(count(live.keys), 40)
         equal(count(live.aliases), 3)
         equal(count(live.triggers), 2)
         killAnonymousEventHandler(state.handler)
@@ -386,7 +458,9 @@ local function execute_audio_checks()
         dofile(root .. "/scripts/tests/ficha.lua").run(
           case, root .. "/rhomscripts/init.lua", function() return live.ficha end, true)
       end, debug.traceback)
-      finish(stopped, stop_error)
+      if not stopped then finish(false, stop_error); return end
+      local nested, nested_error = xpcall(function() reload_from_detail(finish) end, debug.traceback)
+      if not nested then finish(false, nested_error) end
     end)
   end)
 end
@@ -399,6 +473,12 @@ local function execute_suite()
   if not ok then finish(false, err); return end
   RhomScripts.soporte.audio.stop_tag()
   tempTimer(0.1, function()
+    -- Los ensayos anteriores programan reaplicaciones de preferencias. Dejarlas
+    -- terminar antes de crear salas que una reinicialización oficial reemplazaría.
+    local mapped, map_error = xpcall(function()
+      dofile(root .. "/scripts/tests/mapa.lua").real(case, root)
+    end, debug.traceback)
+    if not mapped then finish(false, map_error); return end
     local requested, catalog_key = xpcall(function()
       return assert(RhomScripts.soporte.audio.reproducir("ui.carga_ok", { volumen = 1 }))
     end, debug.traceback)
@@ -412,7 +492,10 @@ local function execute_suite()
         results[#results + 1] = "Audio real: clave de catálogo observada en el motor tras procesar Qt"
       end, debug.traceback)
       if not observed then finish(false, message); return end
-      execute_audio_checks()
+      dofile(root .. "/scripts/tests/mapa.lua").automatic(case, function(opened, opening_error)
+        if not opened then finish(false, opening_error); return end
+        execute_audio_checks()
+      end)
     end)
   end)
 end
@@ -432,7 +515,13 @@ local function start_official()
     assert(control.estado == "activo")
     assert(next(control.temporizadores) == nil and next(control.handlers) == nil)
     results[#results + 1] = "Descarga Qt, instalación oficial y señal local reales sin GMCP"
-    tempTimer(0, execute_suite)
+    -- No crear el mapa sintético mientras una descarga oficial pueda
+    -- reemplazarlo al volver al bucle de eventos dentro de un diálogo.
+    local function when_map_ready()
+      if RL_vars.mapa.descargando then tempTimer(0.05, when_map_ready)
+      else execute_suite() end
+    end
+    tempTimer(0, when_map_ready)
   end, function(message)
     -- El estado de fallo se escribe para que el ejecutor no espere hasta timeout.
     finish(false, message)

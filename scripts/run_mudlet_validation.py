@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--timeout', type=int, default=100)
     parser.add_argument('--clipboard-text-only', action='store_true',
                         help='Prueba optativa que sustituye el portapapeles; preparar antes contenido solo de texto.')
+    parser.add_argument('--map-keyboard', choices=['postmessage', 'sendinput'],
+                        help='Prueba optativa de teclado Windows; SendInput exige primer plano y foco del perfil aislado.')
     args = parser.parse_args()
     release_response = requests.get('https://api.github.com/repos/Mudlet/Mudlet/releases/latest', timeout=45)
     release_response.raise_for_status()
@@ -76,6 +78,7 @@ def main():
                  + '\nRHOM_TEST_PACKAGE = ' + json.dumps(package_path.as_posix(), ensure_ascii=False)
                  + '\nRHOM_TEST_OFFICIAL_PACKAGE = ' + json.dumps(official_package.as_posix(), ensure_ascii=False)
                  + '\nRHOM_TEST_PROFILE = ' + json.dumps(profile_root.as_posix(), ensure_ascii=False)
+                 + '\nRHOM_TEST_MAP_KEYBOARD = ' + (json.dumps(args.map_keyboard) if args.map_keyboard else 'nil')
                  + '\nRHOM_TEST_CLIPBOARD = ' + ('true' if args.clipboard_text_only else 'false')
                  + '\ntempTimer(2, function() dofile(RHOM_TEST_ROOT .. "/scripts/tests/mudlet_integration.lua") end)')
     ET.SubElement(script, 'script').text = bootstrap
@@ -105,6 +108,7 @@ def main():
                         assert installed_xml == expected_xml, 'La descarga Qt difiere de la copia oficial de referencia'
                     metadata = {'result': result_path.as_posix(), 'log': (run_root / 'process.log').as_posix(),
                                 'version': latest_version, 'official_sha256': official_hash,
+                                'map_keyboard': args.map_keyboard,
                                 'success': text.startswith('STATUS OK\n')}
                     pointer = run_root / 'latest.json'
                     pointer.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

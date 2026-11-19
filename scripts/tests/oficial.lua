@@ -12,7 +12,10 @@ function suite.run(mock, case)
   local function startup_handlers()
     local count = 0
     for _, handler in pairs(mock.handlers) do
-      if startup_events[handler.event] then count = count + 1 end
+      -- El dominio mapa escucha algunos de los mismos eventos y tiene su
+      -- propia retirada; excluirlo por procedencia real del callback.
+      local source = debug.getinfo(handler.action, "S").source
+      if startup_events[handler.event] and not source:match("mapa%.lua$") then count = count + 1 end
     end
     return count
   end

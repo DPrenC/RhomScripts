@@ -216,7 +216,10 @@ def check_behavior(runtime_type):
         return value
     def to_python(value):
         if is_lua_table(value):
-            return {key: to_python(item) for key, item in value.items()}
+            entries = dict(value.items())
+            if entries and set(entries) == set(range(1, len(entries) + 1)):
+                return [to_python(entries[index]) for index in range(1, len(entries) + 1)]
+            return {key: to_python(item) for key, item in entries.items()}
         return value
     def decode_json(value):
         return to_lua(json.loads(value, parse_constant=lambda token: (_ for _ in ()).throw(ValueError(token))))

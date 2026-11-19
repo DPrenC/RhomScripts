@@ -2,8 +2,16 @@
 local configuracion = require("configuracion")
 local audio = require("audio")
 local ui = require("ui")
-local sonido = ui.sonido_configurador
+local sonidos = {
+  abrir = "abrir_config", cancelar = "cerrar_config", guardar = "aceptar",
+  desplegar = "desplegar", plegar = "plegar", numero = "boton_1", volumen = "clic_2", booleano = "boton_2", selector = "boton_2",
+  limite = "limite", error = "error",
+}
+local function sonido(evento)
+  audio.reproducir("ui." .. assert(sonidos[evento], "Evento sonoro desconocido"))
+end
 local configurador = { activo = false, cerrando = false }
+configurador.sonido = sonido
 local definiciones = {}
 for _, entrada in ipairs(configuracion.opciones) do definiciones[entrada.id] = entrada end
 
@@ -32,14 +40,21 @@ function Sesion:get(id)
 end
 
 -- Delta expresa dirección, no cantidad: los pasos pertenecen a la definición.
--- Los booleanos alternan en ambas direcciones; los números aumentan/disminuyen.
+-- Los selectores son circulares, los booleanos alternan y los números aumentan/disminuyen.
 -- Devuelve cambio y límite: solo intentar superar un extremo es límite.
 function Sesion:cambiar(id, delta)
   local entrada = opcion(id)
   assert(delta == -1 or delta == 1, "La dirección debe ser -1 o 1")
   local anterior = self:get(id)
   local siguiente
-  if entrada.tipo == "booleano" then
+  if entrada.tipo == "selector" then
+    for indice, alternativa in ipairs(entrada.opciones) do
+      if alternativa.valor == anterior then
+        siguiente = entrada.opciones[(indice - 1 + delta) % #entrada.opciones + 1].valor
+        break
+      end
+    end
+  elseif entrada.tipo == "booleano" then
     siguiente = not anterior
   else
     siguiente = anterior + delta * entrada.paso
@@ -79,6 +94,8 @@ function Sesion:guardar()
   -- La retención pertenece al dominio y se aplica tras confirmar la escritura.
   local comunicaciones = RhomScripts and RhomScripts.modules and RhomScripts.modules.comunicaciones
   if comunicaciones then comunicaciones.aplicar_limites() end
+  local mapa = RhomScripts and RhomScripts.modules and RhomScripts.modules.mapa
+  if mapa then mapa.aplicar_configuracion() end
   -- Una API ausente o un fallo oficial se propaga. La vista puede añadir
   -- contexto y mantener el diálogo, sin confundirlo con un fallo de escritura.
   local resultado = require("arranque").aplicar_configuracion(configuracion)
@@ -92,13 +109,18 @@ local function valor_ajustado(entrada)
   else valor = configuracion.get(entrada.id) end
   local texto = tostring(valor)
   if entrada.tipo == "booleano" then texto = valor and "Activado" or "Desactivado" end
+  if entrada.tipo == "selector" then
+    for _, alternativa in ipairs(entrada.opciones) do
+      if alternativa.valor == valor then texto = alternativa.nombre; break end
+    end
+  end
   return texto, valor
 end
 
 local function etiqueta(entrada)
   local texto, valor = valor_ajustado(entrada)
   if configurador.ajuste == entrada.id then return texto end
-  if entrada.tipo ~= "booleano" then
+  if entrada.tipo == "numero" then
     texto = valor == 0 and entrada.cero or texto .. " " .. (entrada.unidad or "por ciento")
   end
   return entrada.nombre .. ": " .. texto
@@ -143,7 +165,10 @@ local function cambiar_opcion(entrada, delta)
   if cambio then
     audio.aplicar_volumenes(configurador.sesion.valores)
     configurador.arbol:texto(id, etiqueta(entrada))
-    sonido(entrada.tipo == "booleano" and "booleano" or "numero")
+    local evento = entrada.tipo == "booleano" and "booleano" or "numero"
+    if entrada.tipo == "selector" then evento = "selector" end
+    if entrada.id:match("^volumen_") then evento = "volumen" end
+    sonido(evento)
   end
   if limite then sonido("limite") end
   -- El lector recibe el cambio del nodo nativo. No duplicarlo con announce
@@ -236,7 +261,7 @@ function configurador.activar(id, con_enter)
   local arbol = configurador.arbol
   local seleccionada = definiciones[id]
   if seleccionada then
-    if con_enter and not configurador.ajuste and seleccionada.tipo == "booleano" then
+    if con_enter and not configurador.ajuste and (seleccionada.tipo == "booleano" or seleccionada.tipo == "selector") then
       cambiar_opcion(seleccionada, 1)
     else
       configurador.entrar_ajuste(id)
@@ -269,7 +294,7 @@ function configurador.preparar()
   local correcto, resultado = pcall(function()
     local contenido = wx.wxBoxSizer(wx.wxVERTICAL)
     local ayuda = wx.wxStaticText(dialogo, wx.wxID_ANY,
-      "Enter: desplegar, alternar un booleano o ajustar un número.\n"
+      "Enter: desplegar, cambiar un selector o booleano, o ajustar un número.\n"
       .. "Flechas: navegar. Derecha despliega o abre el ajuste. Izquierda pliega.\n"
       .. "En un ajuste: Arriba/Abajo cambian el valor; Izquierda vuelve.\n"
       .. "Enter dentro de un ajuste guarda los cambios y cierra.\n"
@@ -299,8 +324,8 @@ function configurador.preparar()
     configurador.estado = wx.wxStaticText(dialogo, wx.wxID_ANY, configurador.texto_estado)
     contenido:Add(configurador.estado, 0, wx.wxALL, 12)
     local botones = wx.wxBoxSizer(wx.wxHORIZONTAL)
-    local guardar = wx.wxButton(dialogo, wx.wxID_ANY, "&Guardar")
-    local cancelar = wx.wxButton(dialogo, wx.wxID_CANCEL, "&Cancelar")
+    local guardar = ui.boton(wx, dialogo, wx.wxID_ANY, "&Guardar", configurador.guardar)
+    local cancelar = ui.boton(wx, dialogo, wx.wxID_CANCEL, "&Cancelar", configurador.cerrar)
     configurador.guardar_boton, configurador.cancelar_boton = guardar, cancelar
     botones:Add(guardar, 0, wx.wxALL, 6)
     botones:Add(cancelar, 0, wx.wxALL, 6)
@@ -314,8 +339,6 @@ function configurador.preparar()
       if not foco or foco:GetId() ~= arbol.control:GetId() or evento:GetModifiers() ~= 0 then return false end
       return configurador.tecla(evento:GetKeyCode())
     end
-    guardar:Connect(wx.wxEVT_COMMAND_BUTTON_CLICKED, configurador.guardar)
-    cancelar:Connect(wx.wxEVT_COMMAND_BUTTON_CLICKED, configurador.cerrar)
     arbol.control:Connect(wx.wxEVT_TREE_ITEM_ACTIVATED, function()
       if configurador.activo and not configurador.cerrando then configurador.activar(arbol:seleccion()) end
     end)

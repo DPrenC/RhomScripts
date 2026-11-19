@@ -2,6 +2,7 @@
 local suite = {}
 
 local expected = {
+  ["ui.pestana"] = "UI/Pestana.wav",
   ["comunicaciones.canal_off"] = "Comunicaciones/Canal off.wav",
   ["comunicaciones.canal_on"] = "Comunicaciones/Canal on.wav",
   ["comunicaciones.room"] = "Comunicaciones/room.wav",
@@ -13,7 +14,8 @@ local expected = {
   ["ui.cerrar_config"] = "UI/Cerrar config.wav",
   ["ui.abrir_historial"] = "UI/Abrir historial.wav",
   ["ui.cerrar_historial"] = "UI/Cerrar historial.wav",
-  ["ui.ir_sala"] = "UI/Ir sala.WAV",
+  ["ui.abrir_mapa"] = "UI/Abrir mapa.wav",
+  ["ui.seleccionar_mapa"] = "UI/Seleccionar mapa.wav",
 }
 
 local function equal(actual, wanted)

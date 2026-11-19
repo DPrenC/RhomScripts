@@ -85,7 +85,8 @@ local function click(button, expected_sound)
   assert(button:ProcessWindowEvent(event), "Botón nativo sin manejador")
   event:delete()
   if expected_sound then
-    equal(#sound_requests, before + 1)
+    equal(#sound_requests, before + 2)
+    equal(sound_requests[before + 1], "ui.boton_1")
     equal(sound_requests[#sound_requests], expected_sound)
   end
 end
@@ -114,6 +115,7 @@ local function key(code, consumed, sounds)
   if adjusting and (code == demo.wx.WXK_UP or code == demo.wx.WXK_DOWN) then
     local value = demo.sesion:get(adjusting)
     local text = type(value) == "boolean" and (value and "Activado" or "Desactivado") or tostring(value)
+    if adjusting == "mapa_destinos" then text = value and "Rhomscripts" or "Config oficial" end
     if value == previous_value then
       equal(#readings, 1) -- Sin cambio nativo, announce informa del valor.
       equal(readings[1], text)
@@ -295,8 +297,8 @@ local function run()
         selection_queries = selection_queries + 1
         return original_selection(self)
       end
-      key(wx.WXK_UP, true, { "ui.boton_1" })
-      key(wx.WXK_DOWN, true, { "ui.boton_1" })
+      key(wx.WXK_UP, true, { "ui.clic_2" })
+      key(wx.WXK_DOWN, true, { "ui.clic_2" })
       key(wx.WXK_RIGHT, true, {})
       key(wx.WXK_LEFT, true, { "ui.plegar" })
       key(wx.WXK_UP, false, {})
@@ -317,7 +319,7 @@ local function run()
       key(wx.WXK_RETURN, true, { "ui.desplegar" })
       equal(demo.ajuste, "volumen_general")
       equal(demo.sesion:get("volumen_general"), 80)
-      key(wx.WXK_UP, true, { "ui.boton_1" })
+      key(wx.WXK_UP, true, { "ui.clic_2" })
       equal(demo.sesion:get("volumen_general"), 85)
       key(wx.WXK_LEFT, true, { "ui.plegar" })
 
@@ -340,6 +342,29 @@ local function run()
       click(demo.cancelar_boton, "ui.cerrar_config")
       equal(config.get("oficial_interfaz"), true)
     end)
+    exercise("Interfaz del mapa: selector circular, etiquetas y boton_2", function()
+      local tree, wx = demo.arbol, demo.wx
+      tree:seleccionar("mapa_destinos")
+      equal(tree.control:GetItemText(tree.items.mapa_destinos), "Interfaz del mapa: Rhomscripts")
+      key(wx.WXK_RETURN, true, { "ui.boton_2" })
+      equal(tree.control:GetItemText(tree.items.mapa_destinos), "Interfaz del mapa: Config oficial")
+      equal(demo.ajuste, nil)
+      key(wx.WXK_RETURN, true, { "ui.boton_2" })
+      equal(demo.sesion:get("mapa_destinos"), true)
+      key(wx.WXK_RIGHT, true, { "ui.desplegar" })
+      equal(tree.control:GetItemText(tree.items.mapa_destinos), "Rhomscripts")
+      key(wx.WXK_UP, true, { "ui.boton_2" })
+      equal(tree.control:GetItemText(tree.items.mapa_destinos), "Config oficial")
+      key(wx.WXK_UP, true, { "ui.boton_2" })
+      equal(demo.sesion:get("mapa_destinos"), true)
+      key(wx.WXK_DOWN, true, { "ui.boton_2" })
+      equal(demo.sesion:get("mapa_destinos"), false)
+      key(wx.WXK_DOWN, true, { "ui.boton_2" })
+      equal(demo.sesion:get("mapa_destinos"), true)
+      key(wx.WXK_LEFT, true, { "ui.plegar" })
+      equal(tree.control:GetItemText(tree.items.mapa_destinos), "Interfaz del mapa: Rhomscripts")
+      click(demo.cancelar_boton, "ui.cerrar_config")
+    end)
     exercise("Flechas: entrar y salir de ajustes, sonidos y límites", function()
       local tree, wx = demo.arbol, demo.wx
       key(wx.WXK_UP, false, {})
@@ -354,7 +379,7 @@ local function run()
       key(wx.WXK_RIGHT, true, { "ui.desplegar" })
       equal(demo.ajuste, "volumen_general")
       equal(demo.sesion:get("volumen_general"), 80)
-      key(wx.WXK_UP, true, { "ui.boton_1" })
+      key(wx.WXK_UP, true, { "ui.clic_2" })
       equal(demo.sesion:get("volumen_general"), 85)
       equal(native_sounds[#native_sounds].volume, 68)
       equal(tree:seleccion(), "volumen_general")
@@ -366,14 +391,14 @@ local function run()
       assert(tree.control:GetItemText(tree.items.volumen_general):find("Volumen general", 1, true))
       key(wx.WXK_UP, false, {}) -- Fuera del ajuste vuelve a recorrer el árbol.
       key(wx.WXK_RIGHT, true, { "ui.desplegar" })
-      key(wx.WXK_UP, true, { "ui.boton_1" }) -- 90
-      key(wx.WXK_UP, true, { "ui.boton_1" }) -- 95
-      key(wx.WXK_UP, true, { "ui.boton_1" }) -- Llega a 100 sin aviso de límite.
+      key(wx.WXK_UP, true, { "ui.clic_2" }) -- 90
+      key(wx.WXK_UP, true, { "ui.clic_2" }) -- 95
+      key(wx.WXK_UP, true, { "ui.clic_2" }) -- Llega a 100 sin aviso de límite.
       key(wx.WXK_UP, true, { "ui.limite" }) -- Repite contra el máximo.
       equal(demo.sesion:get("volumen_general"), 100)
-      for _ = 1, 19 do key(wx.WXK_DOWN, true, { "ui.boton_1" }) end
+      for _ = 1, 19 do key(wx.WXK_DOWN, true, { "ui.clic_2" }) end
       local played_before_zero = #native_sounds
-      key(wx.WXK_DOWN, true, { "ui.boton_1" }) -- Llega a cero sin aviso de límite.
+      key(wx.WXK_DOWN, true, { "ui.clic_2" }) -- Llega a cero sin aviso de límite.
       key(wx.WXK_DOWN, true, { "ui.limite" })
       equal(demo.sesion:get("volumen_general"), 0)
       equal(#native_sounds, played_before_zero)
@@ -451,11 +476,11 @@ local function run()
       local tree, wx = demo.arbol, demo.wx
       tree:seleccionar("volumen_ambiente")
       key(wx.WXK_RIGHT, true, { "ui.desplegar" })
-      key(wx.WXK_UP, true, { "ui.boton_1" })
+      key(wx.WXK_UP, true, { "ui.clic_2" })
       key(wx.WXK_LEFT, true, { "ui.plegar" })
       tree:seleccionar("volumen_general")
       key(wx.WXK_RETURN, true, { "ui.desplegar" })
-      key(wx.WXK_UP, true, { "ui.boton_1" })
+      key(wx.WXK_UP, true, { "ui.clic_2" })
       key(wx.WXK_RETURN, true, { "ui.aceptar" })
     end)
     equal(config.get("volumen_general"), 85)

@@ -64,7 +64,7 @@ function suite.run(case, init_path, mock)
     case("Debug: inventarios efectivos y copias conservan teclas, aliases y triggers", function()
       for _, kind in ipairs({ "keys", "alias", "triggers" }) do
         local entries = diagnostic().consultar(kind)
-        local expected = kind == "keys" and 39 or (kind == "alias" and 3 or 2)
+        local expected = kind == "keys" and 40 or (kind == "alias" and 3 or 2)
         equal(#entries, expected)
         local first = entries[1]
         assert(first.modulo and first.nombre and first.id, "Inventario sin identidad real: " .. kind)

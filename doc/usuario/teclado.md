@@ -1,5 +1,7 @@
 # Registro de teclado
 
+Dentro de las ventanas, consulta la [navegación común de árboles, listas y pestañas](componentes-interfaz.md). Derecha e Izquierda recorren las acciones del elemento de una lista; Tab cambia de pestaña. En árboles, Tab recorre el árbol y sus botones.
+
 Cada módulo migrado publica una lista `pulsaciones`. `keys.registrar()` recopila estas listas después de cargar los módulos. Las tablas antiguas `key_bindings` se ignoran: sus atajos dejan de registrarse, sin retirar las demás funciones de sus módulos.
 
 ```lua
@@ -35,6 +37,7 @@ APIs oficiales: [tempKey](https://wiki.mudlet.org/w/Manual:Mudlet_Object_Functio
 
 - Ctrl+Shift+H: activa o desactiva la ayuda de teclado.
 - Ctrl+Shift+C: abre el configurador nativo. En ayuda anuncia «Abre el configurador nativo» y no abre la ventana. Declarado en configurador.pulsaciones con nombre configurador.abrir y grupo sistema.
+- Ctrl+Shift+M: abre la [lista de destinos del mapa](mapa.md), si está activada en Interfaz. Dentro de ella, Tab y Mayús+Tab cambian de pestaña, Enter viaja y Escape cierra sin viajar.
 
 - Ctrl+1 a Ctrl+9: lee la línea reciente de ese índice.
 - Ctrl+Shift+1 a Ctrl+Shift+9: copia la línea reciente de ese índice. Las 18 pulsaciones pertenecen a lector, grupo lectura; en ayuda solo anuncian su descripción. Véase [semántica de lectura y copia](lector.md).

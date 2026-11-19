@@ -80,9 +80,7 @@ function historial.nuevo(opciones)
   local primero, ultimo
   local avisos_canal = {}
   local avisos_historicos = {}
-  local renderizados, paginas, posiciones = {}, {}, {}
-  local retirados = false
-  local actualizando = false
+  local renderizados, posiciones = {}, {}
   local refrescar, sincronizar_pestanyas
 
   local function primer_aviso_de_tanda(avisos, id)
@@ -202,7 +200,6 @@ function historial.nuevo(opciones)
         if id == seleccion then movida = true end
       end
     end
-    retirados = true
     registros[registro.id] = nil
     cantidad = cantidad - 1
     if canal and not canal.abierto and canal.cantidad == 0 then
@@ -329,12 +326,12 @@ function historial.nuevo(opciones)
     return guardar(texto)
   end
 
-  local function seleccionar_categoria(nueva)
+  local function seleccionar_categoria(nueva, desde_pestana)
     seleccion = nueva
     if not selecciones[nueva] then selecciones[nueva] = extremo(nueva, true) end
     sincronizar_pestanyas()
     if not tipo or comunicaciones.activo then refrescar(true) end
-    sonido("seleccion_canal")
+    if not desde_pestana then ui.sonido_pestana("ui.seleccion_canal") end
     decir((es_room and "Room " or "canal ") .. nombre(nueva))
     if comunicaciones.activo then comunicaciones.lista:SetFocus() end
   end
@@ -415,7 +412,6 @@ function historial.nuevo(opciones)
     canales, registros, selecciones = {}, {}, {}
     seleccion, cantidad, primero, ultimo = "global", 0, nil, nil
     silencio_general = false
-    retirados = true
     recategorizar()
   end
   comunicaciones.reiniciar = reiniciar
@@ -437,84 +433,53 @@ function historial.nuevo(opciones)
   end
 
   sincronizar_pestanyas = function()
-    if not comunicaciones.pestanyas then return end
-    actualizando = true
-    local tabs, wx = comunicaciones.pestanyas, comunicaciones.vista.wx
-    -- Bajas de derecha a izquierda; no destruir páginas conservadas.
-    local abiertos = {}
-    for _, id in ipairs(categorias) do abiertos[id] = true end
-    for i = #paginas, 1, -1 do
-      if not abiertos[paginas[i]] then
-        assert(tabs:DeletePage(i - 1), "No se pudo retirar la pestaña")
-        table.remove(paginas, i)
-      end
-    end
-    for i, id in ipairs(categorias) do
-      if paginas[i] ~= id then
-        assert(tabs:InsertPage(i - 1, wx.wxPanel(tabs, wx.wxID_ANY), etiqueta(id), false), "No se pudo crear la pestaña")
-        table.insert(paginas, i, id)
-      elseif tabs:GetPageText(i - 1) ~= etiqueta(id) then
-        assert(tabs:SetPageText(i - 1, etiqueta(id)), "No se pudo actualizar la pestaña")
-      end
-      if id == seleccion then tabs:ChangeSelection(i - 1) end
-    end
-    actualizando = false
+    if not comunicaciones.componente or es_telepatia then return end
+    local paginas = {}
+    for _, id in ipairs(categorias) do paginas[#paginas + 1] = { id = id, nombre = etiqueta(id) } end
+    comunicaciones.componente:actualizar_pestanas(paginas, seleccion)
   end
 
   refrescar = function(cambio)
-    if not comunicaciones.vista then return end
-    local lista, wx = comunicaciones.lista, comunicaciones.vista.wx
-    actualizando = true
-    if comunicaciones.categoria_renderizada ~= seleccion then
-      assert(lista:DeleteAllItems(), "No se pudo cambiar el historial")
-      renderizados, posiciones = {}, {}
-      comunicaciones.categoria_renderizada = seleccion
-      cambio = true
-    end
-    -- Índices internos cronológicos; el control presenta las filas en orden inverso.
-    if retirados then
-      for i = #renderizados, 1, -1 do
-        if not registros[renderizados[i]] then
-          assert(lista:DeleteItem(#renderizados - i), "No se pudo retirar el mensaje")
-          table.remove(renderizados, i)
-        end
-      end
-      posiciones = {}
-      for i, id in ipairs(renderizados) do posiciones[id] = i - 1 end
-      retirados = false
-    end
-    local despues
-    if #renderizados > 0 then despues = siguientes(registros[renderizados[#renderizados]], seleccion)
-    else despues = extremo(seleccion) end
-    while despues do
-      local registro = registros[despues]
-      local fila = lista:InsertItem(0, tipo and registro.texto or registro.canal)
-      assert(fila >= 0, "No se pudo insertar el mensaje")
-      if not tipo then lista:SetItem(fila, 1, registro.texto) end
-      assert(lista:SetItemData(fila, registro.id), "No se pudo identificar el mensaje")
+    if not comunicaciones.componente then return end
+    local elementos = {}
+    renderizados, posiciones = {}, {}
+    local actual = extremo(seleccion)
+    while actual do
+      local registro = registros[actual]
       renderizados[#renderizados + 1] = registro.id
       posiciones[registro.id] = #renderizados - 1
-      despues = siguientes(registro, seleccion)
+      actual = siguientes(registro, seleccion)
     end
+    for i = #renderizados, 1, -1 do
+      local registro = registros[renderizados[i]]
+      elementos[#elementos + 1] = { id = registro.id,
+        textos = tipo and { registro.texto } or { registro.canal, registro.texto },
+        datos = registro }
+    end
+    local componente = comunicaciones.componente
     if not selecciones[seleccion] and comunicaciones.activo then
       selecciones[seleccion] = extremo(seleccion, true)
     end
-    local seleccionado = selecciones[seleccion]
-    local estado = wx.wxLIST_STATE_SELECTED + wx.wxLIST_STATE_FOCUSED
-    local fila = fila_visible(seleccionado)
-    if fila then
-      if lista:GetItemState(fila, estado) ~= estado then lista:SetItemState(fila, estado, estado) end
-      if cambio then lista:EnsureVisible(fila) end
-    end
+    componente:actualizar(elementos, { seleccion = selecciones[seleccion], aviso_retirado = false })
+    local elegido = componente:seleccionado()
+    selecciones[seleccion] = elegido and elegido.id or nil
+    if cambio and elegido then componente:seleccionar(elegido.id, true) end
     local nombre_lista = "Historial de " .. etiqueta(seleccion)
     if #renderizados == 0 then nombre_lista = historial_vacio(seleccion) end
     if not tipo and #categorias == 1 then nombre_lista = "Todos los canales apagados" end
     if comunicaciones.nombre_lista ~= nombre_lista then
-      lista:SetName(nombre_lista)
+      comunicaciones.lista:SetName(nombre_lista)
       comunicaciones.nombre_lista = nombre_lista
     end
     actualizar_estado()
-    actualizando = false
+  end
+
+  function comunicaciones.abrir_detalle(elemento)
+    local registro = elemento and registros[elemento.id]
+    if not registro then decir("No hay ningún mensaje seleccionado."); return false end
+    -- Una copia del texto mantiene el detalle estable aunque se recorte el historial.
+    comunicaciones.detalle:mostrar(registro.texto)
+    return true
   end
 
   function comunicaciones.cerrar()
@@ -547,14 +512,6 @@ function historial.nuevo(opciones)
 
   function comunicaciones.tecla(codigo, modificadores)
     local wx = comunicaciones.vista.wx
-    if modificadores == 0 and (codigo == wx.WXK_UP or codigo == wx.WXK_DOWN) then
-      local fila = fila_visible(selecciones[seleccion])
-      if #renderizados == 0 or (codigo == wx.WXK_UP and fila == 0)
-        or (codigo == wx.WXK_DOWN and fila == #renderizados - 1) then
-        sonido("limite")
-        return true
-      end
-    end
     local control_mayus = wx.wxMOD_CONTROL + wx.wxMOD_SHIFT
     if codigo == wx["WXK_" .. opciones.tecla] then
       if modificadores == wx.wxMOD_ALT then comunicaciones.leer_ultimo(); return true end
@@ -568,10 +525,7 @@ function historial.nuevo(opciones)
       if codigo == string.byte(",") then comunicaciones.cambiar_categoria(-1); return true end
       if codigo == string.byte(".") then comunicaciones.cambiar_categoria(1); return true end
     end
-    if modificadores == 0 and (codigo == wx.WXK_RIGHT or codigo == wx.WXK_LEFT) then
-      sonido("limite"); return true
-    end
-    return false
+    return comunicaciones.componente:tecla(codigo, modificadores)
   end
 
   function comunicaciones.preparar()
@@ -583,63 +537,57 @@ function historial.nuevo(opciones)
       local contenido = wx.wxBoxSizer(wx.wxVERTICAL)
       local ayuda = wx.wxStaticText(dialogo, wx.wxID_ANY, opciones.ayuda)
       contenido:Add(ayuda, 0, wx.wxALL, 12)
-      local tabs
-      if not es_telepatia then
-        tabs = wx.wxNotebook(dialogo, wx.wxID_ANY, wx.wxDefaultPosition, wx.wxSize(700, 42))
-        tabs:SetName(es_room and "Pestañas de Room" or "Canales abiertos")
-        comunicaciones.pestanyas = tabs
-        contenido:Add(tabs, 0, wx.wxEXPAND + wx.wxLEFT + wx.wxRIGHT, 12)
+      local sonidos_interfaz = { limite = "limite" }
+      local componente = ui.lista(vista, {
+        nombre = "Historial de mensajes",
+        columnas = tipo and { { titulo = "Mensaje", ancho = 690 } }
+          or { { titulo = "Canal", ancho = 140 }, { titulo = "Mensaje", ancho = 550 } },
+        pestanas = not es_telepatia,
+        sonido_pestana = "ui.seleccion_canal",
+        sonido = function(evento)
+          if comunicaciones.activo then
+            sonido(assert(sonidos_interfaz[evento], "Evento sonoro desconocido"))
+          end
+        end,
+        activar = comunicaciones.abrir_detalle,
+        acciones = function()
+          return {
+            { id = "responder", nombre = "Responder. No disponible todavía", habilitada = false,
+              ejecutar = function() error("Respuesta pendiente de verificar el protocolo") end },
+            { id = "privado", nombre = "Responder en privado. No disponible todavía", habilitada = false,
+              ejecutar = function() error("Respuesta privada pendiente de identificar el autor") end },
+            { id = "copiar", nombre = "Copiar", ejecutar = function(elemento)
+              lector.copiar(elemento.datos.texto)
+            end },
+          }
+        end,
+        al_seleccionar = function(elemento)
+          selecciones[seleccion] = elemento and elemento.id or nil
+          actualizar_estado()
+        end,
+        al_pestana = function(id)
+          if id ~= seleccion then seleccionar_categoria(id, true) end
+        end,
+      })
+      comunicaciones.componente, comunicaciones.lista = componente, componente.control
+      comunicaciones.pestanyas, comunicaciones.botones = componente.pestanyas, componente.botones
+      if comunicaciones.pestanyas then
+        comunicaciones.pestanyas:SetName(es_room and "Pestañas de Room" or "Canales abiertos")
       end
-      local centro = wx.wxBoxSizer(wx.wxHORIZONTAL)
-      local lista = wx.wxListCtrl(dialogo, wx.wxID_ANY, wx.wxDefaultPosition, wx.wxSize(700, 360),
-        wx.wxLC_REPORT + wx.wxLC_SINGLE_SEL)
-      comunicaciones.lista = lista
-      if tipo then
-        assert(lista:InsertColumn(0, "Mensaje", wx.wxLIST_FORMAT_LEFT, 690) == 0)
-      else
-        assert(lista:InsertColumn(0, "Canal", wx.wxLIST_FORMAT_LEFT, 140) == 0)
-        assert(lista:InsertColumn(1, "Mensaje", wx.wxLIST_FORMAT_LEFT, 550) == 1)
-      end
-      centro:Add(lista, 1, wx.wxEXPAND + wx.wxTOP + wx.wxBOTTOM, 12)
-      local acciones = wx.wxBoxSizer(wx.wxVERTICAL)
-      acciones:Add(wx.wxStaticText(dialogo, wx.wxID_ANY, "Acciones del mensaje\n(próximamente)"), 0, wx.wxALL, 8)
-      comunicaciones.botones = {}
-      for _, titulo in ipairs({ "Responder", "Responder en privado", "Copiar" }) do
-        local boton = wx.wxButton(dialogo, wx.wxID_ANY, titulo)
-        boton:SetName(titulo .. " al mensaje seleccionado. No disponible todavía")
-        boton:Enable(false)
-        acciones:Add(boton, 0, wx.wxEXPAND + wx.wxALL, 6)
-        comunicaciones.botones[#comunicaciones.botones + 1] = boton
-      end
-      centro:Add(acciones, 0, wx.wxLEFT + wx.wxTOP, 12)
-      contenido:Add(centro, 1, wx.wxEXPAND + wx.wxLEFT + wx.wxRIGHT, 12)
+      contenido:Add(componente.sizer, 1, wx.wxEXPAND + wx.wxLEFT + wx.wxRIGHT, 12)
       comunicaciones.estado_texto = wx.wxStaticText(dialogo, wx.wxID_ANY, "")
       contenido:Add(comunicaciones.estado_texto, 0, wx.wxALL, 12)
-      dialogo:SetSizerAndFit(contenido)
-      dialogo:SetMinSize(wx.wxSize(700, 400))
-      vista.controles = { lista }
+      vista.controles = { comunicaciones.lista }
       vista.cancelar = comunicaciones.cerrar
       if not es_telepatia then vista.tab = comunicaciones.cambiar_categoria end
       vista.tecla = function(evento) return comunicaciones.tecla(evento:GetKeyCode(), evento:GetModifiers()) end
-      lista:Connect(wx.wxEVT_COMMAND_LIST_ITEM_SELECTED, function(evento)
-        if not actualizando then
-          selecciones[seleccion] = renderizados[#renderizados - evento:GetIndex()]
-          if comunicaciones.activo then sonido("clic_1") end
-          actualizar_estado()
-        end
-        evento:Skip()
-      end)
-      if tabs then
-        tabs:Connect(wx.wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, function(evento)
-          if not actualizando then
-            local id = paginas[evento:GetSelection() + 1]
-            if id and id ~= seleccion then seleccionar_categoria(id) end
-          end
-          evento:Skip()
-        end)
-      end
+      -- El sistema declara silencioso el detalle; las llegadas conservan sus avisos propios.
+      comunicaciones.detalle = ui.detalle(vista, { titulo = "Detalle del mensaje", sonido = function() end })
       sincronizar_pestanyas()
       refrescar()
+      -- Calcular el tamaño después de alojar el contenido en una página real.
+      dialogo:SetSizerAndFit(contenido)
+      dialogo:SetMinSize(wx.wxSize(700, 400))
       vista:preparar()
     end)
     if not correcto then
@@ -656,11 +604,13 @@ function historial.nuevo(opciones)
       if not correcto then errores[#errores + 1] = tostring(mensaje) end
     end
     local vista = comunicaciones.vista
+    if comunicaciones.detalle then limpiar(function() comunicaciones.detalle:destruir() end) end
     if vista then limpiar(function() vista:destruir() end) end
     comunicaciones.vista, comunicaciones.lista, comunicaciones.pestanyas = nil, nil, nil
     comunicaciones.estado_texto, comunicaciones.botones, comunicaciones.texto_estado = nil, nil, nil
     comunicaciones.categoria_renderizada, comunicaciones.nombre_lista, comunicaciones.activo = nil, nil, false
-    renderizados, paginas, posiciones, retirados = {}, {}, {}, false
+    comunicaciones.componente, comunicaciones.detalle = nil, nil
+    renderizados, posiciones = {}, {}
     reiniciar()
     if #errores > 0 then error(table.concat(errores, "\n"), 0) end
   end

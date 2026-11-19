@@ -1,5 +1,81 @@
 # Validación de RhomScripts
 
+## Sonido propio de las pestañas de comunicaciones, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles aprobados, 152 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmp_faqenhy/local.json`; integración STATUS OK con 150 casos en Mudlet 5.1.1/Lua 5.1, última estable consultada por el ejecutor, informe `.tools/mudlet-integration/runs/ddb42ced369b4936a04f20dbb3076639/result.txt`. El caso de componentes reales verifica el valor predeterminado `ui.pestana`, sobrescritura por `ui.seleccion_canal`, una sola solicitud por cambio y silencio al seleccionar la misma pestaña. El mapa conserva su sonido predeterminado y anuncios.
+
+`scripts/run_wxlua_probe.py --comunicaciones`: STATUS OK, 44 casos en Mudlet 5.1.1/wxWidgets 3.2.8; informe `.tools/wxlua-probe/runs/a43e51b66708428d856d156ecd725884/result.txt`. Las pruebas compartidas de categorías esperan `ui.seleccion_canal` tanto en global como en otros canales; se mantienen navegación nativa, Tab, Room y recarga. Perfiles aislados desconectados y portapapeles conservado. Pendientes teclado físico y escucha con lector externo.
+
+## Sonido compartido de pestañas, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados, 152 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmpwra1fqji/local.json`; integración STATUS OK con 150 casos en Mudlet 5.1.1/Lua 5.1, última estable consultada por el ejecutor, informe `.tools/mudlet-integration/runs/9b5b8de81b504f1cbc6f0014fc7c40f4/result.txt`. El componente común y el mapa verifican una solicitud `ui.pestana` por cambio efectivo, sin solicitudes al preparar o seleccionar la misma pestaña; se mantienen los anuncios, el título y las optimizaciones anteriores. El catálogo comprueba la clave y la ruta real `UI/Pestana.wav`.
+
+`scripts/run_wxlua_probe.py --comunicaciones`: STATUS OK, 44 casos en Mudlet 5.1.1/wxWidgets 3.2.8, informe `.tools/wxlua-probe/runs/4122a1031e684f399a4597b363a058b6/result.txt`. Incluye pestañas nativas, Tab y categorías de canales/Room. Los atajos utilizan `ui.sonido_pestana()` y el callback nativo evita un segundo aviso.
+
+El WAV aportado se renombró de Pestaña.wav a Pestana.wav para mantener el contrato ASCII y evitar la incidencia de apertura del nombre Unicode observada en los dos runtimes locales. Se conservó el contenido del archivo. Perfiles aislados y desconectados; portapapeles sin cambios. Pendientes teclado físico y percepción auditiva con lector externo.
+
+## Anuncio y refresco de pestañas del mapa, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados, 152 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmph6gxiwt6/local.json`; integración STATUS OK con 150 casos en Mudlet 5.1.1/Lua 5.1, última estable consultada por el ejecutor, informe `.tools/mudlet-integration/runs/a42c1d7fa59c46088e9ebce1e608c946/result.txt`.
+
+La regresión real verifica tres cambios consecutivos por la política Tab/Mayús+Tab: un announce con el nombre de destino por cambio, ningún sonido, tres llamadas a selección de página (sin reselección desde refrescar), y reutilización de la misma tabla de filas al volver a Favoritos. Seleccionar la misma pestaña no vuelve a anunciarla. Se mantienen las pruebas de títulos, botones alternables, borrado y separación por personaje. El mapa cachea las filas según el conjunto de datos y evita actualizar la lista completa si solo cambian las acciones; no reescribe etiquetas ni nombres idénticos.
+
+Esta evidencia acredita menos trabajo repetido, no una reducción medida de latencia percibida respecto a canales. Pendientes teclado físico, comparación de rapidez y lectura con lector externo. Perfil aislado desconectado y portapapeles conservado.
+
+## Acciones y navegación del mapa, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados, 152 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmplexc8_mg/local.json`; integración STATUS OK con 150 casos en Mudlet 5.1.1/Lua 5.1, última estable consultada por el ejecutor, informe `.tools/mudlet-integration/runs/1135173f734b4772a07ba2d8f27469d6/result.txt`.
+
+Se comprueban Tab y Mayús+Tab mediante la política nativa sin solicitudes de sonido, los títulos reales en cada pestaña y al reabrir, el mismo botón visible y habilitado alternando Añadir/Eliminar con foco conservado en Resultados, y Eliminar en Favoritos. Se observa un solo announce, «Eliminado de favoritos.», al eliminar tanto desde Resultados como desde Favoritos; sigue pasando la persistencia por personaje. El título usa `wxTopLevelWindow:SetTitle(const wxString& title)` heredado por wxDialog, firma verificada en la referencia oficial ya recogida en el contrato histórico de panel de canales, y solo se actualiza si difiere. Perfil aislado desconectado, sin modificar portapapeles. Pendientes teclado físico y percepción de títulos, voz y audio con lector externo.
+
+## Favoritos del mapa por personaje, 19 de noviembre de 2026
+
+`scripts/validate.ps1`: diez controles aprobados, 152 casos por runtime Lua 5.1 y LuaJIT, sintaxis, Luacheck sin avisos, documentación, políticas, empaquetado y Git; informe `.tools/validation/runs/tmpq2pzq7gj/local.json`.
+
+`scripts/run_mudlet_validation.py`: STATUS OK, 150 casos en Mudlet 5.1.1/Lua 5.1 (última estable verificada por el ejecutor), informe `.tools/mudlet-integration/runs/fe6dcbf81a294eee9054c832fe557a96/result.txt`. La regresión con wx real y GMCP sintético cambia de Personaje A a Personaje B con la ventana abierta, comprueba la lista nativa, borra un favorito y lee el JSON real para confirmar su retirada y la conservación del otro personaje. También verifica pérdida y recuperación de nombre, rechazo de altas sin identidad y recarga.
+
+Las pruebas locales comprueban conversión del formato 1 a formato 2 vacío, eliminación persistida tras nueva carga, aislamiento entre personajes y fallos de sustitución o limpieza del respaldo sin publicar el cambio. Ficha notifica después de actualizar el nombre; mapa retira su handler al recargar. Perfiles aislados y desconectados, sin tocar archivos de perfiles de usuario ni el portapapeles. Pendientes identidad recibida del servidor real, teclado físico y lector externo.
+
+## Sonidos propios del mapa, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados y 150 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmp76i7zsv0/local.json`; integración STATUS OK con 149 casos en Mudlet 5.1.1/Lua 5.1 (última estable consultada por el ejecutor), informe `.tools/mudlet-integration/runs/13f5e99f7735466d895d080820daa9c5/result.txt`.
+
+La instrumentación delega al reproductor real y comprueba `ui.abrir_mapa` en apertura/reapertura, `ui.plegar` al cancelar y una sola solicitud `ui.seleccionar_mapa` al confirmar un destino válido mediante aceptación nativa o viaje sigiloso. Se preservan el motor oficial, la navegación y los botones comunes. Perfil aislado desconectado y portapapeles conservado. Pendientes teclado físico y percepción auditiva con lector externo.
+
+## Selector de interfaz del mapa, 19 de noviembre de 2026
+
+Selector circular con valores booleanos persistidos para conservar perfiles anteriores. Rhomscripts es el valor predeterminado para configuraciones nuevas o sin esta opción.
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados, 150 casos por runtime Lua 5.1 y LuaJIT, integración STATUS OK con 149 casos en Mudlet 5.1.1/Lua 5.1, última estable consultada por el ejecutor. Informes `.tools/validation/runs/tmpojff4qxk/local.json` y `.tools/mudlet-integration/runs/b182af0c2c3f45878a319d640d60e0d3/result.txt`. Comprueba persistencia compatible, rechazo de valores ajenos, circularidad y selección confirmada independiente del borrador; el mapa real comprueba sustitución y restauración de la presentación oficial al guardar.
+
+`scripts/run_wxlua_probe.py --configurador`: STATUS OK, 20 casos en Mudlet 5.1.1/wxWidgets 3.2.8, informe `.tools/wxlua-probe/runs/892acc4629804c6bbf45e226f7531bc2/result.txt`. Verifica las etiquetas «Interfaz del mapa», «Rhomscripts» y «Config oficial», Enter directo, circularidad por Arriba/Abajo y una solicitud `ui.boton_2` por cambio. El primer ensayo esperaba Activado/Desactivado en su comprobador de ajustes; se actualizó esa expectativa al texto del selector. Perfil aislado y desconectado, sin modificar portapapeles. Pendientes teclado físico y experiencia auditiva con lector externo.
+
+## Sonido de los reguladores de volumen, 19 de noviembre de 2026
+
+Cambio focalizado en la política del configurador: las opciones `volumen_` solicitan `ui.clic_2` al cambiar; los demás ajustes numéricos, los booleanos y los avisos de límite conservan sus claves. `scripts/validate.ps1`: diez controles aprobados, 150 casos por runtime Lua 5.1 y LuaJIT, informe `.tools/validation/runs/tmpmsek5ybv/local.json`. `scripts/run_wxlua_probe.py --configurador`: STATUS OK, 19 casos en Mudlet 5.1.1/Lua 5.1 y wxWidgets 3.2.8, informe `.tools/wxlua-probe/runs/bd1c5fbadf934c27ba170f12c45732cf/result.txt`. Se comprobaron solicitudes `ui.clic_2` al aumentar y reducir volumen, los extremos y el sonido anterior en otros ajustes. Perfil aislado desconectado; teclado físico y percepción auditiva con lector externo pendientes.
+
+## Sonidos comunes de listas y botones, 19 de noviembre de 2026
+
+`scripts/validate.ps1 -Mudlet`: diez controles locales aprobados, 150 casos por runtime Lua 5.1 y LuaJIT, Luacheck sin avisos e integración STATUS OK con 149 casos en Mudlet 5.1.1/Lua 5.1 (última estable comprobada por el ejecutor oficial). Informes: `.tools/validation/runs/tmpoi9kf07y/local.json` y `.tools/mudlet-integration/runs/3d86d1850915460795d180e06d627c59/result.txt`.
+
+La regresión usa controles wx reales e instrumenta el reproductor delegando al audio productivo: selección nativa con una solicitud `ui.clic_1`, pulsación nativa y Enter con una solicitud `ui.boton_1`, y desplazamientos entre botones o entre lista y botones sin solicitudes sonoras. Preparación y actualizaciones siguen sin clic. Los avisos de límite y pestaña permanecen a cargo del dominio. Se conserva el error de reproducción sin silenciarlo. La prueba del catálogo se actualizó a los WAV del mapa ya renombrados en el árbol de trabajo; la primera ejecución falló al esperar el antiguo `ui.ir_sala`.
+
+`scripts/run_wxlua_probe.py --configurador`: STATUS OK, 19 casos en Mudlet 5.1.1/wxWidgets 3.2.8, informe `.tools/wxlua-probe/runs/d8876973ebc2473fbd07df13bf8465fe/result.txt`. Verifica pulsación de Guardar y Cancelar con `boton_1` seguida del efecto propio, navegación del árbol, ajustes numéricos y booleanos, reapertura y errores de guardado. Perfiles aislados y desconectados; portapapeles conservado. Pendientes teclado físico, percepción auditiva y lector externo.
+
+## Componentes comunes de interfaz, 18 de noviembre de 2026
+
+`scripts/validate.ps1` terminó con diez controles aprobados y ningún fallo: sintaxis Lua 5.1 y LuaJIT, Luacheck 1.2.0 sin avisos, políticas de API, instrucciones, documentación, empaquetado y comprobaciones de Git. Las suites de comportamiento completaron 150 casos por runtime. Informe: `.tools/validation/runs/tmpe1h8i1sh/local.json`. El puente de serialización de las pruebas conserva los arrays JSON al convertir tablas Lua consecutivas; no sustituye la comprobación con yajl real.
+
+`./.tools/venv/Scripts/python.exe scripts/run_mudlet_validation.py --map-keyboard postmessage` completó 150 casos en Mudlet 5.1.1, Lua 5.1 y wxWidgets 3.2.8. El ejecutor consultó la API oficial de releases y comprobó que la instalación probada correspondía a la última estable. Perfil nuevo, aislado y desconectado. Informe final: `.tools/mudlet-integration/runs/59fcffbbc32e452593703a5b930bec62/result.txt`.
+
+La integración verifica controles preparados sin mostrar, páginas nativas con contenido real, dos botones habilitados con acciones distintas, navegación horizontal, selección fija desde botones, inserción por identidad sin desplazar foco, retirada múltiple con siguiente superviviente, acciones deshabilitadas y reutilización de controles. Comprueba snapshot de detalle de solo lectura, vuelta al historial, favoritos persistentes, memoria de pestaña, ausencia de apertura automática sin resultados y apertura pospuesta con resultados. Mensajes Windows dirigidos a la lista aislada activan Return normal y numérico una vez y capturan `norte` y `sigilar norte` del motor oficial sin enviarlos al juego.
+
+Se comprobó la recarga desde el detalle abierto sobre el historial real: ambos HWND permanecen vivos mientras sus llamadas modales están en pila; primero retorna el hijo y después el padre, luego se destruyen y se emite ready una vez, sin duplicar los 40 atajos, tres aliases y dos triggers. Una prueba intermedia detectó bloqueo al ejecutar EndModal del padre mientras seguía activo el bucle hijo. Se corrigió el cierre escalonado y el informe final acredita la regresión. Las ejecuciones intermedias de diagnóstico quedaron en directorios aislados; una instalación oficial también mostró el fallo intermitente de carpeta de paquete ya existente, sin ocultarlo ni modificar el instalador productivo.
+
+`./.tools/venv/Scripts/python.exe scripts/run_wxlua_probe.py --comunicaciones`: 44 casos aprobados en la misma versión de Mudlet y wxWidgets. Informe: `.tools/wxlua-probe/runs/4dc9540c624348ee9723720a2ab34e8d/result.txt`, con 35 pulsos Qt durante diálogos. Comprueba dimensiones útiles de lista y página, botón Copiar visible, selección de pestaña por eventos nativos y Tab, reapertura, texto íntegro y persistente del detalle, llegada con foco en Copiar y retirada del mensaje sin copiar otro. La copia usa el lector productivo con un doble explícito de setClipboardText; el portapapeles real no se modifica.
+
+Se mantienen pendientes teclado físico, experiencia auditiva y lectura percibida con lector externo. Los datos de juego son sintéticos y no hubo conexión al servidor. Responder y Responder en privado siguen indisponibles por falta de contrato de envío y autor acreditado. [Plan cerrado](planes/componentes-interfaz.md), [navegación común](usuario/componentes-interfaz.md), [mapa](usuario/mapa.md) y [comunicaciones](usuario/comunicaciones.md).
+
 El objetivo es la última versión estable de Mudlet, comprobada en releases oficiales. No se mantienen adaptaciones que oculten APIs ausentes. La validación local usa los compiladores reales Lua 5.1 y LuaJIT suministrados por Lupa; no es una emulación de sintaxis con un parser aproximado.
 
 ## Preparación en Windows
@@ -427,3 +503,21 @@ Se restauraron los nombres originales de los seis WAV de apertura y cierre, con 
 Un ensayo del almacén en Lua 5.1 y LuaJIT, con dobles explícitos de audio y lector, confirmó el límite independiente de 500 mensajes por historial, el descarte de los más antiguos y una llamada de audio por mensaje. Los ensayos reales usaron perfiles aislados y desconectados. Quedan pendientes las líneas recibidas del juego, el teclado físico y la escucha con lector externo. [Contrato de Room y telepatía](migraciones/historiales-room-telepatia.md).
 
 La corrección de los atajos pasó `scripts/validate.ps1 -SkipGit -Mudlet` en Mudlet 5.1.1 con 33 teclas, cinco aliases y dos triggers, y el sondeo `scripts/run_wxlua_probe.py --comunicaciones` en wxWidgets 3.2.8. Se verificaron Alt+F2 en global y una pestaña vacía, Ctrl+F2 en global y PNJs, las dos claves de sonido y la retirada de Ctrl+Mayús+S. Evidencias en `.tools/mudlet-integration/runs/c0056a8cd341461393a85f82c0929de1/result.txt` y `.tools/wxlua-probe/runs/9303bdd25e8f44f2962fe842363cb39f/result.txt`. Los atajos se comprobaron mediante callbacks en un perfil aislado.
+
+## Destinos del mapa, 17 de noviembre de 2026
+
+La primera fase de `mapa.lua` pasó `scripts/validate.ps1`: 10 comprobaciones, cero fallos, 147 casos por runtime Lua 5.1 y LuaJIT, sintaxis, Luacheck, documentación, empaquetado y Git. Informe local: `.tools/validation/runs/tmpwr8mb74o/local.json`.
+
+La integración `.tools/venv/Scripts/python.exe scripts/run_mudlet_validation.py` pasó 136 casos en Mudlet 5.1.1, última estable consultada en la API oficial, con perfil aislado desconectado. Informe: `.tools/mudlet-integration/runs/142beb8de87f4cb0960d287642fd95db/result.txt`. Se verificaron controles nativos, JSON, alias, supresión de filas en terminal, viaje normal y sigiloso sobre mapa sintético con el motor real y sin enviar movimientos, salidas normalizadas, configuración, apertura pospuesta y recarga. Registros finales: 40 teclas, 3 alias y 2 triggers.
+
+La emisión sintética de `sysInstallPackage` acredita la reparación del adaptador ante ese evento, no una reinstalación completa del paquete mientras se usa la ventana. No hubo conexión al juego ni modificación del portapapeles. Quedan teclado físico, lector externo y alto contraste. Los botones y la escritura de favoritos desde UI están diferidos. [Diseño, detalle y límites](planes/mapa.md#entrega-y-límites) y [manual](usuario/mapa.md).
+
+## Enter en destinos del mapa, 18 de noviembre de 2026
+
+Se corrigieron dos rutas que la primera validación no cubría: la activación nativa de `wxListCtrl` y la aceptación estándar del diálogo sin captura previa. El enlace oficial sigue llamando a `RL_speed_walk_to(id)` o `RL_speed_walk_sigilar_to(id)`; se utilizan esas mismas acciones.
+
+La integración estándar pasó 137 casos en Mudlet 5.1.1/Lua 5.1 (`.tools/mudlet-integration/runs/115828a9bae849deaa5b44bebb895429/result.txt`). El diagnóstico `.tools/venv/Scripts/python.exe scripts/run_mudlet_validation.py --map-keyboard postmessage` pasó 139 casos: Return normal y numérico enviados al HWND aislado activan la fila y producen una sola llamada al motor, con `norte` y `sigilar norte` capturados sin conexión. Evidencia `.tools/mudlet-integration/runs/cca388780dba4215ab8e9bbea547bb35/result.txt`.
+
+`scripts/validate.ps1` aprobó nueve controles y falló en la sustitución de un archivo durante el empaquetado (`.tools/validation/runs/tmpvuk21udy/local.json`). Se repitió únicamente ese control con `.tools/venv/Scripts/python.exe scripts/test_packaging.py`: cuatro casos aprobados. Los 147 casos de comportamiento por runtime, sintaxis, Luacheck, documentación, política de APIs y Git pasaron en la ejecución general.
+
+El modo optativo `--map-keyboard sendinput` abortó antes de inyectar porque el primer plano pertenecía a otra aplicación. No se intentó cambiar el foco de esa aplicación. Quedan teclado físico y lector externo; PostMessage no acredita el hook global de teclado ni Escape por esa vía. [Detalle y límites](planes/mapa.md#revisión-de-enter).

@@ -119,13 +119,19 @@ local function completar_pvs(combinado, anterior)
   return combinado
 end
 
+local function notificar_nombre(anterior)
+  if anterior ~= ficha.obtener("nombre") then raiseEvent("rhomscripts.ficha.nombre") end
+end
+
 local function recibir(_, paquete)
   if type(paquete) ~= "string" then return end
   local rama = gmcp and gmcp.Char
   if type(rama) ~= "table" then return end
+  local nombre_anterior = ficha.obtener("nombre")
   if paquete == "gmcp.Char" then
     datos = copiar(rama)
     ultimo_pvs_gmcp = leer(rama, ruta_pvs)
+    notificar_nombre(nombre_anterior)
     return
   end
   local ruta = paquete:match("^gmcp%.Char%.(.+)$")
@@ -157,11 +163,14 @@ local function recibir(_, paquete)
     destino = destino[campo]
   end
   destino[campos[#campos]] = copia
+  notificar_nombre(nombre_anterior)
 end
 
 local function vaciar()
+  local nombre_anterior = ficha.obtener("nombre")
   datos = {}
   ultimo_pvs_gmcp = leer(gmcp and gmcp.Char, ruta_pvs)
+  notificar_nombre(nombre_anterior)
 end
 
 function ficha.iniciar(datos_previos)

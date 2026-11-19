@@ -1,3 +1,4 @@
+-- luacheck: globals RL_mostrar_links_viaje_room
 -- Doble explícito de APIs documentadas. No define APIs desconocidas.
 local mock = {
   keys = {}, aliases = {}, triggers = {}, handlers = {}, events = {},
@@ -115,6 +116,11 @@ function mock.official_ready()
       widget_comm = { hidden = false }, widget_comm_consola_global = { hidden = false },
     }, widget_comm = { current = "global" } },
   }
+end
+
+-- Presentación oficial: contrato leído en RLMud_Config.xml; no crea un mapa.
+function RL_mostrar_links_viaje_room(criterio, sigilar)
+  mock.output[#mock.output + 1] = "Oficial: " .. criterio .. (sigilar and " sigilando" or "")
 end
 
 -- APIs oficiales leídas del XML instalado. Este doble solo modela efectos

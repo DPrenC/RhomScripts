@@ -14,10 +14,16 @@ Registrar aquí los planes iniciados que requieren una decisión, un dato o una 
 
 - **Distribución y actualizador.** Siguiente paso previsto: concretar el contrato del manifiesto, el alojamiento y la activación de versiones. [Diseño de actualizaciones](../decisiones.md#4-actualizaciones-previstas)
 - **Clasificación de emisores de Room.** Siguiente paso previsto: comprobar qué dato identifica de forma fiable a Jugadores y PNJs en cada línea capturada. [Captura y clasificación](../migraciones/historiales-room-telepatia.md#captura-y-clasificación)
-- **Acciones del historial de canales.** Responder, responder en privado y copiar están diferidas. Para retomar las respuestas hay que verificar el comando de envío y la identificación del autor. [Acciones del panel de canales](../migraciones/panel-canales.md#4-acciones)
+- **Respuestas del historial de canales.** Responder y responder en privado requieren verificar el comando de envío y la identificación del autor. Copiar está disponible mediante los [componentes comunes](componentes-interfaz.md). [Contrato pendiente de respuestas](../migraciones/panel-canales.md#4-acciones)
 - **Descubrimiento de perfiles en los clientes.** Comprobar los adaptadores regenerados en una nueva sesión de Codex y en la interfaz de VS Code con Copilot disponible. [Ficha de colaboración y herramientas](colaboracion-y-herramientas.md).
 
 ## Entregas cerradas
+
+- **Componentes comunes de interfaz.** Listas, pestañas nativas visibles, acciones contextuales, clic y pulsación comunes y demás sonidos por dominio, detalle de mensajes, copia y gestión de favoritos; validación local y 150 casos en Mudlet 5.1.1 desconectado. [Entrega y límites](componentes-interfaz.md#entrega-y-validación).
+
+- **Enter en destinos del mapa.** Activación nativa y aceptación estándar del diálogo corregidas; verificado el motor oficial y los envíos capturados con Return normal y numérico en Mudlet 5.1.1 desconectado. [Corrección y evidencia](mapa.md#revisión-de-enter).
+
+- **Primera fase de destinos del mapa.** Lista activable en Interfaz, Resultados efímeros y consulta de Favoritos en JSON; validación local y en Mudlet 5.1.1 desconectado. [Plan y evidencia](mapa.md#entrega-y-límites).
 
 - **Debug centralizado y arranque limpio.** Modo compartido, familia única `rhomscripts`, consulta de versión e historial de 500 mensajes implementados y validados con Mudlet 5.1.1 desconectado. [Plan y evidencia](debug.md).
 

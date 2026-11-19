@@ -140,15 +140,17 @@ local function run()
     assert(c.texto_estado:find("No hay mensajes en el canal vacio", 1, true))
     local sounds, original = {}, audio.reproducir
     audio.reproducir = function(key, options)
-      sounds[#sounds + 1] = key
+      if key == "ui.limite" then sounds[#sounds + 1] = key end
       return original(key, options)
     end
     local ok, message = pcall(function()
+      con_dialogo(c, function()
       assert(c.tecla(c.vista.wx.WXK_UP, 0))
       assert(c.tecla(c.vista.wx.WXK_DOWN, 0))
       equal(#sounds, 2)
       equal(sounds[1], "ui.limite")
       equal(sounds[2], "ui.limite")
+      end)
     end)
     audio.reproducir = original
     assert(ok, message)
@@ -220,7 +222,8 @@ local function run()
     c.cambiar_categoria(1)
     equal(c.estado().seleccion, "chat")
     equal(c.lista, list)
-    for _, button in ipairs(c.botones) do assert(not button:IsEnabled()) end
+    assert(not c.botones[1]:IsEnabled() and not c.botones[2]:IsEnabled())
+    assert(c.botones[3]:IsEnabled(), "Copiar debe estar disponible para el mensaje seleccionado")
     c.alternar_silencio()
     c.alternar_silencio()
     equal(list:GetItemCount(), 1)
@@ -327,10 +330,11 @@ local function run()
     local state = wx.wxLIST_STATE_SELECTED + wx.wxLIST_STATE_FOCUSED
     local sounds, original = {}, audio.reproducir
     audio.reproducir = function(key, options)
-      sounds[#sounds + 1] = key
+      if key == "ui.limite" then sounds[#sounds + 1] = key end
       return original(key, options)
     end
     local ok, message = pcall(function()
+      con_dialogo(c, function()
       list:SetItemState(0, state, state)
       assert(c.tecla(wx.WXK_UP, 0))
       assert(not c.tecla(wx.WXK_DOWN, 0))
@@ -341,6 +345,7 @@ local function run()
       equal(sounds[1], "ui.limite")
       equal(sounds[2], "ui.limite")
       equal(list:GetItemCount(), 2)
+      end)
     end)
     audio.reproducir = original
     assert(ok, message)
@@ -389,6 +394,107 @@ local function run()
     end)
     c.mostrar_historial()
     assert(ok, message)
+  end)
+  case("Botones contextuales conservan mensaje y foco durante llegadas; Copiar no abre detalle", function()
+    con_dialogo(c, function()
+      local wx = c.vista.wx
+      local list_size = c.lista:GetClientSize()
+      assert(list_size:GetWidth() > 100 and list_size:GetHeight() > 100, "La lista debe ocupar una superficie útil")
+      local page = c.pestanyas:GetPage(c.pestanyas:GetSelection())
+      local page_size = page:GetClientSize()
+      assert(page_size:GetWidth() > 100 and page_size:GetHeight() > 100, "La pestaña debe mostrar su contenido")
+      local button_size = c.botones[3]:GetClientSize()
+      assert(button_size:GetWidth() > 0 and button_size:GetHeight() > 0 and c.botones[3]:IsShown(), "El botón Copiar debe ser visible")
+      local selected = c.componente:seleccionado()
+      assert(selected and selected.datos.texto)
+      local id, text = selected.id, selected.datos.texto
+      local clipboard, copied, details = setClipboardText, {}, 0
+      local show = c.detalle.mostrar
+      setClipboardText = function(value) copied[#copied + 1] = value end
+      c.detalle.mostrar = function() details = details + 1 end
+      local ok, message = xpcall(function()
+        c.lista:SetFocus()
+        assert(c.tecla(wx.WXK_RIGHT, 0))
+        local focus = wx.wxWindow.FindFocus()
+        assert(focus and focus:GetId() == c.botones[3]:GetId(), "Derecha debe saltar respuestas no disponibles")
+        assert(c.tecla(wx.WXK_UP, 0) and c.tecla(wx.WXK_DOWN, 0))
+        equal(c.componente:seleccionado().id, id)
+        c.recibir({ canal = "chat", mensaje = "Nueva llegada mientras se enfoca Copiar" })
+        equal(c.componente:seleccionado().id, id)
+        focus = wx.wxWindow.FindFocus()
+        assert(focus and focus:GetId() == c.botones[3]:GetId(), "La actualización robó el foco del botón")
+        assert(c.tecla(wx.WXK_RETURN, 0))
+        equal(#copied, 1)
+        equal(copied[1], text)
+        equal(details, 0)
+        assert(c.tecla(wx.WXK_LEFT, 0))
+        focus = wx.wxWindow.FindFocus()
+        assert(focus and focus:GetId() == c.lista:GetId())
+      end, debug.traceback)
+      setClipboardText, c.detalle.mostrar = clipboard, show
+      assert(ok, message)
+    end)
+  end)
+  case("Pestañas nativas por clic y Tab usan el mismo contenido y recuerdan la categoría", function()
+    con_dialogo(c, function()
+      local page = c.pestanyas:GetSelection()
+      c.pestanyas:SetSelection(page == 0 and 1 or 0)
+      equal(c.componente.pestana, c.estado().seleccion)
+      equal(c.pestanyas:GetPageText(c.pestanyas:GetSelection()), c.estado().seleccion)
+      c.vista.tab(1)
+      equal(c.componente.pestana, c.estado().seleccion)
+    end)
+    local category = c.estado().seleccion
+    con_dialogo(c, function()
+      equal(c.estado().seleccion, category)
+      local selected = c.componente:seleccionado()
+      if selected then equal(selected.id, c.lista:GetItemData(0)) end
+    end)
+    -- Continuar el ensayo de retención sobre el canal concreto de la prueba.
+    while c.estado().seleccion ~= "chat" do c.cambiar_categoria(1) end
+  end)
+  case("Retirar el mensaje de un botón devuelve el foco a la lista sin copiar otro mensaje", function()
+    local previous = config.get("canales_limite")
+    config.set("canales_limite", 100)
+    c.aplicar_limites()
+    con_dialogo(c, function()
+      local wx = c.vista.wx
+      local last = c.lista:GetItemCount() - 1
+      local flag = wx.wxLIST_STATE_SELECTED + wx.wxLIST_STATE_FOCUSED
+      c.lista:SetItemState(last, flag, flag)
+      local old = c.componente:seleccionado().id
+      c.lista:SetFocus()
+      assert(c.tecla(wx.WXK_RIGHT, 0))
+      c.recibir({ canal = "chat", mensaje = "El límite retira el mensaje asociado al botón" })
+      assert(c.componente:seleccionado().id ~= old)
+      local focus = wx.wxWindow.FindFocus()
+      assert(focus and focus:GetId() == c.lista:GetId(), "Al retirar el mensaje debe abandonarse su botón")
+      equal(c.estado().selecciones.chat, c.componente:seleccionado().id)
+    end)
+    config.set("canales_limite", previous)
+  end)
+  case("Enter abre detalle nativo readonly estable y retorna al mismo historial", function()
+    con_dialogo(c, function()
+      local element = c.componente:seleccionado()
+      assert(element)
+      local snapshot = element.datos.texto
+      local detail, checked, failure = c.detalle, false, nil
+      detail.vista.dialogo:CallAfter(function()
+        checked, failure = xpcall(function()
+          assert(detail.vista.dialogo:IsShown())
+          equal(detail.control:GetValue(), snapshot)
+          assert(not detail.control:IsEditable(), "El detalle debe ser solo lectura")
+          c.recibir({ canal = "chat", mensaje = "Otro mensaje con el detalle abierto" })
+          equal(detail.control:GetValue(), snapshot)
+        end, debug.traceback)
+        detail:cerrar()
+      end)
+      c.lista:SetFocus()
+      assert(c.tecla(c.vista.wx.WXK_RETURN, 0))
+      assert(checked, failure or "No se abrió el detalle")
+      assert(c.vista.dialogo:IsShown() and not detail.vista.dialogo:IsShown())
+      equal(c.componente:seleccionado().id, element.id)
+    end)
   end)
   case("Todos apagados se muestra incluso conservando mensajes anteriores", function()
     local count = c.estado().cantidad
@@ -657,7 +763,9 @@ local function run()
   end)
   case("Destruir y recargar descarta historial conservando bibliotecas nativas", function()
     local native = package.loaded.wx
+    local previous_view, previous_detail = c.vista, c.detalle
     c.destruir()
+    assert(previous_view.destruida and previous_detail.vista.destruida, "Destruir debe retirar también el detalle preparado")
     package.loaded.comunicaciones = nil
     c = require("comunicaciones")
     equal(c.estado().cantidad, 0)

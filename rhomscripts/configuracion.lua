@@ -12,6 +12,8 @@ configuracion.opciones = {
   { id = "volumen_combate", nombre = "Volumen de combate", tipo = "numero", defecto = 80, minimo = 0, maximo = 100, paso = 5 },
   { id = "volumen_ambiente", nombre = "Volumen de ambiente", tipo = "numero", defecto = 70, minimo = 0, maximo = 100, paso = 5 },
   { id = "ventanasflotantes", nombre = "Ventanas flotantes", tipo = "booleano", defecto = true, categoria = "interfaz" },
+  { id = "mapa_destinos", nombre = "Interfaz del mapa", tipo = "selector", defecto = true, categoria = "interfaz",
+    opciones = { { valor = true, nombre = "Rhomscripts" }, { valor = false, nombre = "Config oficial" } } },
   { id = "oficial_depuracion", nombre = "Modo debug", tipo = "booleano", defecto = false,
     categoria = "interfaz", persistente = false },
   { id = "canales_limite", nombre = "Mensajes por canal", tipo = "numero", defecto = 500,
@@ -50,6 +52,12 @@ local function opcion(id)
 end
 
 local function valido(entrada, valor)
+  if entrada.tipo == "selector" then
+    for _, alternativa in ipairs(entrada.opciones) do
+      if valor == alternativa.valor then return true end
+    end
+    return false
+  end
   if entrada.tipo == "booleano" then return type(valor) == "boolean" end
   return type(valor) == "number" and valor >= entrada.minimo and valor <= entrada.maximo
     and valor % entrada.paso == 0
@@ -158,7 +166,7 @@ local function estructura_valida(datos)
   for _, entrada in ipairs(configuracion.opciones) do
     if entrada.persistente ~= false then
       -- Completar las preferencias incorporadas después de los primeros perfiles.
-      if datos.valores[entrada.id] == nil and (entrada.id == "ventanasflotantes"
+      if datos.valores[entrada.id] == nil and (entrada.id == "ventanasflotantes" or entrada.id == "mapa_destinos"
         or entrada.id == "volumen_comunicaciones" or entrada.categoria == "canales"
         or (datos.version == 1 and entrada.categoria == "oficial")) then
         datos.valores[entrada.id] = entrada.defecto

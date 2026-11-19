@@ -12,23 +12,23 @@ function suite.run(mock)
   end
   local function active_modules()
     local expected = {
-      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true,
+      configuracion = true, configurador = true, keys = true, lector = true, comunicaciones = true, ficha = true, debug = true, mapa = true,
     }
     local count = 0
     for name in pairs(RhomScripts.modules) do
       assert(expected[name], "Módulo no migrado conectado: " .. name)
       count = count + 1
     end
-    equal(count, 7)
+    equal(count, 8)
     equal(mock.count(mock.triggers), 2)
     equal(RhomScripts.modules.comunicaciones.cantidad_triggers(), 2)
-    equal(mock.count(mock.keys), 39)
+    equal(mock.count(mock.keys), 40)
     equal(mock.count(mock.aliases), 3)
     assert(not package.loaded.historial)
     assert(package.loaded.config == nil and package.loaded.modes == nil)
     assert(mock.persisted[getMudletHomeDir() .. "/rl_config.lua"] == nil)
   end
-  case("Arranque: siete módulos, treinta y nueve teclas, tres comandos y dos triggers", function()
+  case("Arranque: ocho módulos, cuarenta teclas, tres comandos y dos triggers", function()
     active_modules()
     assert(table.concat(mock.output):find("Carga correcta", 1, true))
   end)
@@ -60,6 +60,7 @@ function suite.run(mock)
   dofile("scripts/tests/inicio.lua").run("rhomscripts/init.lua", TEST_PROFILE_PATH .. "/no-existe", case)
   dofile("scripts/tests/configuracion.lua").run(case, "rhomscripts/init.lua")
   dofile("scripts/tests/oficial_configuracion.lua").run(case, "rhomscripts/init.lua", mock)
+  dofile("scripts/tests/mapa.lua").run(case, "rhomscripts/mapa.lua", mock)
   dofile("scripts/tests/keys.lua").run("rhomscripts/keys.lua", case)
   dofile("scripts/tests/lector.lua").run(mock, case)
   dofile("scripts/tests/depuracion.lua").run(case, "rhomscripts/init.lua", mock)

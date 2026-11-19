@@ -1,4 +1,4 @@
--- Entrada de configuración, configurador, ficha, lector, comunicaciones y teclas.
+-- Entrada de configuración, configurador, ficha, lector, comunicaciones, mapa y teclas.
 -- Audio, catálogo de sonidos, paquete oficial y registro de comandos son dependencias de soporte.
 local depuracion
 local startup_audio
@@ -22,6 +22,7 @@ local function failure(message)
   local modules, soporte = RhomScripts.modules, RhomScripts.soporte
   if soporte and soporte.arranque then limpiar(soporte.arranque.cancelar_configuracion) end
   if modules then
+    if modules.mapa then limpiar(modules.mapa.destruir) end
     if modules.ficha then limpiar(modules.ficha.detener) end
     if modules.comunicaciones then limpiar(modules.comunicaciones.destruir) end
     if modules.configurador then limpiar(modules.configurador.destruir) end
@@ -95,6 +96,7 @@ local function initialize()
   RhomScripts.registration_generation = 2
   local datos_ficha
   if previous then
+    if previous.mapa then previous.mapa.destruir() end
     if previous.ficha then
       datos_ficha = previous.ficha.datos()
       previous.ficha.detener()
@@ -125,7 +127,7 @@ local function initialize()
   -- Mantener las instancias nativas wx/cffi cargadas; renovar solo adaptadores Lua.
   -- Retirar también nombres antiguos para actualizar sesiones anteriores a las fusiones.
   for _, name in ipairs({ "configuracion", "configurador", "lector", "comunicaciones", "comunicaciones_captura",
-    "comunicaciones_historial", "keys", "audio", "sonidos",
+    "comunicaciones_historial", "mapa", "keys", "audio", "sonidos",
     "oficial", "aliases", "comprobaciones", "arranque", "configurador_modelo", "ui", "ui.arbol", "ui.sonidos", "nativo", "interfaz", "pruebas" }) do
     package.loaded[name] = nil
   end
@@ -158,6 +160,7 @@ local function initialize()
     { nombre = "audio", dependencias = { "sonidos", "configuracion" } },
     { nombre = "ui", dependencias = { "audio", "configuracion", "arranque" } },
     { nombre = "configurador", tipo = "funcional", dependencias = { "ui" } },
+    { nombre = "mapa", tipo = "funcional", dependencias = { "ui", "arranque", "ficha" } },
     { nombre = "lector", tipo = "funcional" },
     { nombre = "comunicaciones_historial", dependencias = { "ui" } },
     { nombre = "comunicaciones_captura" },
@@ -206,6 +209,7 @@ local function initialize()
       depuracion.proveedor("triggers", modulo.consultar_triggers)
       modulo.iniciar()
     end)
+    cargar("mapa", RhomScripts.modules, function(modulo) modulo.iniciar() end)
     -- Dependencias cargadas por sus dominios: se exponen sin duplicar instancias.
     for _, nombre in ipairs({ "comunicaciones_historial", "comunicaciones_captura" }) do
       RhomScripts.soporte[nombre] = package.loaded[nombre]
